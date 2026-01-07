@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 import { connectDB } from '../config/database';
 import AdminUser from '../models/AdminUser.model';
 import logger from '../utils/logger';
@@ -25,11 +24,9 @@ const seedSuperAdmin = async () => {
       process.exit(0);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     await AdminUser.create({
       email,
-      password: hashedPassword,
+      password: password,
       firstName: 'Super',
       lastName: 'Admin',
       role: 'superadmin',
