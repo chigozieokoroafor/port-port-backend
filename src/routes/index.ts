@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes';
-// import adminRoutes from './admin';
+import adminRoutes from './admin.routes';
 // import quoteRequestRoutes from './quoteRequest';
 // import quoteRoutes from './quote';
 // import paymentRoutes from './payment';
@@ -24,7 +24,7 @@ router.get('/health', (req, res) => {
 
 // Mount routes
 router.use('/auth', authRoutes);
-// router.use('/admin', adminRoutes);
+router.use('/admin', adminRoutes);
 // router.use('/quotes', quoteRequestRoutes);
 // router.use('/admin/quotes', quoteRoutes);
 // router.use('/payments', paymentRoutes);

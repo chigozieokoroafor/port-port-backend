@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import AdminUser, { IAdminUser } from '../models/AdminUser.model';
+import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
-
 
 declare global {
   namespace Express {
@@ -45,6 +45,12 @@ export const protect = catchAsync(
         token,
         process.env.JWT_SECRET as string
       ) as JwtPayload;
+
+      // Check if token is blacklisted
+      const isBlacklisted = await TokenBlacklist.findOne({ token });
+      if (isBlacklisted) {
+        throw new ApiError(401, 'Token has been revoked. Please login again.');
+      }
 
       // Get user from database
       const user = await AdminUser.findById(decoded.id);

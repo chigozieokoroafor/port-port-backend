@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import AdminUser from '../models/AdminUser.model';
+import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 
@@ -82,9 +83,34 @@ export const login = catchAsync(async (req: Request, res: Response) => {
  * @access  Private
  */
 export const logout = catchAsync(async (req: Request, res: Response) => {
-  // In a JWT-based system, logout is typically handled client-side
-  // by removing the token. However, you can implement token blacklisting
-  // if needed for enhanced security.
+  if (!req.user) {
+    throw new ApiError(401, 'Not authenticated');
+  }
+
+  // Extract token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new ApiError(401, 'No token provided');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  // Decode token to get expiration time
+  const decoded = jwt.decode(token) as { exp: number };
+  
+  if (!decoded || !decoded.exp) {
+    throw new ApiError(400, 'Invalid token format');
+  }
+
+  // Convert expiration timestamp to Date
+  const expiresAt = new Date(decoded.exp * 1000);
+
+  // Add token to blacklist
+  await TokenBlacklist.create({
+    token,
+    userId: req.user._id,
+    expiresAt,
+  });
 
   res.status(200).json({
     success: true,
