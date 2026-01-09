@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import AdminUser from '../models/AdminUser.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
-import { sendInviteEmail } from '../services/email.service';
+import { sendInviteEmail } from '../services/email/service';
 
 /**
  * @desc    Invite new admin

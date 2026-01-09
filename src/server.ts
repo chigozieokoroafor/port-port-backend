@@ -5,7 +5,7 @@ import app from './app';
 import { connectDB } from './config/database';
 import logger from './utils/logger';
 import { Server } from 'http';
-import { verifyEmailConnection } from './services/email.service';
+import { verifyEmailConnection } from './services/email/service';
 
 const PORT = process.env.PORT || 5000;
 

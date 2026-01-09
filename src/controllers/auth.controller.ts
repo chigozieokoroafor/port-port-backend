@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
+import crypto from 'crypto';
 import AdminUser from '../models/AdminUser.model';
 import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
+import { sendPasswordResetEmail } from '../services/email/service';
 
 /**
  * Generate JWT token
@@ -211,6 +213,165 @@ export const activateAccount = catchAsync(
     res.status(200).json({
       success: true,
       message: 'Account activated successfully',
+      data: {
+        user: {
+          id: user._id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          fullName: user.getFullName(),
+          role: user.role,
+        },
+        token: authToken,
+      },
+    });
+  }
+);
+
+/**
+ * @desc    Change password (when user is logged in)
+ * @route   PUT /api/auth/change-password
+ * @access  Private
+ */
+export const changePassword = catchAsync(
+  async (req: Request, res: Response) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!req.user) {
+      throw new ApiError(401, 'Not authenticated');
+    }
+
+    // Get user with password
+    const user = await AdminUser.findById(req.user._id).select('+password');
+
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+
+    // Verify current password
+    const isPasswordCorrect = await user.comparePassword(currentPassword);
+
+    if (!isPasswordCorrect) {
+      throw new ApiError(401, 'Current password is incorrect');
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully',
+    });
+  }
+);
+
+/**
+ * @desc    Forgot password - send reset email
+ * @route   POST /api/auth/forgot-password
+ * @access  Public
+ */
+export const forgotPassword = catchAsync(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    // Find user by email
+    const user = await AdminUser.findOne({ email });
+
+    if (!user) {
+      // Don't reveal that user doesn't exist for security
+      return res.status(200).json({
+        success: true,
+        message: 'If an account exists with this email, a password reset link has been sent',
+      });
+    }
+
+    // Check if user is active
+    if (user.status !== 'active') {
+      throw new ApiError(403, 'Account is not active');
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    
+    // Hash token before saving to database
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    // Save hashed token and expiry (1 hour)
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    // Create reset URL with unhashed token
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+    try {
+      // Send email
+      await sendPasswordResetEmail({
+        to: user.email,
+        firstName: user.firstName,
+        resetUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Password reset link sent to your email',
+      });
+    } catch (error) {
+      // If email fails, clear reset token
+      user.passwordResetToken = undefined;
+      user.passwordResetExpiry = undefined;
+      await user.save();
+
+      throw new ApiError(500, 'Failed to send password reset email. Please try again.');
+    }
+  }
+);
+
+/**
+ * @desc    Reset password with token
+ * @route   POST /api/auth/reset-password
+ * @access  Public
+ */
+export const resetPassword = catchAsync(
+  async (req: Request, res: Response) => {
+    const { token, newPassword } = req.body;
+
+    // Hash the token from URL to compare with stored hash
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
+    // Find user with valid reset token
+    const user = await AdminUser.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpiry: { $gt: new Date() },
+    }).select('+passwordResetToken +passwordResetExpiry');
+
+    if (!user) {
+      throw new ApiError(400, 'Invalid or expired password reset token');
+    }
+
+    // Update password
+    user.password = newPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpiry = undefined;
+    await user.save();
+
+    // Generate new auth token
+    const authToken = generateToken(
+      user._id.toString(),
+      user.email,
+      user.role
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset successfully',
       data: {
         user: {
           id: user._id,

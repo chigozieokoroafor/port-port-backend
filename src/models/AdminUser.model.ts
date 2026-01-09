@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 export interface IAdminUser extends Document {
     email: string;
     password: string;
+    tempPassword:string;
     firstName: string;
     lastName: string;
     role: 'admin' | 'superadmin';
@@ -11,6 +12,8 @@ export interface IAdminUser extends Document {
     invitedBy?: mongoose.Types.ObjectId;
     inviteToken?: string;
     inviteTokenExpiry?: Date;
+    passwordResetToken?: string;
+    passwordResetExpiry?: Date;
     lastLogin?: Date;
     createdAt: Date;
     updatedAt: Date;
@@ -37,7 +40,7 @@ const adminUserSchema = new Schema<IAdminUser>(
             type: String,
             required: [true, 'Password is required'],
             minlength: [8, 'Password must be at least 8 characters long'],
-            select: false,
+            // select: false,
         },
         firstName: {
             type: String,
@@ -76,6 +79,14 @@ const adminUserSchema = new Schema<IAdminUser>(
             select: false,
         },
         inviteTokenExpiry: {
+            type: Date,
+            select: false,
+        },
+        passwordResetToken: {
+            type: String,
+            select: false,
+        },
+        passwordResetExpiry: {
             type: Date,
             select: false,
         },
