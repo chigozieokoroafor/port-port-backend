@@ -3,6 +3,7 @@ import { transporter } from './transporter';
 import { inviteEmail } from './templates/inviteEmail';
 import { passwordReset } from './templates/passwordReset';
 import { quoteConfirmation } from './templates/generateQuote';
+import { sentQuote } from './templates/sentQuote';
 import { paymentConfirmation } from './templates/paymentConfirmation';
 
 interface InviteEmailParams {
@@ -16,6 +17,17 @@ interface PasswordResetEmailParams {
     to: string;
     firstName: string;
     resetUrl: string;
+}
+
+interface QuoteEmailParams {
+    to: string;
+    customerName: string;
+    quoteNumber: string;
+    referenceId: string;
+    pricing: any;
+    terms: any;
+    vehicle: any;
+    route: any;
 }
 
 /**
@@ -102,6 +114,27 @@ export const sendPaymentConfirmationEmail = async (
         paymentReference,
         receiptUrl
     );
+
+    const mailOptions: Mail.Options = {
+        from: {
+            name: 'Port2Port',
+            address: process.env.SMTP_FROM_EMAIL as string,
+        },
+        to,
+        subject: template.subject,
+        text: template.text,
+        html: template.html,
+    };
+
+    await transporter.sendMail(mailOptions);
+};
+
+/**
+ * Send quote email to customer
+ */
+export const sendQuoteEmail = async (params: QuoteEmailParams): Promise<void> => {
+    const { to } = params;
+    const template = sentQuote(params);
 
     const mailOptions: Mail.Options = {
         from: {

@@ -6,7 +6,7 @@ interface InviteEmailParams {
 }
 
 export const inviteEmail = (params: InviteEmailParams) => {
-    const { to, firstName, inviteUrl, inviterName } = params;
+    const { firstName, inviteUrl, inviterName } = params;
     
     return {
         subject: 'You have been invited to Port2Port Admin',
