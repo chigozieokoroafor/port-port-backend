@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import crypto from 'crypto';
 import User from '../models/User.model';
 import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
-import { sendPasswordResetEmail } from '../services/email/service';
 import { UserStatus } from '../models/enums/UserStatus.enum';
 import { emailVerification, sendResetPassword, sendTestEmail } from '../services/email.service';
 import Token from '../models/Token.model';
@@ -51,12 +49,13 @@ export const create = catchAsync(async (req: Request, res: Response) => {
     isSubscribedToNewsletter
   });
 
-  await emailVerification(user);
+  const link = await emailVerification(user);
 
   return res.status(200).json({
     success: true,
     message: 'User created successfully',
     data: {
+      link,
       user: {
         id: user._id,
         email: user.email,
@@ -368,10 +367,13 @@ export const forgotPassword = catchAsync(
 
     try {
       // Send email
-      await sendResetPassword(user);
+      const link = await sendResetPassword(user);
 
       res.status(200).json({
         success: true,
+        data:{
+            link
+        },
         message: 'Password reset link sent to your email',
       });
     } catch (error) {

@@ -49,7 +49,8 @@ export const emailVerification = async (user: IUser) =>{
   const link = `${process.env.LOCAL_LINK}/verify-email?token=${token.hash}`
   const message = `<p>Please verify your email with the link below</p>
         <p>${link}</p>`
-  await sendTestEmail(user.email,TokenType.EmailVerification, message).catch(console.error);;
+  await sendTestEmail(user.email,TokenType.EmailVerification, message).catch(console.error);
+  return link;
 }
 
 export const sendResetPassword = async (user: IUser) =>{
@@ -67,7 +68,8 @@ export const sendResetPassword = async (user: IUser) =>{
   const link = `${process.env.LOCAL_LINK}/update-password?token=${token.hash}`
   const message = `<p>Please clink the link to reset password</p>
         <p>${link}</p>`
-  await sendTestEmail(user.email,TokenType.ResetPassword, message).catch(console.error);;
+  await sendTestEmail(user.email,TokenType.ResetPassword, message).catch(console.error);
+  return link;
 }
 
 export const sendInviteMail = async (user: IUser) =>{
@@ -83,7 +85,8 @@ export const sendInviteMail = async (user: IUser) =>{
   const link = `${process.env.LOCAL_LINK}/activate/${token.hash}`
   const message = `<p>Please clink the link to accept admin invite</p>
         <p>${link}</p>`
-  await sendTestEmail(user.email,TokenType.InviteUser, message).catch(console.error);;
+  await sendTestEmail(user.email,TokenType.InviteUser, message).catch(console.error);
+  return link;
 }
 
 

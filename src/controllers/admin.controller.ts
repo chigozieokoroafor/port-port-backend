@@ -283,10 +283,13 @@ export const resendInvite = catchAsync(async (req: Request, res: Response) => {
         throw new ApiError(400, 'Admin account is already active');
     }
 
-    await sendInviteMail(admin);
+    const link = await sendInviteMail(admin);
 
     res.status(200).json({
         success: true,
+        data:{
+            link
+        },
         message: 'Invite resent successfully',
     });
 });
