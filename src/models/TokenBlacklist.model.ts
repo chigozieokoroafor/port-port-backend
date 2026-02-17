@@ -16,7 +16,7 @@ const tokenBlacklistSchema = new Schema<ITokenBlacklist>(
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'AdminUser',
+      ref: 'User',
       required: true,
     },
     expiresAt: {
@@ -31,7 +31,7 @@ const tokenBlacklistSchema = new Schema<ITokenBlacklist>(
 );
 
 // Index for faster lookups
-tokenBlacklistSchema.index({ token: 1 });
+// tokenBlacklistSchema.index({ token: 1 });
 
 const TokenBlacklist = mongoose.model<ITokenBlacklist>(
   'TokenBlacklist',

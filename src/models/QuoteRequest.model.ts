@@ -168,10 +168,10 @@ const quoteRequestSchema = new Schema<IQuoteRequest>(
 );
 
 // Indexes
-quoteRequestSchema.index({ referenceId: 1 });
-quoteRequestSchema.index({ status: 1 });
-quoteRequestSchema.index({ 'customer.email': 1 });
-quoteRequestSchema.index({ createdAt: -1 });
+// quoteRequestSchema.index({ referenceId: 1 });
+// quoteRequestSchema.index({ status: 1 });
+// quoteRequestSchema.index({ 'customer.email': 1 });
+// quoteRequestSchema.index({ createdAt: -1 });
 
 const QuoteRequest = mongoose.model<IQuoteRequest>('QuoteRequest', quoteRequestSchema);
 

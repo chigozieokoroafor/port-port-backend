@@ -1,5 +1,91 @@
+import { sub } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
+import { IUser } from '../models/User.model';
+import moment from 'moment';
+import Token from '../models/Token.model';
+import { TokenType } from '../models/enums/TokenType.enum';
+
+ export async function sendTestEmail(userEmail: string, subject: TokenType, html: string){
+  const testAccount = await nodemailer.createTestAccount();
+
+
+  console.log("Test account created:");
+  console.log("  User: %s", testAccount.user);
+  console.log("  Pass: %s", testAccount.pass);
+
+  const transporter = nodemailer.createTransport({
+    host: testAccount.smtp.host,
+    port: testAccount.smtp.port,
+    secure: testAccount.smtp.secure,
+    auth: {
+      user: testAccount.user,
+      pass: testAccount.pass,
+    },
+  });
+
+   const info = await transporter.sendMail({
+    from: `"Test App" <${testAccount.user}>`,
+    to: userEmail,
+    subject: subject,
+    html: html,
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  console.log("Preview: %s", nodemailer.getTestMessageUrl(info));
+}
+
+export const emailVerification = async (user: IUser) =>{
+  let hash = uuidv4();
+  hash = hash.replace(/-/g, '');
+  const expiresIn = moment().add(30, 'minutes').format();
+  const token = await Token.create({
+    user: user._id,
+    hash,
+    expiresIn,
+    type: TokenType.EmailVerification
+  });
+  const link = `${process.env.LOCAL_LINK}/verify-email?token=${token.hash}`
+  const message = `<p>Please verify your email with the link below</p>
+        <p>${link}</p>`
+  await sendTestEmail(user.email,TokenType.EmailVerification, message).catch(console.error);;
+}
+
+export const sendResetPassword = async (user: IUser) =>{
+  let hash = uuidv4();
+  hash = hash.replace(/-/g, '');
+  const expiresIn = moment().add(15, 'minutes').format();
+ 
+  const token = await Token.create({
+    user: user._id,
+    hash,
+    expiresIn,
+    type: TokenType.ResetPassword
+  });
+
+  const link = `${process.env.LOCAL_LINK}/update-password?token=${token.hash}`
+  const message = `<p>Please clink the link to reset password</p>
+        <p>${link}</p>`
+  await sendTestEmail(user.email,TokenType.ResetPassword, message).catch(console.error);;
+}
+
+export const sendInviteMail = async (user: IUser) =>{
+  let hash = uuidv4();
+  hash = hash.replace(/-/g, '');
+  const expiresIn = moment().add(15, 'minutes').format();
+  const token = await Token.create({
+    user: user._id,
+    hash,
+    expiresIn,
+    type: TokenType.InviteUser
+  });
+  const link = `${process.env.LOCAL_LINK}/activate/${token.hash}`
+  const message = `<p>Please clink the link to accept admin invite</p>
+        <p>${link}</p>`
+  await sendTestEmail(user.email,TokenType.InviteUser, message).catch(console.error);;
+}
+
 
 // Create transporter
 const createTransporter = () => {
@@ -36,6 +122,8 @@ interface InviteEmailParams {
   inviterName: string;
   tempPassword: string;
 }
+
+
 
 /**
  * Send invite email to new admin

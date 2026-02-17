@@ -16,13 +16,28 @@ export const validateLogin = [
     .withMessage('Password must be at least 8 characters'),
 ];
 
+export const validateSignup = [
+  body('email')
+    .trim()
+    .isEmail()
+    .withMessage('Please proAvide a valid email')
+    .normalizeEmail(),
+
+  body('firstName')
+  .trim()
+  .notEmpty()
+  .withMessage('First Name is required'),
+
+  body('lastName')
+  .trim()
+  .notEmpty()
+  .withMessage('Last Name is required')
+]
+
 /**
  * Validate activate account request
  */
 export const validateActivateAccount = [
-  body('token')
-    .notEmpty()
-    .withMessage('Activation token is required'),
   body('password')
     .notEmpty()
     .withMessage('Password is required')
@@ -85,9 +100,6 @@ export const validateForgotPassword = [
  * Validate reset password request
  */
 export const validateResetPassword = [
-  body('token')
-    .notEmpty()
-    .withMessage('Reset token is required'),
   body('newPassword')
     .notEmpty()
     .withMessage('New password is required')
