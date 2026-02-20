@@ -121,10 +121,10 @@ const quoteSchema = new Schema<IQuote>(
     );
 
 // Indexes
-quoteSchema.index({ quoteNumber: 1 });
-quoteSchema.index({ quoteRequestId: 1 });
-quoteSchema.index({ status: 1 });
-quoteSchema.index({ createdAt: -1 });
+// quoteSchema.index({ quoteNumber: 1 });
+// quoteSchema.index({ quoteRequestId: 1 });
+// quoteSchema.index({ status: 1 });
+// quoteSchema.index({ createdAt: -1 });
 
 // Virtual to check if quote is expired
 quoteSchema.virtual('isExpired').get(function () {

@@ -45,8 +45,8 @@ export const getAllQuoteRequests = catchAsync(
         }
 
         // Pagination
-        const pageNum = parseInt(page as string, 10);
-        const limitNum = parseInt(limit as string, 10);
+        const pageNum = Number.parseInt(page as string, 10);
+        const limitNum = Number.parseInt(limit as string, 10);
         const skip = (pageNum - 1) * limitNum;
 
         // Get total count
@@ -347,8 +347,8 @@ export const getAllQuotes = catchAsync(
         }
 
         // Pagination
-        const pageNum = parseInt(page as string, 10);
-        const limitNum = parseInt(limit as string, 10);
+        const pageNum = Number.parseInt(page as string, 10);
+        const limitNum = Number.parseInt(limit as string, 10);
         const skip = (pageNum - 1) * limitNum;
 
         // Get total count

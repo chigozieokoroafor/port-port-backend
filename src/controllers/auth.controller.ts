@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import crypto from 'crypto';
-import AdminUser from '../models/AdminUser.model';
+import User from '../models/User.model';
 import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
-import { sendPasswordResetEmail } from '../services/email/service';
+import { UserStatus } from '../models/enums/UserStatus.enum';
+import { emailVerification, sendResetPassword } from '../services/email.service';
+import Token from '../models/Token.model';
+import moment from 'moment';
+import logger from '../utils/logger';
 
 /**
  * Generate JWT token
@@ -24,6 +27,48 @@ const generateToken = (id: string, email: string, role: string): string => {
 };
 
 /**
+ * @desc    Create User customer
+ * @route   POST /api/auth/create
+ * @access  Public
+ */
+
+export const create = catchAsync(async (req: Request, res: Response) => {
+  const { firstName, lastName, email, password, isAgreedToTermsAndConditions, isSubscribedToNewsletter } = req.body;
+  let user = await User.findOne({
+    email: req.body.email
+  })
+  if (user) {
+    throw new ApiError(400, 'User with email already exist');
+  }
+  user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    status: UserStatus.Pending,
+    isAgreedToTermsAndConditions,
+    isSubscribedToNewsletter
+  });
+
+  const link = await emailVerification(user);
+
+  return res.status(200).json({
+    success: true,
+    message: 'User created successfully',
+    data: {
+      link,
+      user: {
+        id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.getFullName()
+      }
+    }
+  });
+});
+
+/**
  * @desc    Login admin/superadmin
  * @route   POST /api/auth/login
  * @access  Public
@@ -32,18 +77,18 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   // Check if user exists (with password field)
-  const user = await AdminUser.findOne({ email }).select('+password');
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     throw new ApiError(401, 'Invalid credentials');
   }
 
   // Check if account is active
-  if (user.status === 'suspended') {
+  if (user.status === UserStatus.Suspended) {
     throw new ApiError(403, 'Your account has been suspended');
   }
 
-  if (user.status === 'pending') {
+  if (user.status === UserStatus.Pending) {
     throw new ApiError(403, 'Please activate your account first');
   }
 
@@ -79,6 +124,27 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
+  const token = await Token.findOne({
+    hash: req.params.hash
+  });
+  if (token === null || !token) {
+    throw new ApiError(400, 'invalid token');
+  }
+
+  if (moment().isAfter(moment(token.expiresIn))) {
+    throw new ApiError(400, 'Token expired')
+  }
+
+  await User.findOneAndUpdate({
+    _id: token.user
+  }, {
+    status: UserStatus.Active
+  });
+  return res.status(200).json({ success: true, message: 'User verified successfully' })
+});
+
 /**
  * @desc    Logout user
  * @route   POST /api/auth/logout
@@ -91,7 +157,7 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
 
   // Extract token from Authorization header
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader?.startsWith('Bearer ')) {
     throw new ApiError(401, 'No token provided');
   }
 
@@ -99,8 +165,8 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
 
   // Decode token to get expiration time
   const decoded = jwt.decode(token) as { exp: number };
-  
-  if (!decoded || !decoded.exp) {
+
+  if (!decoded?.exp) {
     throw new ApiError(400, 'Invalid token format');
   }
 
@@ -183,24 +249,32 @@ export const refreshToken = catchAsync(
  */
 export const activateAccount = catchAsync(
   async (req: Request, res: Response) => {
-    const { token, password } = req.body;
+    const { password } = req.body;
+
+    const token = await Token.findOne({
+      hash: req.params.hash
+    });
+    if (token === null || !token) {
+      throw new ApiError(400, 'invalid token');
+    }
+
+    if (moment().isAfter(moment(token.expiresIn))) {
+      throw new ApiError(400, 'Token expired')
+    }
 
     // Find user with valid invite token
-    const user = await AdminUser.findOne({
-      inviteToken: token,
-      inviteTokenExpiry: { $gt: new Date() },
-      status: 'pending',
-    }).select('+inviteToken +inviteTokenExpiry');
+    const user = await User.findOne({
+      _id: token.user
+    })
 
-    if (!user) {
-      throw new ApiError(400, 'Invalid or expired activation token');
+    if(!user){
+      throw new ApiError(400, 'User does not exist')
     }
+
 
     // Set password and activate account
     user.password = password;
-    user.status = 'active';
-    user.inviteToken = undefined;
-    user.inviteTokenExpiry = undefined;
+    user.status = UserStatus.Active;
     await user.save();
 
     // Generate token
@@ -242,7 +316,7 @@ export const changePassword = catchAsync(
     }
 
     // Get user with password
-    const user = await AdminUser.findById(req.user._id).select('+password');
+    const user = await User.findById(req.user._id).select('+password');
 
     if (!user) {
       throw new ApiError(404, 'User not found');
@@ -276,7 +350,7 @@ export const forgotPassword = catchAsync(
     const { email } = req.body;
 
     // Find user by email
-    const user = await AdminUser.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       // Don't reveal that user doesn't exist for security
@@ -287,47 +361,27 @@ export const forgotPassword = catchAsync(
     }
 
     // Check if user is active
-    if (user.status !== 'active') {
+    if (user.status !== UserStatus.Active) {
       throw new ApiError(403, 'Account is not active');
     }
 
-    // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    
-    // Hash token before saving to database
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(resetToken)
-      .digest('hex');
-
-    // Save hashed token and expiry (1 hour)
-    user.passwordResetToken = hashedToken;
-    user.passwordResetExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-    await user.save();
-
-    // Create reset URL with unhashed token
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
     try {
       // Send email
-      await sendPasswordResetEmail({
-        to: user.email,
-        firstName: user.firstName,
-        resetUrl,
-      });
+      const link = await sendResetPassword(user);
 
       res.status(200).json({
         success: true,
+        data:{
+            link
+        },
         message: 'Password reset link sent to your email',
       });
     } catch (error) {
-      // If email fails, clear reset token
-      user.passwordResetToken = undefined;
-      user.passwordResetExpiry = undefined;
-      await user.save();
-
+      console.log(error);
+      logger.error(error);
       throw new ApiError(500, 'Failed to send password reset email. Please try again.');
-    }
+    } 
   }
 );
 
@@ -338,28 +392,30 @@ export const forgotPassword = catchAsync(
  */
 export const resetPassword = catchAsync(
   async (req: Request, res: Response) => {
-    const { token, newPassword } = req.body;
+    const { newPassword } = req.body;
 
-    // Hash the token from URL to compare with stored hash
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
+    const token = await Token.findOne({
+      hash: req.params.hash
+    });
 
-    // Find user with valid reset token
-    const user = await AdminUser.findOne({
-      passwordResetToken: hashedToken,
-      passwordResetExpiry: { $gt: new Date() },
-    }).select('+passwordResetToken +passwordResetExpiry');
+    if (token === null || !token) {
+      throw new ApiError(400, 'invalid token');
+    }
+
+    if (moment().isAfter(moment(token.expiresIn))) {
+      throw new ApiError(400, 'Token expired')
+    }
+
+    const user = await User.findOne({
+      _id: token.user
+    });
 
     if (!user) {
-      throw new ApiError(400, 'Invalid or expired password reset token');
+      throw new ApiError(400, 'Invalid user')
     }
 
     // Update password
     user.password = newPassword;
-    user.passwordResetToken = undefined;
-    user.passwordResetExpiry = undefined;
     await user.save();
 
     // Generate new auth token

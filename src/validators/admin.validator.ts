@@ -1,4 +1,5 @@
 import { body, param } from 'express-validator';
+import { UserType } from '../models/enums/UserType.enum';
 
 /**
  * Validate invite admin request
@@ -23,7 +24,7 @@ export const validateInviteAdmin = [
         .withMessage('Last name must be between 2 and 50 characters'),
     body('role')
         .optional()
-        .isIn(['admin', 'superadmin'])
+        .isIn([UserType.Admin, UserType.SuperAdmin])
         .withMessage('Role must be either admin or superadmin'),
 ];
 

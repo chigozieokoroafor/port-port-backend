@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import AdminUser, { IAdminUser } from '../models/AdminUser.model';
 import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
+import User, { IUser } from '../models/User.model';
+import { UserStatus } from '../models/enums/UserStatus.enum';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: IAdminUser;
+      user?: IUser;
     }
   }
 }
@@ -28,8 +29,7 @@ export const protect = catchAsync(
 
     // Check for token in Authorization header
     if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
+      req.headers.authorization?.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
     }
@@ -53,14 +53,14 @@ export const protect = catchAsync(
       }
 
       // Get user from database
-      const user = await AdminUser.findById(decoded.id);
+      const user = await User.findById(decoded.id);
 
       if (!user) {
         throw new ApiError(401, 'User no longer exists');
       }
 
       // Check if user is active
-      if (user.status !== 'active') {
+      if (user.status !== UserStatus.Active) {
         throw new ApiError(
           403,
           'Your account is not active. Please contact support.'
@@ -91,8 +91,7 @@ export const optionalAuth = catchAsync(
     let token: string | undefined;
 
     if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
+      req.headers.authorization?.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
     }
@@ -104,14 +103,16 @@ export const optionalAuth = catchAsync(
           process.env.JWT_SECRET as string
         ) as JwtPayload;
 
-        const user = await AdminUser.findById(decoded.id);
+        const user = await User.findById(decoded.id);
 
-        if (user && user.status === 'active') {
+        if (user && user.status === UserStatus.Active) {
           req.user = user;
         }
       } catch (error) {
         // Token invalid, but that's okay for optional auth
         // Continue without attaching user
+        console.log(error);
+        throw new ApiError(401, 'Invalid token');
       }
     }
 

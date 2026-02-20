@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import crypto from 'crypto';
-import AdminUser from '../models/AdminUser.model';
+import crypto from 'node:crypto';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
-import { sendInviteEmail } from '../services/email/service';
+import User from '../models/User.model';
+import { UserStatus } from '../models/enums/UserStatus.enum';
+import { sendInviteMail } from '../services/email.service';
 
 /**
  * @desc    Invite new admin
@@ -18,58 +19,41 @@ export const inviteAdmin = catchAsync(async (req: Request, res: Response) => {
     }
 
     // Check if user already exists
-    const existingUser = await AdminUser.findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
         throw new ApiError(400, 'User with this email already exists');
     }
 
-    // Generate invite token
-    const inviteToken = crypto.randomBytes(32).toString('hex');
-    const inviteTokenExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
 
     // Create new admin user
-    const newAdmin = await AdminUser.create({
+    const user = await User.create({
         email,
         firstName,
         lastName,
-        role: role || 'admin',
-        status: 'pending',
+        role: role,
+        status: UserStatus.Pending,
         invitedBy: req.user._id,
-        inviteToken,
-        inviteTokenExpiry,
-        password: crypto.randomBytes(32).toString('hex'), // Temporary password (will be set during activation)
+        password: crypto.randomBytes(32).toString('hex')
     });
 
     // Send invite email
-    const inviteUrl = `${process.env.FRONTEND_URL}/activate?token=${inviteToken}`;
-    
-    try {
-        await sendInviteEmail({
-            to: email,
-            firstName,
-            inviteUrl,
-            inviterName: req.user.getFullName(),
-        });
-    } catch (emailError) {
-        // If email fails, delete the created user
-        await AdminUser.findByIdAndDelete(newAdmin._id);
-        throw new ApiError(500, 'Failed to send invite email. Please try again.');
-    }
+    await sendInviteMail(user);
 
     res.status(201).json({
         success: true,
         message: 'Admin invite sent successfully',
         data: {
-        user: {
-            id: newAdmin._id,
-            email: newAdmin.email,
-            firstName: newAdmin.firstName,
-            lastName: newAdmin.lastName,
-            role: newAdmin.role,
-            status: newAdmin.status,
-            invitedBy: req.user.getFullName(),
-            createdAt: newAdmin.createdAt,
-        },
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+                status: user.status,
+                invitedBy: req.user.getFullName(),
+                createdAt: user.createdAt,
+            },
         },
     });
 });
@@ -95,22 +79,22 @@ export const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
 
     if (search) {
         filter.$or = [
-        { email: { $regex: search, $options: 'i' } },
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { firstName: { $regex: search, $options: 'i' } },
+            { lastName: { $regex: search, $options: 'i' } },
         ];
     }
 
     // Pagination
-    const pageNum = parseInt(page as string, 10);
-    const limitNum = parseInt(limit as string, 10);
+    const pageNum = Number.parseInt(page as string, 10);
+    const limitNum = Number.parseInt(limit as string, 10);
     const skip = (pageNum - 1) * limitNum;
 
     // Get total count
-    const total = await AdminUser.countDocuments(filter);
+    const total = await User.countDocuments(filter);
 
     // Get admins with pagination
-    const admins = await AdminUser.find(filter)
+    const admins = await User.find(filter)
         .populate('invitedBy', 'firstName lastName email')
         .sort({ createdAt: -1 })
         .skip(skip)
@@ -119,25 +103,25 @@ export const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
     res.status(200).json({
         success: true,
         data: {
-        admins: admins.map((admin) => ({
-            id: admin._id,
-            email: admin.email,
-            firstName: admin.firstName,
-            lastName: admin.lastName,
-            fullName: admin.getFullName(),
-            role: admin.role,
-            status: admin.status,
-            lastLogin: admin.lastLogin,
-            invitedBy: admin.invitedBy,
-            createdAt: admin.createdAt,
-            updatedAt: admin.updatedAt,
-        })),
-        pagination: {
-            page: pageNum,
-            limit: limitNum,
-            total,
-            pages: Math.ceil(total / limitNum),
-        },
+            admins: admins.map((admin) => ({
+                id: admin._id,
+                email: admin.email,
+                firstName: admin.firstName,
+                lastName: admin.lastName,
+                fullName: admin.getFullName(),
+                role: admin.role,
+                status: admin.status,
+                lastLogin: admin.lastLogin,
+                invitedBy: admin.invitedBy,
+                createdAt: admin.createdAt,
+                updatedAt: admin.updatedAt,
+            })),
+            pagination: {
+                page: pageNum,
+                limit: limitNum,
+                total,
+                pages: Math.ceil(total / limitNum),
+            },
         },
     });
 });
@@ -156,7 +140,7 @@ export const updateAdmin = catchAsync(async (req: Request, res: Response) => {
     }
 
     // Find admin user
-    const admin = await AdminUser.findById(id);
+    const admin = await User.findById(id);
 
     if (!admin) {
         throw new ApiError(404, 'Admin user not found');
@@ -184,18 +168,18 @@ export const updateAdmin = catchAsync(async (req: Request, res: Response) => {
         success: true,
         message: 'Admin user updated successfully',
         data: {
-        user: {
-            id: admin._id,
-            email: admin.email,
-            firstName: admin.firstName,
-            lastName: admin.lastName,
-            fullName: admin.getFullName(),
-            role: admin.role,
-            status: admin.status,
-            lastLogin: admin.lastLogin,
-            createdAt: admin.createdAt,
-            updatedAt: admin.updatedAt,
-        },
+            user: {
+                id: admin._id,
+                email: admin.email,
+                firstName: admin.firstName,
+                lastName: admin.lastName,
+                fullName: admin.getFullName(),
+                role: admin.role,
+                status: admin.status,
+                lastLogin: admin.lastLogin,
+                createdAt: admin.createdAt,
+                updatedAt: admin.updatedAt,
+            },
         },
     });
 });
@@ -213,7 +197,7 @@ export const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
     }
 
     // Find admin user
-    const admin = await AdminUser.findById(id);
+    const admin = await User.findById(id);
 
     if (!admin) {
         throw new ApiError(404, 'Admin user not found');
@@ -225,17 +209,17 @@ export const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
     }
 
     // Delete admin user
-    await AdminUser.findByIdAndDelete(id);
+    await User.findByIdAndDelete(id);
 
     res.status(200).json({
         success: true,
         message: 'Admin user deleted successfully',
         data: {
-        deletedUser: {
-            id: admin._id,
-            email: admin.email,
-            fullName: admin.getFullName(),
-        },
+            deletedUser: {
+                id: admin._id,
+                email: admin.email,
+                fullName: admin.getFullName(),
+            },
         },
     });
 });
@@ -248,7 +232,7 @@ export const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
 export const getAdminById = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const admin = await AdminUser.findById(id).populate(
+    const admin = await User.findById(id).populate(
         'invitedBy',
         'firstName lastName email'
     );
@@ -260,19 +244,19 @@ export const getAdminById = catchAsync(async (req: Request, res: Response) => {
     res.status(200).json({
         success: true,
         data: {
-        user: {
-            id: admin._id,
-            email: admin.email,
-            firstName: admin.firstName,
-            lastName: admin.lastName,
-            fullName: admin.getFullName(),
-            role: admin.role,
-            status: admin.status,
-            lastLogin: admin.lastLogin,
-            invitedBy: admin.invitedBy,
-            createdAt: admin.createdAt,
-            updatedAt: admin.updatedAt,
-        },
+            user: {
+                id: admin._id,
+                email: admin.email,
+                firstName: admin.firstName,
+                lastName: admin.lastName,
+                fullName: admin.getFullName(),
+                role: admin.role,
+                status: admin.status,
+                lastLogin: admin.lastLogin,
+                invitedBy: admin.invitedBy,
+                createdAt: admin.createdAt,
+                updatedAt: admin.updatedAt,
+            },
         },
     });
 });
@@ -289,36 +273,23 @@ export const resendInvite = catchAsync(async (req: Request, res: Response) => {
         throw new ApiError(401, 'Not authenticated');
     }
 
-    const admin = await AdminUser.findById(id).select('+inviteToken +inviteTokenExpiry');
+    const admin = await User.findById(id);
 
     if (!admin) {
         throw new ApiError(404, 'Admin user not found');
     }
 
-    if (admin.status !== 'pending') {
+    if (admin.status !== UserStatus.Pending) {
         throw new ApiError(400, 'Admin account is already active');
     }
 
-    // Generate new invite token
-    const inviteToken = crypto.randomBytes(32).toString('hex');
-    const inviteTokenExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-
-    admin.inviteToken = inviteToken;
-    admin.inviteTokenExpiry = inviteTokenExpiry;
-    await admin.save();
-
-    // Send invite email
-    const inviteUrl = `${process.env.FRONTEND_URL}/activate?token=${inviteToken}`;
-    
-    await sendInviteEmail({
-        to: admin.email,
-        firstName: admin.firstName,
-        inviteUrl,
-        inviterName: req.user.getFullName(),
-    });
+    const link = await sendInviteMail(admin);
 
     res.status(200).json({
         success: true,
+        data:{
+            link
+        },
         message: 'Invite resent successfully',
     });
 });

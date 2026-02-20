@@ -11,6 +11,8 @@ import {
   changePassword,
   forgotPassword,
   resetPassword,
+  create,
+  verifyEmail,
 } from '../controllers/auth.controller';
 import { 
   validateLogin, 
@@ -18,6 +20,7 @@ import {
   validateChangePassword,
   validateForgotPassword,
   validateResetPassword,
+  validateSignup,
 } from '../validators/auth.validator';
 
 const router = Router();
@@ -38,6 +41,19 @@ router.get('/', protect, getCurrentUser);
 router.post( '/login', rateLimiter({ windowMs: 15 * 60 * 1000, max: 5 }), validateLogin, validate, login);
 
 /**
+ * @route   POST /api/auth/create
+ * @desc    Customer/create Customer
+ * @access  Public
+ */
+router.post('/create', validateSignup, validate, create);
+
+/**
+ * @route   PATCH /api/auth/verify-email/:hash
+ * @desc    Customer/verify customer's email
+ * @access  Public
+ */
+router.patch('/verify-email/:hash', verifyEmail);
+/**
  * @route   POST /api/auth/logout
  * @desc    Logout user (invalidate token on client side)
  * @access  Private
@@ -56,7 +72,7 @@ router.post('/refresh', protect, refreshToken);
  * @desc    Activate invited admin account
  * @access  Public
  */
-router.post('/activate', validateActivateAccount, validate, activateAccount);
+router.post('/activate/:hash', validateActivateAccount, validate, activateAccount);
 
 /**
  * @route   PUT /api/auth/change-password
@@ -79,6 +95,6 @@ router.post( '/forgot-password', rateLimiter({ windowMs: 15 * 60 * 1000, max: 3 
  * @access  Public
  */
 // 5 requests per 15 minutes
-router.post('/reset-password', rateLimiter({ windowMs: 15 * 60 * 1000, max: 5 }),  validateResetPassword, validate, resetPassword);
+router.post('/reset-password/:hash', rateLimiter({ windowMs: 15 * 60 * 1000, max: 5 }),  validateResetPassword, validate, resetPassword);
 
 export default router;
