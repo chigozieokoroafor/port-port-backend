@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiError } from '../utils/ApiError';
 import { UserType } from '../models/enums/UserType.enum';
-import User from '../models/User.model';
 
 /**
  * Restrict access to SuperAdmin only

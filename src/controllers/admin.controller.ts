@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import User from '../models/User.model';
@@ -86,8 +86,8 @@ export const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
     }
 
     // Pagination
-    const pageNum = parseInt(page as string, 10);
-    const limitNum = parseInt(limit as string, 10);
+    const pageNum = Number.parseInt(page as string, 10);
+    const limitNum = Number.parseInt(limit as string, 10);
     const skip = (pageNum - 1) * limitNum;
 
     // Get total count

@@ -5,9 +5,10 @@ import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { UserStatus } from '../models/enums/UserStatus.enum';
-import { emailVerification, sendResetPassword, sendTestEmail } from '../services/email.service';
+import { emailVerification, sendResetPassword } from '../services/email.service';
 import Token from '../models/Token.model';
 import moment from 'moment';
+import logger from '../utils/logger';
 
 /**
  * Generate JWT token
@@ -136,7 +137,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
     throw new ApiError(400, 'Token expired')
   }
 
-  const user = await User.findOneAndUpdate({
+  await User.findOneAndUpdate({
     _id: token.user
   }, {
     status: UserStatus.Active
@@ -156,7 +157,7 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
 
   // Extract token from Authorization header
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader?.startsWith('Bearer ')) {
     throw new ApiError(401, 'No token provided');
   }
 
@@ -165,7 +166,7 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
   // Decode token to get expiration time
   const decoded = jwt.decode(token) as { exp: number };
 
-  if (!decoded || !decoded.exp) {
+  if (!decoded?.exp) {
     throw new ApiError(400, 'Invalid token format');
   }
 
@@ -377,6 +378,8 @@ export const forgotPassword = catchAsync(
         message: 'Password reset link sent to your email',
       });
     } catch (error) {
+      console.log(error);
+      logger.error(error);
       throw new ApiError(500, 'Failed to send password reset email. Please try again.');
     } 
   }

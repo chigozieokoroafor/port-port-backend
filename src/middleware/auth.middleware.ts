@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import AdminUser, { IAdminUser } from '../models/AdminUser.model';
 import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
@@ -30,8 +29,7 @@ export const protect = catchAsync(
 
     // Check for token in Authorization header
     if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
+      req.headers.authorization?.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
     }
@@ -93,8 +91,7 @@ export const optionalAuth = catchAsync(
     let token: string | undefined;
 
     if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
+      req.headers.authorization?.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1];
     }
@@ -114,6 +111,8 @@ export const optionalAuth = catchAsync(
       } catch (error) {
         // Token invalid, but that's okay for optional auth
         // Continue without attaching user
+        console.log(error);
+        throw new ApiError(401, 'Invalid token');
       }
     }
 
