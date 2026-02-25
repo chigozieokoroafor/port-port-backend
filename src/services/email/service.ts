@@ -72,6 +72,10 @@ export const emailVerification = async (user: IUser) =>{
   await transporter.sendMail(mailOptions);
 }
 
+/**
+ * Send password reset email
+ */
+
 export const sendResetPassword = async (user: IUser) =>{
   let hash = uuidv4();
   hash = hash.replace(/-/g, '');
@@ -142,26 +146,6 @@ export const sendInviteEmail = async (user: IUser, inviterName: string): Promise
     await transporter.sendMail(mailOptions);
 };
 
-/**
- * Send password reset email
- */
-export const sendPasswordResetEmail = async (params: PasswordResetEmailParams): Promise<void> => {
-    const { to } = params;
-    const template = passwordReset(params);
-
-    const mailOptions: Mail.Options = {
-        from: {
-            name: 'Port2Port',
-            address: process.env.SMTP_FROM_EMAIL as string,
-        },
-        to,
-        subject: template.subject,
-        text: template.text,
-        html: template.html,
-    };
-
-    await transporter.sendMail(mailOptions);
-};
 
 /**
  * Send quote request confirmation email
