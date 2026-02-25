@@ -6,6 +6,7 @@ import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { UserStatus } from '../models/enums/UserStatus.enum';
 import { emailVerification, sendResetPassword } from '../services/email.service';
+// !!!! Use from '../services/email/service' instead !!!!!!
 import Token from '../models/Token.model';
 import moment from 'moment';
 import logger from '../utils/logger';

@@ -21,11 +21,13 @@ const startServer = async () => {
     
     // Start server
     server = app.listen(PORT, () => {
+      const baseUrl = process.env.BACKEND_URL || 'http://localhost:' + PORT;
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : baseUrl + '/api';
       logger.info(`Server running in "${process.env.NODE_ENV}" mode on port ${PORT}`);
-      logger.info(`Backend URL: ${process.env.BACKEND_URL || `http://localhost:${PORT}`}`);
-      console.log(`\n🚀 Server is running!`);
-      console.log(`🌍 Backend URL: ${process.env.BACKEND_URL || `http://localhost:${PORT}`}`);
-      console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+      logger.info(`Backend URL: ${baseUrl}`);
+      console.log('\n🚀 Server is running!');
+      console.log(`🌍 Backend URL: ${apiUrl}`);
+      console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
       console.log(`📚 API: http://localhost:${PORT}/api\n`);
     });
   } catch (error) {
