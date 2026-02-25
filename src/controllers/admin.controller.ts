@@ -4,7 +4,7 @@ import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import User from '../models/User.model';
 import { UserStatus } from '../models/enums/UserStatus.enum';
-import { sendInviteMail } from '../services/email.service';
+import { sendInviteEmail } from '../services/email/service';
 
 /**
  * @desc    Invite new admin
@@ -38,7 +38,7 @@ export const inviteAdmin = catchAsync(async (req: Request, res: Response) => {
     });
 
     // Send invite email
-    await sendInviteMail(user);
+    await sendInviteEmail(user, req.user.getFullName());
 
     res.status(201).json({
         success: true,
@@ -283,7 +283,7 @@ export const resendInvite = catchAsync(async (req: Request, res: Response) => {
         throw new ApiError(400, 'Admin account is already active');
     }
 
-    const link = await sendInviteMail(admin);
+    const link = await sendInviteEmail(admin, req.user.getFullName());
 
     res.status(200).json({
         success: true,

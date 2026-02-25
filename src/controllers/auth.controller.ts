@@ -5,7 +5,7 @@ import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { UserStatus } from '../models/enums/UserStatus.enum';
-import { emailVerification, sendResetPassword } from '../services/email.service';
+import { emailVerification, sendResetPassword } from '../services/email/service';
 import Token from '../models/Token.model';
 import moment from 'moment';
 import logger from '../utils/logger';
