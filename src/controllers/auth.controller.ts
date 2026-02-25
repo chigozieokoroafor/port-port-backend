@@ -50,13 +50,10 @@ export const create = catchAsync(async (req: Request, res: Response) => {
     isSubscribedToNewsletter
   });
 
-  const link = await emailVerification(user);
-
   return res.status(200).json({
     success: true,
     message: 'User created successfully',
     data: {
-      link,
       user: {
         id: user._id,
         email: user.email,
@@ -367,14 +364,9 @@ export const forgotPassword = catchAsync(
 
 
     try {
-      // Send email
-      const link = await sendResetPassword(user);
 
       res.status(200).json({
         success: true,
-        data:{
-            link
-        },
         message: 'Password reset link sent to your email',
       });
     } catch (error) {
