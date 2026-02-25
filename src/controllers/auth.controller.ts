@@ -370,7 +370,6 @@ export const forgotPassword = catchAsync(
         message: 'Password reset link sent to your email',
       });
     } catch (error) {
-      console.log(error);
       logger.error(error);
       throw new ApiError(500, 'Failed to send password reset email. Please try again.');
     } 
