@@ -5,8 +5,7 @@ import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { UserStatus } from '../models/enums/UserStatus.enum';
-import { emailVerification, sendResetPassword } from '../services/email.service';
-// !!!! Use from '../services/email/service' instead !!!!!!
+import { emailVerification, sendResetPassword } from '../services/email/service';
 import Token from '../models/Token.model';
 import moment from 'moment';
 import logger from '../utils/logger';
@@ -51,13 +50,10 @@ export const create = catchAsync(async (req: Request, res: Response) => {
     isSubscribedToNewsletter
   });
 
-  const link = await emailVerification(user);
-
   return res.status(200).json({
     success: true,
     message: 'User created successfully',
     data: {
-      link,
       user: {
         id: user._id,
         email: user.email,
@@ -368,18 +364,12 @@ export const forgotPassword = catchAsync(
 
 
     try {
-      // Send email
-      const link = await sendResetPassword(user);
 
       res.status(200).json({
         success: true,
-        data:{
-            link
-        },
         message: 'Password reset link sent to your email',
       });
     } catch (error) {
-      console.log(error);
       logger.error(error);
       throw new ApiError(500, 'Failed to send password reset email. Please try again.');
     } 

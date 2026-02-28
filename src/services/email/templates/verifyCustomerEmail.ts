@@ -1,15 +1,13 @@
-interface PasswordResetEmailParams {
-    to: string;
-    firstName: string;
-    resetUrl: string;
-}
+import { TokenType } from "../../../models/enums/TokenType.enum";
+import { EmailParams } from "../../../models/interfaces/Email.interface";
 
-export const passwordReset = (params: PasswordResetEmailParams) => {
-    const {  firstName, resetUrl } = params;
+
+export const verifyCustomerEmail = (params: EmailParams) => {
+    const { firstName, inviteUrl } = params;
     
     return {
-        subject: 'Password Reset Request - Port2Port',
-        text: `Hi ${firstName},\n\nWe received a request to reset your password.\n\nPlease click the link below to reset your password:\n${resetUrl}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this email.\n\nBest regards,\nPort2Port Team`,
+        subject: TokenType.EmailVerification,
+        text: `Hi ${firstName},\n\n Welcome to Port2Port. Please click the link below to verify your account:\n${inviteUrl}\n\nThis link will expire in 30 minutes.\n\nBest regards,\nPort2Port Team`,
         html: `
             <!DOCTYPE html>
             <html>
@@ -26,7 +24,7 @@ export const passwordReset = (params: PasswordResetEmailParams) => {
                             padding: 20px;
                         }
                         .header {
-                            background-color: #dc3545;
+                            background-color: #0066cc;
                             color: white;
                             padding: 20px;
                             text-align: center;
@@ -35,10 +33,17 @@ export const passwordReset = (params: PasswordResetEmailParams) => {
                             padding: 20px;
                             background-color: #f9f9f9;
                         }
+                        .credentials {
+                            background-color: #fff;
+                            padding: 15px;
+                            border-left: 4px solid #0066cc;
+                            margin: 20px 0;
+                            font-family: 'Courier New', monospace;
+                        }
                         .button {
                             display: inline-block;
                             padding: 12px 24px;
-                            background-color: #dc3545;
+                            background-color: #0066cc;
                             color: white;
                             text-decoration: none;
                             border-radius: 5px;
@@ -61,35 +66,28 @@ export const passwordReset = (params: PasswordResetEmailParams) => {
                 <body>
                     <div class="container">
                         <div class="header">
-                            <h2>🔐 Password Reset Request</h2>
+                            <h2>Port2Port Admin Invitation</h2>
                         </div>
                         <div class="content">
+
                             <h3>Hi ${firstName},</h3>
 
-                            <p>We received a request to reset your password for your Port2Port admin account.</p>
-                            
-                            <p>Click the button below to reset your password:</p>
+                            <p>Click the button below to verify your account:</p>
 
                             <p style="text-align: center;">
-                                <a href="${resetUrl}" class="button">Reset Password</a>
+                                <a href="${inviteUrl}" class="button">Verify</a>
                             </p>
-
-                            <p>Or copy and paste this link into your browser:</p>
                             
-                            <p style="word-break: break-all;">${resetUrl}</p>
+                            <p>Or copy and paste this link into your browser:</p>
 
-                            <div class="warning">
-                                <p><strong>⚠️ Important:</strong></p>
-                                <ul>
-                                    <li>This link will expire in <strong>1 hour</strong></li>
-                                    <li>If you didn't request this password reset, please ignore this email</li>
-                                    <li>Your password will remain unchanged unless you click the link above</li>
-                                </ul>
-                            </div>
+                            <p style="word-break: break-all;">${inviteUrl}</p>
+                            
+                            <p><strong>Note:</strong> This verification link will expire in 30 minutes.</p>
+                        
                         </div>
                         <div class="footer">
                             <p>© ${new Date().getFullYear()} Port2Port. All rights reserved.</p>
-                            <p>This is an automated email, please do not reply.</p>
+                            <p>If you didn't expect this invitation, please ignore this email.</p>
                         </div>
                     </div>
                 </body>

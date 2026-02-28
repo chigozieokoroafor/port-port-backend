@@ -5,6 +5,13 @@ import { passwordReset } from './templates/passwordReset';
 import { quoteConfirmation } from './templates/generateQuote';
 import { sentQuote } from './templates/sentQuote';
 import { paymentConfirmation } from './templates/paymentConfirmation';
+import { v4 as uuidv4 } from 'uuid';
+import { IUser } from '../../models/User.model';
+import moment from 'moment';
+import Token from '../../models/Token.model';
+import { TokenType } from '../../models/enums/TokenType.enum';
+import { EmailParams } from '../../models/interfaces/Email.interface';
+import { verifyCustomerEmail } from './templates/verifyCustomerEmail';
 
 interface InviteEmailParams {
     to: string;
@@ -31,39 +38,106 @@ interface QuoteEmailParams {
 }
 
 /**
- * Send invite email to new admin
+ * Send verification mail to
  */
-export const sendInviteEmail = async (params: InviteEmailParams): Promise<void> => {
-    const { to } = params;
-    const template = inviteEmail(params);
 
-    const mailOptions: Mail.Options = {
+export const emailVerification = async (user: IUser) =>{
+  let hash = uuidv4();
+  hash = hash.replace(/-/g, '');
+  const expiresIn = moment().add(30, 'minutes').format();
+  const token = await Token.create({
+    user: user._id,
+    hash,
+    expiresIn,
+    type: TokenType.EmailVerification
+  });
+  const link = `${process.env.FRONTEND_URL}/verify?token=${token.hash}`
+  const verifyParam: EmailParams = {
+    to: user.email,
+    firstName: user.firstName,
+    inviteUrl: link
+  }
+  const template = verifyCustomerEmail(verifyParam);
+
+  const mailOptions: Mail.Options = {
         from: {
             name: 'Port2Port',
             address: process.env.SMTP_FROM_EMAIL as string,
         },
-        to,
+        to:user.email,
         subject: template.subject,
         text: template.text,
         html: template.html,
     };
-
-    await transporter.sendMail(mailOptions);
-};
+  await transporter.sendMail(mailOptions);
+}
 
 /**
  * Send password reset email
  */
-export const sendPasswordResetEmail = async (params: PasswordResetEmailParams): Promise<void> => {
-    const { to } = params;
-    const template = passwordReset(params);
 
+export const sendResetPassword = async (user: IUser) =>{
+  let hash = uuidv4();
+  hash = hash.replace(/-/g, '');
+  const expiresIn = moment().add(15, 'minutes').format();
+  const token = await Token.create({
+    user: user._id,
+    hash,
+    expiresIn,
+    type: TokenType.ResetPassword
+  });
+  const link = `${process.env.FRONTEND_URL}/update-password?token=${token.hash}`
+  const resetParam: PasswordResetEmailParams = {
+    to: user.email,
+    firstName: user.firstName,
+    resetUrl: link
+  }
+  const template = passwordReset(resetParam);
+
+  const mailOptions: Mail.Options = {
+        from: {
+            name: 'Port2Port',
+            address: process.env.SMTP_FROM_EMAIL as string,
+        },
+        to:user.email,
+        subject: template.subject,
+        text: template.text,
+        html: template.html,
+    };
+  await transporter.sendMail(mailOptions);
+}
+
+/**
+ * Send invite email to new admin
+ */
+
+export const sendInviteEmail = async (user: IUser, inviterName: string): Promise<void> => {
+
+     let hash = uuidv4();
+      hash = hash.replace(/-/g, '');
+      const expiresIn = moment().add(15, 'minutes').format();
+      const token = await Token.create({
+        user: user._id,
+        hash,
+        expiresIn,
+        type: TokenType.InviteUser
+      });
+
+       const link = `${process.env.FRONTEND_URL}/activate/${token.hash}`
+  const inviteParam: InviteEmailParams = {
+    to: user.email,
+    firstName: user.firstName,
+    inviteUrl: link,
+    inviterName
+  }
+  const template = inviteEmail(inviteParam);
+  
     const mailOptions: Mail.Options = {
         from: {
             name: 'Port2Port',
             address: process.env.SMTP_FROM_EMAIL as string,
         },
-        to,
+        to: user.email,
         subject: template.subject,
         text: template.text,
         html: template.html,
@@ -71,6 +145,7 @@ export const sendPasswordResetEmail = async (params: PasswordResetEmailParams): 
 
     await transporter.sendMail(mailOptions);
 };
+
 
 /**
  * Send quote request confirmation email
