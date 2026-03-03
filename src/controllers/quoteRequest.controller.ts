@@ -3,7 +3,7 @@ import QuoteRequest from '../models/QuoteRequest.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { generateReferenceId } from '../utils/helper';
-import { sendQuoteConfirmationEmail } from '../services/email.service';
+ import { sendQuoteConfirmationEmail } from '../services/email/service'
 
 /**
  * @desc    Submit quote request
@@ -19,14 +19,14 @@ export const submitQuoteRequest = catchAsync(
 
         // Create quote request
         const quoteRequest = await QuoteRequest.create({
+            user: req.user?._id,
             referenceId,
             customer,
             vehicle,
-            route,
-            status: 'new',
+            route
         });
 
-        // Send confirmation email to customer
+       //Send confirmation email to customer
         try {
             await sendQuoteConfirmationEmail(
                 customer.email,
@@ -49,6 +49,7 @@ export const submitQuoteRequest = catchAsync(
         });
     }
 );
+
 
 /**
  * @desc    Track quote status by reference ID

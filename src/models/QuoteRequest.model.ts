@@ -1,8 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { Status } from './enums/Status.enum';
+import { VehicleType } from './enums/VehicleType.enum';
+import { VehicleCondition } from './enums/VehicleCondition.enum';
 
 export interface IQuoteRequest extends Document {
     referenceId: string;
-    
+    user: mongoose.Types.ObjectId;
     customer: {
         fullName: string;
         email: string;
@@ -11,7 +14,7 @@ export interface IQuoteRequest extends Document {
     };
     
     vehicle: {
-        type: 'car' | 'suv' | 'truck' | 'machinery' | 'motorhome' | 'other';
+        type: VehicleType;
         make: string;
         model: string;
         year: number;
@@ -22,7 +25,7 @@ export interface IQuoteRequest extends Document {
         height: number;
         };
         weight: number;
-        condition: 'running' | 'non-running';
+        condition: VehicleCondition;
     };
     
     route: {
@@ -33,15 +36,26 @@ export interface IQuoteRequest extends Document {
         preferredShippingDate?: Date;
     };
     
-    status: 'new' | 'reviewed' | 'quoted' | 'paid' | 'in-transit' | 'delivered' | 'cancelled';
+    status: Status;
     notes?: string;
     
+    reviewedByUserId: mongoose.Types.ObjectId;
+    reviewedBy: string;
+    reviewedDate: Date;
     createdAt: Date;
     updatedAt: Date;
 }
 
 const quoteRequestSchema = new Schema<IQuoteRequest>(
     {
+        user: {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        reviewedByUserId: {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
         referenceId: {
             type: String,
             required: true,
@@ -74,7 +88,7 @@ const quoteRequestSchema = new Schema<IQuoteRequest>(
         vehicle: {
             type: {
                 type: String,
-                enum: ['car', 'suv', 'truck', 'machinery', 'motorhome', 'other'],
+                enum: VehicleType,
                 required: [true, 'Vehicle type is required'],
             },
             make: {
@@ -123,7 +137,7 @@ const quoteRequestSchema = new Schema<IQuoteRequest>(
             },
             condition: {
                 type: String,
-                enum: ['running', 'non-running'],
+                enum: VehicleCondition,
                 required: [true, 'Vehicle condition is required'],
             },
         },
@@ -154,13 +168,15 @@ const quoteRequestSchema = new Schema<IQuoteRequest>(
         },
         status: {
             type: String,
-            enum: ['new', 'reviewed', 'quoted', 'paid', 'in-transit', 'delivered', 'cancelled'],
-            default: 'new',
+            enum: Status,
+            default: Status.Pending,
         },
         notes: {
             type: String,
             trim: true,
         },
+        reviewedBy: String,
+        reviewedDate: Date
     },
     {
         timestamps: true,

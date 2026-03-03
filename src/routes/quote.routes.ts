@@ -12,6 +12,8 @@ import {
   getQuoteById,
   sendQuote,
   getAllQuotes,
+  approveQuoteRequest,
+  rejectQuoteRequest,
 } from '../controllers/quote.controller';
 import {
   validateGenerateQuote,
@@ -24,26 +26,21 @@ const router = Router();
 router.use(protect);
 router.use(restrictToAdmin);
 
-/**
- * @route   GET /api/admin/quotes/requests
- * @desc    List all quote requests with filters
- * @access  Admin
- */
-router.get('/requests', getAllQuoteRequests);
 
 /**
- * @route   GET /api/admin/quotes/requests/:id
- * @desc    Get specific quote request details
+ * @route   PATCH /api/admin/quotes/requests/approve/:id
+ * @desc    Approve Quote Request
  * @access  Admin
  */
-router.get('/requests/:id', getQuoteRequestById);
+router.patch('/requests/approve/:id', validateUpdateStatus, validate, approveQuoteRequest);
 
 /**
- * @route   PUT /api/admin/quotes/requests/:id/status
- * @desc    Update quote request status
+ * @route   PATCH /api/admin/quotes/requests/reject/:id
+ * @desc    Reject Quote Request
  * @access  Admin
  */
-router.put('/requests/:id/status', validateUpdateStatus, validate, updateQuoteRequestStatus);
+router.patch('/requests/reject/:id', validateUpdateStatus, validate, rejectQuoteRequest);
+
 
 /**
  * @route   DELETE /api/admin/quotes/requests/:id
