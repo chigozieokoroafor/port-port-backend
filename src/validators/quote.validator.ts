@@ -1,4 +1,6 @@
 import { body, param } from 'express-validator';
+import { VehicleType } from '../models/enums/VehicleType.enum';
+import { VehicleCondition } from '../models/enums/VehicleCondition.enum';
 
 /**
  * Validate quote request submission
@@ -35,7 +37,7 @@ export const validateQuoteRequest = [
     body('vehicle.type')
         .notEmpty()
         .withMessage('Vehicle type is required')
-        .isIn(['car', 'suv', 'truck', 'machinery', 'motorhome', 'other'])
+        .isIn(Object.values(VehicleType)) 
         .withMessage('Invalid vehicle type'),
     
     body('vehicle.make')
@@ -82,7 +84,7 @@ export const validateQuoteRequest = [
     body('vehicle.condition')
         .notEmpty()
         .withMessage('Vehicle condition is required')
-        .isIn(['running', 'non-running'])
+        .isIn(Object.values(VehicleCondition)) 
         .withMessage('Condition must be either running or non-running'),
     
     // Route information
@@ -251,12 +253,6 @@ export const validateUpdateStatus = [
     param('id')
         .isMongoId()
         .withMessage('Invalid quote request ID'),
-    
-    body('status')
-        .notEmpty()
-        .withMessage('Status is required')
-        .isIn(['new', 'reviewed', 'quoted', 'paid', 'in-transit', 'delivered', 'cancelled'])
-        .withMessage('Invalid status value'),
     
     body('notes')
         .optional()

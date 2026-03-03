@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import { connectDB } from '../config/database';
 import AdminUser from '../models/AdminUser.model';
 import logger from '../utils/logger';
+import User from '../models/User.model';
+import { UserType } from '../models/enums/UserType.enum';
 
 const seedSuperAdmin = async () => {
   try {
@@ -17,19 +19,19 @@ const seedSuperAdmin = async () => {
       throw new Error('SUPERADMIN_EMAIL and SUPERADMIN_PASSWORD must be set in .env');
     }
 
-    const existingAdmin = await AdminUser.findOne({ email });
+    const existingAdmin = await User.findOne({ email });
 
     if (existingAdmin) {
       logger.info('SuperAdmin already exists');
       process.exit(0);
     }
 
-    await AdminUser.create({
+    await User.create({
       email,
       password: password,
       firstName: 'Super',
       lastName: 'Admin',
-      role: 'superadmin',
+      role: UserType.SuperAdmin,
       status: 'active',
     });
 

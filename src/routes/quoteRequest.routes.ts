@@ -6,8 +6,11 @@ import {
   submitQuoteRequest,
   trackQuoteRequest,
 } from '../controllers/quoteRequest.controller';
+import { getAllQuoteRequests, getQuoteRequestById } from '../controllers/quote.controller';
+import { protect } from '../middleware/auth.middleware';
 
 const router = Router();
+router.use(protect);
 
 /**
  * @route   POST /api/quotes/request
@@ -23,5 +26,19 @@ router.post('/request', rateLimiter({ windowMs: 60 * 60 * 1000, max: 5 }),  vali
  * @access  Public
  */
 router.get('/track/:referenceId', trackQuoteRequest);
+
+/**
+ * @route   GET /api/quotes/requests
+ * @desc    List all quote requests with filters
+ * @access  Public
+ */
+router.get('/requests', getAllQuoteRequests);
+
+/**
+ * @route   GET /api/quotes/requests/:id
+ * @desc    Get specific quote request details
+ * @access  Public
+ */
+router.get('/requests/:id', getQuoteRequestById);
 
 export default router;
