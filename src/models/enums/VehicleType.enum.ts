@@ -1,12 +1,8 @@
 export enum VehicleType{
-    Car = "Cars & SUVs",
-    SUV = 'Suv',
-    Truck = "Trucks & Motorhomes",
-    Others = 'Others',
-    // "Cars & SUVs"Cars & SUVs",
-    // "Vans",
-    // "Trucks & Motorhomes",
-    // "Trailers",
-    // "Wheeled Equipment (Agricultural Equipment)",
-    // "Others"
+    CarsAndSuvs = "Cars & SUVs",
+    Vans = "Vans",
+    TruckAndMotorhomes = "Trucks & Motorhomes",
+    Trailers = "Trailers",
+    WheeledEquipment = "Wheeled Equipment(Agricultural Equipment)",
+    Others = 'Others'
 }
