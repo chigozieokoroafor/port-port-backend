@@ -5,7 +5,7 @@ import TokenBlacklist from '../models/TokenBlacklist.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { UserStatus } from '../models/enums/UserStatus.enum';
-import { emailVerification, sendResetPassword } from '../services/email/service';
+import { emailVerification, sendResetPassword, sendChangeConfirmation} from '../services/email/service';
 import Token from '../models/Token.model';
 import moment from 'moment';
 import logger from '../utils/logger';
@@ -49,6 +49,8 @@ export const create = catchAsync(async (req: Request, res: Response) => {
     isAgreedToTermsAndConditions,
     isSubscribedToNewsletter
   });
+
+  emailVerification(user)
 
   return res.status(200).json({
     success: true,
@@ -330,6 +332,8 @@ export const changePassword = catchAsync(
     user.password = newPassword;
     await user.save();
 
+    sendChangeConfirmation(user);
+
     res.status(200).json({
       success: true,
       message: 'Password changed successfully',
@@ -353,7 +357,7 @@ export const forgotPassword = catchAsync(
       // Don't reveal that user doesn't exist for security
       return res.status(200).json({
         success: true,
-        message: 'If an account exists with this email, a password reset link has been sent',
+        message: 'Password reset link sent to your email. Check your inbox',
       });
     }
 
@@ -362,12 +366,12 @@ export const forgotPassword = catchAsync(
       throw new ApiError(403, 'Account is not active');
     }
 
-
     try {
+      sendResetPassword(user);
 
       res.status(200).json({
         success: true,
-        message: 'Password reset link sent to your email',
+        message: 'Password reset link sent to your email. Check your inbox',
       });
     } catch (error) {
       logger.error(error);

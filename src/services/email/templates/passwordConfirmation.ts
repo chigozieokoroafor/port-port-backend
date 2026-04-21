@@ -4,7 +4,7 @@ interface PasswordResetEmailParams {
     resetUrl: string;
 }
 
-export const passwordReset = (params: PasswordResetEmailParams) => {
+export const passwordConfirmation = (params: PasswordResetEmailParams) => {
     const {  firstName, resetUrl } = params;
     
     return {
@@ -66,26 +66,20 @@ export const passwordReset = (params: PasswordResetEmailParams) => {
                         <div class="content">
                             <h3>Hi ${firstName},</h3>
 
-                            <p>We received a request to reset your password for your Port2Port account.</p>
+                            <p>We are sending this mail to confirm the password for your Port2Port account has been changed.</p>
                             
-                            <p>Click the button below to reset your password:</p>
+                            <p>If you did not make this change, Contact our 
+                            <a href="mailto:help@p2p.com">support team </a> 
+                            as soon as possible. Otherwise you may go to your dashboard to continue with your activities with us
+                            </p>
 
                             <p style="text-align: center;">
-                                <a href="${resetUrl}" class="button">Reset Password</a>
+                                <a href="${resetUrl}" class="button">Go to Dashboard</a>
                             </p>
 
                             <p>Or copy and paste this link into your browser:</p>
                             
                             <p style="word-break: break-all;">${resetUrl}</p>
-
-                            <div class="warning">
-                                <p><strong>⚠️ Important:</strong></p>
-                                <ul>
-                                    <li>This link will expire in <strong>1 hour</strong></li>
-                                    <li>If you didn't request this password reset, please ignore this email</li>
-                                    <li>Your password will remain unchanged unless you click the link above</li>
-                                </ul>
-                            </div>
                         </div>
                         <div class="footer">
                             <p>© ${new Date().getFullYear()} Port2Port. All rights reserved.</p>

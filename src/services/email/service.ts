@@ -12,6 +12,7 @@ import Token from '../../models/Token.model';
 import { TokenType } from '../../models/enums/TokenType.enum';
 import { EmailParams } from '../../models/interfaces/Email.interface';
 import { verifyCustomerEmail } from './templates/verifyCustomerEmail';
+import { passwordConfirmation } from './templates/passwordConfirmation';
 
 interface InviteEmailParams {
     to: string;
@@ -86,7 +87,7 @@ export const sendResetPassword = async (user: IUser) =>{
     expiresIn,
     type: TokenType.ResetPassword
   });
-  const link = `${process.env.FRONTEND_URL}/update-password?token=${token.hash}`
+  const link = `${process.env.FRONTEND_URL}/reset-password?token=${token.hash}`
   const resetParam: PasswordResetEmailParams = {
     to: user.email,
     firstName: user.firstName,
@@ -105,6 +106,30 @@ export const sendResetPassword = async (user: IUser) =>{
         html: template.html,
     };
   await transporter.sendMail(mailOptions);
+}
+/**
+ * Send password change 
+*/
+export const sendChangeConfirmation = async (user: IUser) =>{
+    const link = `${process.env.FRONTEND_URL}/user/dashboard`
+    const confirmParam: PasswordResetEmailParams = {
+        to: user.email,
+        firstName: user.firstName,
+        resetUrl: link
+    }
+    const template = passwordConfirmation(confirmParam);
+
+    const mailOptions: Mail.Options = {
+            from: {
+                name: 'Port2Port',
+                address: process.env.SMTP_FROM_EMAIL as string,
+            },
+            to:user.email,
+            subject: template.subject,
+            text: template.text,
+            html: template.html,
+        };
+    await transporter.sendMail(mailOptions);
 }
 
 /**
