@@ -2,10 +2,7 @@ import { Router } from 'express';
 import { validateQuoteRequest } from '../validators/quote.validator';
 import { validate } from '../middleware/validate.middleware';
 import { rateLimiter } from '../middleware/rateLimiter.middleware';
-import {
-  submitQuoteRequest,
-  trackQuoteRequest,
-} from '../controllers/quoteRequest.controller';
+import { submitQuoteRequest, trackQuoteRequest, getUserQuoteRequests } from '../controllers/quoteRequest.controller';
 import { getAllQuoteRequests, getQuoteRequestById } from '../controllers/quote.controller';
 import { protect } from '../middleware/auth.middleware';
 
@@ -33,6 +30,14 @@ router.get('/track/:referenceId', trackQuoteRequest);
  * @access  Public
  */
 router.get('/requests', getAllQuoteRequests);
+
+/**
+ * @route   GET /api/quotes/requests/user/:userId
+ * @desc    List all quote requests with filters for current user
+ * @access  Public
+ */
+router.get('/requests/user/:userId', getUserQuoteRequests);
+
 
 /**
  * @route   GET /api/quotes/requests/:id

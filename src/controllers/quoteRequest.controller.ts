@@ -93,3 +93,104 @@ export const trackQuoteRequest = catchAsync(
         });
     }
 );
+
+/**
+ * @desc    Get Quote request by ID 
+ * @route   GET /api/quotes/requests/:id
+ * @access  User 
+ */
+export const getQuoteRequestById = catchAsync(
+    async (req: Request, res: Response) => {
+
+        const quoteRequest = await QuoteRequest.findById(req.params.id);
+
+        if (!quoteRequest) {
+            throw new ApiError(404, 'Quote request not found');
+        }
+
+        res.status(200).json({
+            success: true,
+            data: {
+                quoteRequest,
+            },
+        });
+    }
+)
+
+/**
+ * @desc    Get Quote requests by User ID 
+ * @route   GET /api/quotes/requests/user/:userId
+ * @access  User 
+ */
+export const getUserQuoteRequests = catchAsync(
+    async (req: Request, res: Response) => {
+        const { userId: requestedUserId } = req.params;
+        const userId = req.user?._id;
+
+        if (userId?.toString() !== requestedUserId) {
+            throw new ApiError(400, 'You cannot view other users quote requests');
+        }
+
+        const quoteRequests = await QuoteRequest.find({ user: userId }).sort({ createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            data: {
+                quoteRequests,
+            },
+        });
+    }
+)
+
+
+/**
+ * @desc    Update Quote request 
+ * @route   PUT /api/quotes/requests/:id
+ * @access  User 
+ */
+export const updateQuoteRequest = catchAsync(
+    async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const { customer, vehicle, route } = req.body;
+
+        const quoteRequest = await QuoteRequest.findByIdAndUpdate(id, {
+            customer,
+            vehicle,
+            route,
+        }, { new: true });
+
+        if (!quoteRequest) {
+            throw new ApiError(404, 'Quote request not found');
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Quote request updated successfully',
+            data: {
+                quoteRequest,
+            },
+        });
+    }
+)
+
+/**
+ * @desc    Delete Quote request 
+ * @route   DELETE /api/quotes/requests/:id
+ * @access  User 
+ */
+export const deleteQuoteRequest = catchAsync(
+    async (req: Request, res: Response) => {
+        const { id } = req.params;
+
+        const quoteRequest = await QuoteRequest.findByIdAndDelete(id);
+
+        if (!quoteRequest) {
+            throw new ApiError(404, 'Quote request not found');
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Quote request deleted successfully',
+        });
+    }
+)

@@ -84,6 +84,29 @@ export const getAllQuoteRequests = catchAsync(
 );
 
 /**
+ * @desc    List all quote requests with filters for current user
+ * @route   GET /api/quotes/requests/user/:userId   
+ * @access  User
+ */
+export const getUserQuoteRequests = catchAsync(
+    async (req: Request, res: Response) => {
+        const { userId: requestedUserId} = req.params;
+        if(requestedUserId !== req.user?._id?.toString()){
+            throw new ApiError(400, 'You cannot view other users quote requests');
+        }
+
+        const requests = await QuoteRequest.find({
+            user: req.user?._id
+        }).sort({ createdAt: -1 });
+        
+        res.status(200).json({
+            success: true,
+            data: requests,
+        });
+    }
+)   
+
+/**
  * @desc    Get specific quote request details
  * @route   GET /api/admin/quotes/requests/:id
  * @access  Admin

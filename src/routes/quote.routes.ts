@@ -3,9 +3,6 @@ import { protect } from '../middleware/auth.middleware';
 import { restrictToAdmin } from '../middleware/roleCheck.middleware';
 import { validate } from '../middleware/validate.middleware';
 import {
-  getAllQuoteRequests,
-  getQuoteRequestById,
-  updateQuoteRequestStatus,
   deleteQuoteRequest,
   generateQuote,
   updateQuote,
