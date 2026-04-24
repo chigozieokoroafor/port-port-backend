@@ -25,12 +25,12 @@ export const getAllQuoteRequests = catchAsync(
             isCustomer
         } = req.query;
 
-        if(!isCustomer && req.user?.role === UserType.Customer){
+        if (!isCustomer && req.user?.role === UserType.Customer) {
             throw new ApiError(400, 'Cannot view Quote requests. Invalid user role');
         }
         // Build filter
         const filter: any = {};
-         
+
         if (status) {
             filter.status = status;
         }
@@ -49,8 +49,8 @@ export const getAllQuoteRequests = catchAsync(
             if (startDate) filter.createdAt.$gte = new Date(startDate as string);
             if (endDate) filter.createdAt.$lte = new Date(endDate as string);
         }
-       
-        if(isCustomer){
+
+        if (isCustomer) {
             filter.user = req.user?._id
         }
 
@@ -64,9 +64,9 @@ export const getAllQuoteRequests = catchAsync(
 
         // Get requests
         const requests = await QuoteRequest.find(filter)
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limitNum);
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limitNum);
 
         res.status(200).json({
             success: true,
@@ -82,29 +82,6 @@ export const getAllQuoteRequests = catchAsync(
         });
     }
 );
-
-/**
- * @desc    List all quote requests with filters for current user
- * @route   GET /api/quotes/requests/user/:userId   
- * @access  User
- */
-export const getUserQuoteRequests = catchAsync(
-    async (req: Request, res: Response) => {
-        const { userId: requestedUserId} = req.params;
-        if(requestedUserId !== req.user?._id?.toString()){
-            throw new ApiError(400, 'You cannot view other users quote requests');
-        }
-
-        const requests = await QuoteRequest.find({
-            user: req.user?._id
-        }).sort({ createdAt: -1 });
-        
-        res.status(200).json({
-            success: true,
-            data: requests,
-        });
-    }
-)   
 
 /**
  * @desc    Get specific quote request details
@@ -177,7 +154,7 @@ export const approveQuoteRequest = catchAsync(
     async (req: Request, res: Response) => {
         const { id } = req.params;
 
-        if(!req.user){
+        if (!req.user) {
             throw new ApiError(400, 'User not authenticated');
         }
 
@@ -187,10 +164,10 @@ export const approveQuoteRequest = catchAsync(
             throw new ApiError(404, 'Quote request not found');
         }
 
-        if(request.status != Status.Pending){
+        if (request.status != Status.Pending) {
             throw new ApiError(400, `Quote request has been ${request.status}`)
         }
-       
+
         request.status = Status.Approved;
         request.reviewedByUserId = req.user._id;
         request.reviewedBy = req.user.getFullName();
@@ -215,7 +192,7 @@ export const rejectQuoteRequest = catchAsync(
     async (req: Request, res: Response) => {
         const { id } = req.params;
 
-        if(!req.user){
+        if (!req.user) {
             throw new ApiError(400, 'User not authenticated');
         }
 
@@ -225,7 +202,7 @@ export const rejectQuoteRequest = catchAsync(
             throw new ApiError(404, 'Quote request not found');
         }
 
-        if(request.status != Status.Pending){
+        if (request.status != Status.Pending) {
             throw new ApiError(400, `Quote request has been ${request.status}`)
         }
 
@@ -320,7 +297,7 @@ export const generateQuote = catchAsync(
         });
 
         // Update request status
-       // request.status = 'quoted';
+        // request.status = 'quoted';
         await request.save();
 
         res.status(201).json({
@@ -383,8 +360,8 @@ export const getQuoteById = catchAsync(
         const { id } = req.params;
 
         const quote = await Quote.findById(id)
-        .populate('quoteRequestId')
-        .populate('generatedBy', 'firstName lastName email');
+            .populate('quoteRequestId')
+            .populate('generatedBy', 'firstName lastName email');
 
         if (!quote) {
             throw new ApiError(404, 'Quote not found');
@@ -468,21 +445,21 @@ export const getAllQuotes = catchAsync(
 
         // Get quotes
         const quotes = await Quote.find(filter)
-        .populate('quoteRequestId', 'referenceId customer vehicle')
-        .populate('generatedBy', 'firstName lastName')
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limitNum);
+            .populate('quoteRequestId', 'referenceId customer vehicle')
+            .populate('generatedBy', 'firstName lastName')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limitNum);
 
         res.status(200).json({
             success: true,
             data: {
                 quotes,
                 pagination: {
-                page: pageNum,
-                limit: limitNum,
-                total,
-                pages: Math.ceil(total / limitNum),
+                    page: pageNum,
+                    limit: limitNum,
+                    total,
+                    pages: Math.ceil(total / limitNum),
                 },
             },
         });
