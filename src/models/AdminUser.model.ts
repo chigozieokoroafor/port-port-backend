@@ -32,7 +32,7 @@ const adminUserSchema = new Schema<IAdminUser>(
             lowercase: true,
             trim: true,
             match: [
-                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
                 'Please provide a valid email address',
             ],
         },
@@ -117,11 +117,7 @@ adminUserSchema.pre('save', async function () {
 adminUserSchema.methods.comparePassword = async function (
     candidatePassword: string
 ): Promise<boolean> {
-    try {
-        return await bcrypt.compare(candidatePassword, this.password);
-    } catch (error) {
-        throw new Error('Password comparison failed');
-    }
+    return await bcrypt.compare(candidatePassword, this.password);
 };
 
 // Instance method to get full name

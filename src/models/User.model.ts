@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { IAdminUser } from './AdminUser.model';
+// import { IAdminUser } from './AdminUser.model';
 import { UserStatus } from './enums/UserStatus.enum';
 import { UserType } from './enums/UserType.enum';
 
@@ -20,8 +20,8 @@ export interface IUser extends Document {
     lastLogin?: Date;
     createdAt: Date;
     updatedAt: Date;
-    isSubscribedToNewsletter: Boolean;
-    isAgreedToTermsAndConditions: Boolean;
+    isSubscribedToNewsletter: boolean;
+    isAgreedToTermsAndConditions: boolean;
     
     comparePassword(candidatePassword: string): Promise<boolean>;
     getFullName(): string;
@@ -37,7 +37,7 @@ const userSchema = new Schema<IUser>(
             lowercase: true,
             trim: true,
             match: [
-                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
                 'Please provide a valid email address',
             ],
         },
@@ -130,11 +130,7 @@ userSchema.pre('save', async function () {
 userSchema.methods.comparePassword = async function (
     candidatePassword: string
 ): Promise<boolean> {
-    try {
-        return await bcrypt.compare(candidatePassword, this.password);
-    } catch (error) {
-        throw new Error('Password comparison failed');
-    }
+    return await bcrypt.compare(candidatePassword, this.password);
 };
 
 // Instance method to get full name

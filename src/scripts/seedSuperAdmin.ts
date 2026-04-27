@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import mongoose from 'mongoose';
 import { connectDB } from '../config/database';
-import AdminUser from '../models/AdminUser.model';
 import logger from '../utils/logger';
 import User from '../models/User.model';
+import { UserStatus } from '../models/enums/UserStatus.enum';
 import { UserType } from '../models/enums/UserType.enum';
 
 const seedSuperAdmin = async () => {
@@ -29,10 +28,13 @@ const seedSuperAdmin = async () => {
     await User.create({
       email,
       password: password,
+      tempPassword: password,
       firstName: 'Super',
       lastName: 'Admin',
       role: UserType.SuperAdmin,
-      status: 'active',
+      status: UserStatus.Active,
+      isSubscribedToNewsletter: true,
+      isAgreedToTermsAndConditions: true,
     });
 
     logger.info('SuperAdmin created successfully');
