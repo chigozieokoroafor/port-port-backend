@@ -11,6 +11,7 @@ import {
   getAllQuotes,
   approveQuoteRequest,
   rejectQuoteRequest,
+  getQuoteRequestById
 } from '../controllers/quote.controller';
 import {
   validateGenerateQuote,
@@ -66,6 +67,13 @@ router.get('/', getAllQuotes);
  * @access  Admin
  */
 router.get('/:id', getQuoteById);
+
+/**
+ * @route   GET /api/admin/quotes/request/:id
+ * @desc    Get quote details
+ * @access  Admin
+ */
+router.get('/request/:id', getQuoteRequestById);
 
 /**
  * @route   PUT /api/admin/quotes/:id

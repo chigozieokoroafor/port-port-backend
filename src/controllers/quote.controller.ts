@@ -91,9 +91,7 @@ export const getAllQuoteRequests = catchAsync(
 export const getQuoteRequestById = catchAsync(
     async (req: Request, res: Response) => {
         const { id } = req.params;
-
-        const request = await QuoteRequest.findById(id);
-
+        const request = await QuoteRequest.findOne({ _id: id });
         if (!request) {
             throw new ApiError(404, 'Quote request not found');
         }

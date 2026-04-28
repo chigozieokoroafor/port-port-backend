@@ -28,7 +28,7 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
 router.use('/quotes', quoteRequestRoutes);
-router.use('/quotes/admin', quoteRoutes);
+router.use('/admin/quotes', quoteRoutes);
 // router.use('/payments', paymentRoutes);
 // router.use('/shipments', shipmentRoutes);
 // router.use('/documents', documentRoutes);

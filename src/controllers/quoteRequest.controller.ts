@@ -37,6 +37,17 @@ export const submitQuoteRequest = catchAsync(
             // Log error but don't fail the request
             console.error('Failed to send confirmation email:', emailError);
         }
+        // Send email to the admin
+        try {
+            await sendQuoteConfirmationEmail(
+                "[EMAIL_ADDRESS]",
+                referenceId,
+                "Admin"
+            );
+        } catch (emailError) {
+            // Log error but don't fail the request
+            console.error('Failed to send confirmation email:', emailError);
+        }
 
         res.status(201).json({
             success: true,
