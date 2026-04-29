@@ -3,7 +3,7 @@ import QuoteRequest from '../models/QuoteRequest.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { generateReferenceId } from '../utils/helper';
- import { sendQuoteConfirmationEmail } from '../services/email/service'
+import { sendQuoteConfirmationEmail } from '../services/email/service'
 
 /**
  * @desc    Submit quote request

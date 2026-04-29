@@ -44,7 +44,7 @@ interface QuoteEmailParams {
 
 export const emailVerification = async (user: IUser) =>{
   let hash = uuidv4();
-  hash = hash.replace(/-/g, '');
+  hash = hash.replaceAll('-', '');
   const expiresIn = moment().add(30, 'minutes').format();
   const token = await Token.create({
     user: user._id,
@@ -79,7 +79,7 @@ export const emailVerification = async (user: IUser) =>{
 
 export const sendResetPassword = async (user: IUser) =>{
   let hash = uuidv4();
-  hash = hash.replace(/-/g, '');
+  hash = hash.replaceAll('-', '');
   const expiresIn = moment().add(15, 'minutes').format();
   const token = await Token.create({
     user: user._id,
@@ -139,7 +139,7 @@ export const sendChangeConfirmation = async (user: IUser) =>{
 export const sendInviteEmail = async (user: IUser, inviterName: string): Promise<void> => {
 
      let hash = uuidv4();
-      hash = hash.replace(/-/g, '');
+      hash = hash.replaceAll('-', '');
       const expiresIn = moment().add(15, 'minutes').format();
       const token = await Token.create({
         user: user._id,
