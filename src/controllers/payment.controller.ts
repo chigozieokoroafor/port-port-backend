@@ -15,7 +15,6 @@ export const webhook = catchAsync(async (req: Request, res: Response)=>{
     const stripe: Stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
     try {
-        console.log({body : req.body.toString('utf8')})
         event = stripe.webhooks.constructEvent(
             req.body.toString('utf8'), 
             signature,
