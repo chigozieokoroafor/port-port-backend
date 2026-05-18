@@ -1,10 +1,11 @@
-import express, { Application } from 'express';
+import express, { Application, Router } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import routes from './routes';
 import { errorHandler } from './middleware/errorHandler.middleware';
 import { notFound } from './middleware/notFound.middleware';
+import paymentRoutes from './routes/payment.routes';
 
 const app: Application = express();
 
@@ -26,6 +27,8 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+app.use('/stripe', paymentRoutes);
 
 // Body parsing
 app.use(express.json());
