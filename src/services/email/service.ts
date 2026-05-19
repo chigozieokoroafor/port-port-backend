@@ -13,6 +13,8 @@ import { TokenType } from '../../models/enums/TokenType.enum';
 import { EmailParams } from '../../models/interfaces/Email.interface';
 import { verifyCustomerEmail } from './templates/verifyCustomerEmail';
 import { passwordConfirmation } from './templates/passwordConfirmation';
+import { sendQuote } from './templates/sendQuote';
+import { sendPaymentLink } from './templates/sendPaymentLink';
 
 interface InviteEmailParams {
     to: string;
@@ -36,6 +38,21 @@ interface QuoteEmailParams {
     terms: any;
     vehicle: any;
     route: any;
+}
+
+interface SendQuoteEmailParams{
+    to: string;
+    firstName: string;
+    quoteId: string;
+    quoteRequestId: string;
+    quoteUrl: string;
+}
+
+interface SendPaymentLinkParams{
+    to: string;
+    firstName: string;
+    paymentLink: string;
+    quoteReference: string;
 }
 
 /**
@@ -197,6 +214,40 @@ export const sendQuoteConfirmationEmail = async (
 };
 
 /**
+ * Send quote request confirmation email
+ */
+export const sendQuoteEmailToCustomer= async (
+    to: string,
+    quoteId: string,
+    quoteReferenceId: string,
+    quoteRequestId: string,
+    customerName: string
+): Promise<void> => {
+    const link = `${process.env.FRONTEND_URL}/quotes/${quoteId}`
+    const param: SendQuoteEmailParams = {
+        to,
+        quoteId: quoteReferenceId,
+        quoteRequestId,
+        quoteUrl: link,
+        firstName: customerName
+    };
+    const template = sendQuote(param);
+
+    const mailOptions: Mail.Options = {
+        from: {
+            name: 'Port2Port',
+            address: process.env.SMTP_FROM_EMAIL as string,
+        },
+        to,
+        subject: template.subject,
+        text: template.text,
+        html: template.html,
+    };
+
+    await transporter.sendMail(mailOptions);
+};
+
+/**
  * Send payment confirmation email
  */
 export const sendPaymentConfirmationEmail = async (
@@ -235,6 +286,27 @@ export const sendPaymentConfirmationEmail = async (
 export const sendQuoteEmail = async (params: QuoteEmailParams): Promise<void> => {
     const { to } = params;
     const template = sentQuote(params);
+
+    const mailOptions: Mail.Options = {
+        from: {
+            name: 'Port2Port',
+            address: process.env.SMTP_FROM_EMAIL as string,
+        },
+        to,
+        subject: template.subject,
+        text: template.text,
+        html: template.html,
+    };
+
+    await transporter.sendMail(mailOptions);
+};
+
+/**
+ * Send Payment Link to Initiate Payment
+ */
+export const sendPaymentLinkEmail = async (params: SendPaymentLinkParams): Promise<void> => {
+    const { to } = params;
+    const template = sendPaymentLink(params);
 
     const mailOptions: Mail.Options = {
         from: {

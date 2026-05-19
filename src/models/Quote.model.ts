@@ -1,9 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { Status } from './enums/Status.enum';
 
 export interface IQuote extends Document {
     quoteNumber: string;
     quoteRequestId: mongoose.Types.ObjectId;
-    
+    notes: string;
+    productId: string;
     pricing: {
         shippingCost: number;
         insuranceCost?: number;
@@ -22,25 +24,29 @@ export interface IQuote extends Document {
         specialConditions?: string;
     };
     
-    status: 'draft' | 'sent' | 'viewed' | 'accepted' | 'expired' | 'rejected';
+    status: Status;
     
     sentAt?: Date;
     viewedAt?: Date;
     
     generatedBy: mongoose.Types.ObjectId;
-    
+    createdBy: mongoose.Types.ObjectId;
+    updatedBy: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }
 
 const quoteSchema = new Schema<IQuote>(
     {
+        productId: String,
         quoteNumber: {
             type: String,
             required: true,
             unique: true,
             index: true,
         },
+
+        notes: String,
         quoteRequestId: {
             type: Schema.Types.ObjectId,
             ref: 'QuoteRequest',
@@ -102,18 +108,26 @@ const quoteSchema = new Schema<IQuote>(
                 trim: true,
             },
         },
-        status: {
-            type: String,
-            enum: ['draft', 'sent', 'viewed', 'accepted', 'expired', 'rejected'],
-            default: 'draft',
+         status: {
+                    type: String,
+                    enum: Status,
+                    default: Status.Pending,
         },
         sentAt: { type: Date, },
         viewedAt: { type: Date, },
         generatedBy: {
             type: Schema.Types.ObjectId,
-            ref: 'AdminUser',
+            ref: 'User',
             required: true,
         },
+        createdBy:{
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        updatedBy:{
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }
     },
     {
         timestamps: true,

@@ -26,21 +26,6 @@ router.use(restrictToAdmin);
 
 
 /**
- * @route   PATCH /api/admin/quotes/requests/approve/:id
- * @desc    Approve Quote Request
- * @access  Admin
- */
-router.patch('/requests/approve/:id', validateUpdateStatus, validate, approveQuoteRequest);
-
-/**
- * @route   PATCH /api/admin/quotes/requests/reject/:id
- * @desc    Reject Quote Request
- * @access  Admin
- */
-router.patch('/requests/reject/:id', validateUpdateStatus, validate, rejectQuoteRequest);
-
-
-/**
  * @route   DELETE /api/admin/quotes/requests/:id
  * @desc    Delete quote request
  * @access  Admin
@@ -61,19 +46,6 @@ router.post('/:requestId/generate', validateGenerateQuote, validate, generateQuo
  */
 router.get('/', getAllQuotes);
 
-/**
- * @route   GET /api/admin/quotes/:id
- * @desc    Get quote details
- * @access  Admin
- */
-router.get('/:id', getQuoteById);
-
-/**
- * @route   GET /api/admin/quotes/request/:id
- * @desc    Get quote details
- * @access  Admin
- */
-router.get('/request/:id', getQuoteRequestById);
 
 /**
  * @route   PUT /api/admin/quotes/:id

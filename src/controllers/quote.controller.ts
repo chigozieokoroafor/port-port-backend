@@ -1,12 +1,15 @@
 import { Request, Response } from 'express';
-import QuoteRequest from '../models/QuoteRequest.model';
-import Quote from '../models/Quote.model';
+import QuoteRequest, { IQuoteRequest } from '../models/QuoteRequest.model';
+import Quote, { IQuote } from '../models/Quote.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { generateReferenceId } from '../utils/helper';
-import { sendQuoteEmail } from '../services/email/service';
+import { sendPaymentLinkEmail, sendQuoteEmail, sendQuoteEmailToCustomer } from '../services/email/service';
 import { UserType } from '../models/enums/UserType.enum';
 import { Status } from '../models/enums/Status.enum';
+import { createPaymentLink } from '../services/payment';
+import Payment from '../models/Payment.model';
+import { IPayment } from '../models/interfaces/Payment.interface';
 
 /**
  * @desc    List all quote requests with filters
@@ -55,15 +58,15 @@ export const getAllQuoteRequests = catchAsync(
         }
 
         // Pagination
-        const pageNum = Number.parseInt(page as string, 10);
-        const limitNum = Number.parseInt(limit as string, 10);
-        const skip = (pageNum - 1) * limitNum;
+        const pageNum: number = Number.parseInt(page as string, 10);
+        const limitNum: number = Number.parseInt(limit as string, 10);
+        const skip: number = (pageNum - 1) * limitNum;
 
         // Get total count
         const total = await QuoteRequest.countDocuments(filter);
 
         // Get requests
-        const requests = await QuoteRequest.find(filter)
+        const requests: IQuoteRequest[] | null = await QuoteRequest.find(filter)
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limitNum);
@@ -93,11 +96,11 @@ export const getQuoteRequestById = catchAsync(
         const { id } = req.params;
         const request = await QuoteRequest.findOne({ _id: id });
         if (!request) {
-            throw new ApiError(404, 'Quote request not found');
+            throw new ApiError(404, 'Quote not found');
         }
 
         // Get associated quote if exists
-        const quote = await Quote.findOne({ quoteRequestId: id }).populate(
+        const quote: IQuote | null = await Quote.findOne({ quoteRequestId: id }).populate(
             'generatedBy',
             'firstName lastName email'
         );
@@ -122,7 +125,7 @@ export const updateQuoteRequestStatus = catchAsync(
         const { id } = req.params;
         const { status, notes } = req.body;
 
-        const request = await QuoteRequest.findById(id);
+        const request: IQuoteRequest | null = await QuoteRequest.findById(id);
 
         if (!request) {
             throw new ApiError(404, 'Quote request not found');
@@ -145,7 +148,7 @@ export const updateQuoteRequestStatus = catchAsync(
 
 /**
  * @desc    Approve quote request 
- * @route   PATCH /api/admin/quotes/requests/approve/:id
+ * @route   PATCH /api/quotes/approve/:id
  * @access  Admin
  */
 export const approveQuoteRequest = catchAsync(
@@ -156,34 +159,60 @@ export const approveQuoteRequest = catchAsync(
             throw new ApiError(400, 'User not authenticated');
         }
 
-        const request = await QuoteRequest.findById(id);
-
-        if (!request) {
-            throw new ApiError(404, 'Quote request not found');
+    
+        const quote: IQuote | null = await Quote.findById(id);
+        if (!quote) {
+            throw new ApiError(404, 'Quote not found');
         }
 
-        if (request.status != Status.Pending) {
-            throw new ApiError(400, `Quote request has been ${request.status}`)
+        const request: IQuoteRequest | null = await QuoteRequest.findById(quote.quoteRequestId);
+
+        if (quote.status == Status.Approved) {
+            throw new ApiError(400, `Quote has been ${quote.status}`)
         }
 
-        request.status = Status.Approved;
-        request.reviewedByUserId = req.user._id;
-        request.reviewedBy = req.user.getFullName();
-        request.reviewedDate = new Date();
+        quote.status = Status.Approved;
 
-        await request.save();
+        const paymentLink: string = await createPaymentLink(quote);
+
+        let payment: IPayment | null = await Payment.findOne({quoteId: quote._id});
+        if(!payment){
+            payment = await Payment.create({
+                        quoteId: quote._id,
+                        paymentUrl: paymentLink,
+                        createdBy: req.user._id,
+                        quoteReference: quote.quoteNumber
+                    });
+        }else{
+            payment.paymentUrl = paymentLink;
+        }
+         
+
+        //send payment link mail
+        await sendPaymentLinkEmail({
+            to: request?.customer.email as string,
+            firstName: request?.customer.fullName as string,
+            quoteReference: quote.quoteNumber,
+            paymentLink
+        })
+
+        await payment.save();
+        await quote.save();
 
         res.status(200).json({
             success: true,
-            message: 'Quote request approved successfully',
-            data: { request },
+            message: 'Quote approved successfully',
+            data: { 
+                quote,
+                paymentLink
+             },
         });
     }
 );
 
 /**
  * @desc    Reject quote request
- * @route   PATCH /api/admin/quotes/requests/reject/:id
+ * @route   PATCH /api/quotes/reject/:id
  * @access  Admin
  */
 export const rejectQuoteRequest = catchAsync(
@@ -194,30 +223,24 @@ export const rejectQuoteRequest = catchAsync(
             throw new ApiError(400, 'User not authenticated');
         }
 
-        const request = await QuoteRequest.findById(id);
+        const quote: IQuote | null = await Quote.findById(id);
 
-        if (!request) {
-            throw new ApiError(404, 'Quote request not found');
+        if (!quote) {
+            throw new ApiError(404, 'Quote not found');
         }
 
-        if (request.status != Status.Pending) {
-            throw new ApiError(400, `Quote request has been ${request.status}`)
+        if (quote.status == Status.Approved) {
+            throw new ApiError(400, `Quote request has been ${quote.status}`)
         }
 
-        request.status = Status.Rejected;
-        request.reviewedByUserId = req.user._id;
-        request.reviewedBy = req.user.getFullName();
-        request.reviewedDate = new Date();
-        if (req.body?.notes !== undefined) {
-            request.notes = req.body.notes;
-        }
+        quote.status = Status.Rejected;
+        quote.updatedBy = req.user._id;
 
-        await request.save();
+        await quote.save();
 
         res.status(200).json({
             success: true,
-            message: 'Quote request rejected successfully',
-            data: { request },
+            message: 'Quote rejected successfully'
         });
     }
 );
@@ -231,14 +254,14 @@ export const deleteQuoteRequest = catchAsync(
     async (req: Request, res: Response) => {
         const { id } = req.params;
 
-        const request = await QuoteRequest.findById(id);
+        const request: IQuoteRequest | null = await QuoteRequest.findById(id);
 
         if (!request) {
             throw new ApiError(404, 'Quote request not found');
         }
 
         // Check if quote has been generated
-        const quote = await Quote.findOne({ quoteRequestId: id });
+        const quote: IQuote | null = await Quote.findOne({ quoteRequestId: id });
         if (quote) {
             throw new ApiError(
                 400,
@@ -263,42 +286,49 @@ export const deleteQuoteRequest = catchAsync(
 export const generateQuote = catchAsync(
     async (req: Request, res: Response) => {
         const { requestId } = req.params;
-        const { pricing, terms } = req.body;
+        const { pricing, terms, notes } = req.body;
 
         if (!req.user) {
             throw new ApiError(401, 'Not authenticated');
         }
 
         // Check if request exists
-        const request = await QuoteRequest.findById(requestId);
+        const request: IQuoteRequest | null = await QuoteRequest.findById(requestId);
+
         if (!request) {
             throw new ApiError(404, 'Quote request not found');
         }
-
+        request.status = Status.Approved;
+        request.save();
         // Check if quote already exists
-        const existingQuote = await Quote.findOne({ quoteRequestId: requestId });
-        if (existingQuote) {
-            throw new ApiError(400, 'Quote already exists for this request');
+        let quote: IQuote | null = await Quote.findOne({ quoteRequestId: requestId });
+        
+         if (quote) {
+            quote.pricing = pricing ?? quote.pricing;
+            quote.terms = terms ?? quote.terms;
+            quote.notes = notes ?? quote.notes;
+            quote.status = Status.Pending;
+            quote.generatedBy = req.user._id;
+            
+            await quote.save();
+        } else {
+            const quoteNumber = generateReferenceId('QT');
+            
+            quote = await Quote.create({
+                quoteNumber,
+                quoteRequestId: requestId,
+                pricing,
+                terms,
+                notes,
+                status: Status.Pending,
+                generatedBy: req.user._id,
+            });
         }
 
-        // Generate quote number
-        const quoteNumber = generateReferenceId('QT');
+        //send quote mail;
+        await sendQuoteEmailToCustomer(request.customer.email, quote._id.toString(), quote.quoteNumber,request._id.toString(), request.customer.fullName);
 
-        // Create quote
-        const quote = await Quote.create({
-            quoteNumber,
-            quoteRequestId: requestId,
-            pricing,
-            terms,
-            status: 'draft',
-            generatedBy: req.user._id,
-        });
-
-        // Update request status
-        // request.status = 'quoted';
-        await request.save();
-
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: 'Quote generated successfully',
             data: { quote },
@@ -316,7 +346,7 @@ export const updateQuote = catchAsync(
         const { id } = req.params;
         const { pricing, terms } = req.body;
 
-        const quote = await Quote.findById(id);
+        const quote: IQuote | null = await Quote.findById(id);
 
         if (!quote) {
             throw new ApiError(404, 'Quote not found');
@@ -356,10 +386,35 @@ export const updateQuote = catchAsync(
 export const getQuoteById = catchAsync(
     async (req: Request, res: Response) => {
         const { id } = req.params;
-
-        const quote = await Quote.findById(id)
+       
+        const quote: IQuote | null = await Quote.findById(id)
             .populate('quoteRequestId')
             .populate('generatedBy', 'firstName lastName email');
+        
+        if (!quote) {
+            throw new ApiError(404, 'Quote not found');
+        }
+
+        res.status(200).json({
+            success: true,
+            data: { quote },
+        });
+    }
+);
+
+/**
+ * @desc    Get quote details by Quote Request
+ * @route   GET /api/admin/quotes/:requestid
+ * @access  Admin
+ */
+export const getQuoteByRequestId = catchAsync(
+    async (req: Request, res: Response) => {
+        const { requestId } = req.params;
+
+        const quote: IQuote | null = await Quote.findOne({quoteRequestId: requestId})
+            .populate('quoteRequestId')
+            .populate('generatedBy', 'firstName lastName email');
+       
 
         if (!quote) {
             throw new ApiError(404, 'Quote not found');
@@ -381,7 +436,7 @@ export const sendQuote = catchAsync(
     async (req: Request, res: Response) => {
         const { id } = req.params;
 
-        const quote = await Quote.findById(id).populate('quoteRequestId');
+        const quote: IQuote | null = await Quote.findById(id).populate('quoteRequestId');
 
         if (!quote) {
             throw new ApiError(404, 'Quote not found');
@@ -406,7 +461,7 @@ export const sendQuote = catchAsync(
         });
 
         // Update quote status
-        quote.status = 'sent';
+       // quote.status = 'sent';
         quote.sentAt = new Date();
         await quote.save();
 
@@ -434,15 +489,15 @@ export const getAllQuotes = catchAsync(
         }
 
         // Pagination
-        const pageNum = Number.parseInt(page as string, 10);
-        const limitNum = Number.parseInt(limit as string, 10);
-        const skip = (pageNum - 1) * limitNum;
+        const pageNum: number = Number.parseInt(page as string, 10);
+        const limitNum: number = Number.parseInt(limit as string, 10);
+        const skip: number = (pageNum - 1) * limitNum;
 
         // Get total count
         const total = await Quote.countDocuments(filter);
 
         // Get quotes
-        const quotes = await Quote.find(filter)
+        const quotes: IQuote[] | [] = await Quote.find(filter)
             .populate('quoteRequestId', 'referenceId customer vehicle')
             .populate('generatedBy', 'firstName lastName')
             .sort({ createdAt: -1 })
