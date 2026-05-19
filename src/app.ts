@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import routes from './routes';
 import { errorHandler } from './middleware/errorHandler.middleware';
 import { notFound } from './middleware/notFound.middleware';
-import paymentRoutes from './routes/payment.routes';
+import webhookRoutes from './routes/webhook.routes';
 
 const app: Application = express();
 
@@ -28,7 +28,7 @@ app.use(
   })
 );
 
-app.use('/stripe', paymentRoutes);
+app.use('/stripe', webhookRoutes);
 
 // Body parsing
 app.use(express.json());

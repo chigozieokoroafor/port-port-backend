@@ -23,7 +23,7 @@ const router = Router();
 
 router.use(protect);
 router.use(restrictToAdmin);
-  
+
 
 /**
  * @route   DELETE /api/admin/quotes/requests/:id

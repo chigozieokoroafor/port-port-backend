@@ -1,10 +1,21 @@
-import  express, { Request, Response, NextFunction, Router } from "express";
-import { webhook } from "../controllers/payment.controller";
+import { Router } from "express";
+import { getPaymentById, getPayments } from "../controllers/payment.controller";
 
 const router = Router();
 
-router.post('/webhook',
-    express.raw({ type: 'application/json' }),
-    webhook);
+
+/**
+ * @route   GET /api/payment/:id
+ * @desc    Get Payment by ID
+ * @access  Admin and Customer
+ */
+router.get('/:id', getPaymentById);
+
+/**
+ * @route   GET /api/payments
+ * @desc    Get Payment by ID
+ * @access  Admin and Customer
+ */
+router.get('/', getPayments)
 
 export default router;
