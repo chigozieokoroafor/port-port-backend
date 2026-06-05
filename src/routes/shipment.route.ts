@@ -6,3 +6,5 @@ const router = Router();
 router.use(protect);
 
 router.post('/create', create);
+
+export default router;
