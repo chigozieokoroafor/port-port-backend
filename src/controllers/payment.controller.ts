@@ -5,6 +5,56 @@ import Payment from '../models/Payment.model';
 import { PaymentStatus } from '../models/enums/PaymentStatus.enum';
 import { IPayment } from '../models/interfaces/Payment.interface';
 import { ApiError } from '../utils/ApiError';
+import Shipment from '../models/Shipment.model';
+import Quote from '../models/Quote.model';
+import { createPaymentLink } from '../services/payment';
+import { sendPaymentLinkEmail } from '../services/email';
+import QuoteRequest from '../models/QuoteRequest.model';
+import { Status } from '../models/enums/Status.enum';
+
+export const create = catchAsync(async (req: Request, res: Response) =>{
+    const {quoteId} = req.body;
+
+    const quote = await Quote.findById(quoteId);
+    if(!quote) throw new ApiError(400, 'Invalid quote');
+
+    if(quote.status != Status.Approved) throw new ApiError(400, 'Payemnt Link can only be generated for approved quotes')
+
+    const request = await QuoteRequest.findById(quote.quoteRequestId);
+
+    const paymentLink =  await createPaymentLink(quote);
+
+    let payment: IPayment | null = await Payment.findOne({quoteId: quote._id});
+
+    if(payment && payment.status == PaymentStatus.Paid) throw new ApiError(400, 'Payment is already paid for');
+
+    if(!payment){
+            payment = await Payment.create({
+                        quoteId: quote._id,
+                        paymentUrl: paymentLink,
+                        createdBy: req.user?._id,
+                        quoteReference: quote.quoteNumber
+                    });
+        }else{
+            payment.paymentUrl = paymentLink;
+        }
+    
+        //send payment link mail
+        await sendPaymentLinkEmail({
+            to: request?.customer.email as string,
+            firstName: request?.customer.fullName as string,
+            quoteReference: quote.quoteNumber,
+            paymentLink
+        })
+
+        await payment.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Payment link generated successfully',
+            paymentLink
+        });
+});
 
 /**
  * @desc    Webhook listening to stripe payment events
@@ -36,12 +86,20 @@ try{
         const paymentIntent = event.data.object;
         const quoteId: string | undefined = paymentIntent.metadata?.quoteRef;
         if(quoteId){
-            await Payment.findOneAndUpdate({quoteReference: quoteId}, {
+            const payment = await Payment.findOne({quoteReference: quoteId, status: PaymentStatus.Unpaid});
+            if(payment){
+                await Payment.findOneAndUpdate({quoteReference: quoteId}, {
                 status: PaymentStatus.Paid,
                 paidAt: new Date(),
                 amountPaid: paymentIntent.amount_total
             })
 
+            //create Shipment
+            await Shipment.create({
+                quote: quoteId,
+                payment: payment._id
+            })
+            }
         }
         //send customer email
         console.log(`Quote ${quoteId} paid successfully`);
