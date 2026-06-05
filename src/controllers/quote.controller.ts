@@ -165,7 +165,6 @@ export const approveQuoteRequest = catchAsync(
             throw new ApiError(404, 'Quote not found');
         }
 
-        const request: IQuoteRequest | null = await QuoteRequest.findById(quote.quoteRequestId);
 
         if (quote.status == Status.Approved) {
             throw new ApiError(400, `Quote has been ${quote.status}`)
@@ -173,38 +172,13 @@ export const approveQuoteRequest = catchAsync(
 
         quote.status = Status.Approved;
 
-        const paymentLink: string = await createPaymentLink(quote);
-
-        let payment: IPayment | null = await Payment.findOne({quoteId: quote._id});
-        if(!payment){
-            payment = await Payment.create({
-                        quoteId: quote._id,
-                        paymentUrl: paymentLink,
-                        createdBy: req.user._id,
-                        quoteReference: quote.quoteNumber
-                    });
-        }else{
-            payment.paymentUrl = paymentLink;
-        }
-         
-
-        //send payment link mail
-        await sendPaymentLinkEmail({
-            to: request?.customer.email as string,
-            firstName: request?.customer.fullName as string,
-            quoteReference: quote.quoteNumber,
-            paymentLink
-        })
-
-        await payment.save();
         await quote.save();
 
         res.status(200).json({
             success: true,
             message: 'Quote approved successfully',
             data: { 
-                quote,
-                paymentLink
+                quote
              },
         });
     }

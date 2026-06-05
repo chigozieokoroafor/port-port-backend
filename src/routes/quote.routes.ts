@@ -6,17 +6,12 @@ import {
   deleteQuoteRequest,
   generateQuote,
   updateQuote,
-  getQuoteById,
   sendQuote,
-  getAllQuotes,
-  approveQuoteRequest,
-  rejectQuoteRequest,
-  getQuoteRequestById
+  getAllQuotes
 } from '../controllers/quote.controller';
 import {
   validateGenerateQuote,
-  validateUpdateQuote,
-  validateUpdateStatus,
+  validateUpdateQuote
 } from '../validators/quote.validator';
 
 const router = Router();

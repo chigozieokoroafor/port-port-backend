@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, {Document} from "mongoose";
 import { PaymentStatus } from "../enums/PaymentStatus.enum";
 
 export interface IPayment extends Document{
