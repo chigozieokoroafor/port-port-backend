@@ -26,7 +26,7 @@ A robust backend API for a vehicle freight and RORO (Roll-on/Roll-off) shipping 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Titoluwa/p2p-backend
+git clone https://github.com/sasomtech-Nig/port-Backend
 cd p2p-backend
 ```
 
@@ -350,4 +350,4 @@ Toluwani Oluwaranti - [@ti_toolu_](https://x.com/ti_toolu_)
 
 ## 🆘 Support
 
-For support, email titoluwaranti@gmail.com.
+For support, email ranti@gmail.com.
