@@ -6,6 +6,9 @@ export interface IPayment extends Document{
     quoteReference: String,
     status: PaymentStatus,
     paymentUrl: String;
+    currency?: string;
+    stripeSessionId?: string;
+    stripePaymentIntentId?: string;
     createdAt: Date;
     updatedAt: Date;
     paidAt: Date;

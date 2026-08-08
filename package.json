@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "seed:superadmin": "ts-node src/scripts/seedSuperAdmin.ts",
+    "seed:customer": "ts-node src/scripts/seedTestCustomer.ts",
+    "backfill:payment-currency": "ts-node src/scripts/backfillPaymentCurrency.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",

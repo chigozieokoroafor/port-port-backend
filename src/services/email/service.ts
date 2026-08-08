@@ -53,6 +53,8 @@ interface SendPaymentLinkParams{
     firstName: string;
     paymentLink: string;
     quoteReference: string;
+    amount: number;
+    currency: string;
 }
 
 /**
