@@ -4,12 +4,9 @@ import Quote, { IQuote } from '../models/Quote.model';
 import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { generateReferenceId } from '../utils/helper';
-import { sendPaymentLinkEmail, sendQuoteEmail, sendQuoteEmailToCustomer } from '../services/email/service';
+import { sendQuoteEmail, sendQuoteEmailToCustomer } from '../services/email/service';
 import { UserType } from '../models/enums/UserType.enum';
 import { Status } from '../models/enums/Status.enum';
-import { createPaymentLink } from '../services/payment';
-import Payment from '../models/Payment.model';
-import { IPayment } from '../models/interfaces/Payment.interface';
 
 /**
  * @desc    List all quote requests with filters
