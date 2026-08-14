@@ -20,5 +20,5 @@ export const validateCreatePayment = [
         .notEmpty()
         .withMessage('paymentMethod is required')
         .isIn(Object.values(PaymentMethod))
-        .withMessage('paymentMethod must be one of: card, bank_transfer'),
+        .withMessage('paymentMethod must be one of: card, bank_transfer, paypal'),
 ];

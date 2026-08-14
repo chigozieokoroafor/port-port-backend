@@ -8,3 +8,4 @@ uploads/
 notes.txt
 package-lock.json
 /.CLAUDE.md
+dist/

@@ -13,8 +13,8 @@ import { VehicleType } from '../models/enums/VehicleType.enum';
 import { VehicleCondition } from '../models/enums/VehicleCondition.enum';
 
 /**
- * Seed a ready-to-use test customer plus an APPROVED quote owned by them, so the
- * whole Stripe payment path can be exercised without going through the real
+ * Seed a ready-to-use test customer plus APPROVED quotes owned by them, so both the
+ * Stripe and PayPal payment paths can be exercised without going through the real
  * register → verify-email → submit-request → admin-generate → admin-approve chain.
  *
  * Why a script and not the public API: `POST /api/auth/create` makes customers
@@ -39,6 +39,15 @@ const TEST_QUOTE_NUMBER_3DS = 'QT-SEEDTEST-3DS';   // 3D-Secure success (USD) fo
 const TEST_QUOTE_NUMBER_BANK = 'QT-SEEDTEST-BANK'; // bank transfer / us_bank_account (USD)
 const TEST_QUOTE_NUMBER_EUR = 'QT-SEEDTEST-EUR';   // bank transfer / SEPA (EUR)
 const TEST_QUOTE_NUMBER_FAIL = 'QT-SEEDTEST-FAIL'; // reusable decline / regeneration (USD), never reaches Paid
+
+// PayPal (Phase 2) fixtures — paid via `paymentMethod: paypal`, which routes to PayPal's
+// own order-and-redirect flow instead of Stripe Checkout. PayPal supports a different
+// currency set than Stripe (USD/EUR/GBP/CAD/AUD/JPY), so these exercise both a happy
+// path and the currency guard.
+const TEST_QUOTE_NUMBER_PP_USD = 'QT-SEEDTEST-PP-USD';     // PayPal happy path (USD, two-decimal)
+const TEST_QUOTE_NUMBER_PP_JPY = 'QT-SEEDTEST-PP-JPY';     // PayPal zero-decimal (JPY) — "150000" not "150000.00"
+const TEST_QUOTE_NUMBER_PP_CANCEL = 'QT-SEEDTEST-PP-CANCEL'; // reusable cancel/abandon (USD), never reaches Paid
+const TEST_QUOTE_NUMBER_PP_NGN = 'QT-SEEDTEST-PP-NGN';     // reusable currency-guard reject (NGN — Stripe-only)
 
 const seedTestCustomer = async () => {
     try {
@@ -115,8 +124,8 @@ const seedTestCustomer = async () => {
 
         // 3) Quote(s) — must be Approved (payment.create rejects non-approved) and
         //    valid into the future (computeExpiry rejects an already-expired quote).
-        //    We seed two: a standard two-decimal USD quote (Test 1) and a zero-decimal
-        //    JPY quote (Test 2), so both currency paths are ready to pay.
+        //    We seed a spread of currencies/methods across both providers so every
+        //    payment path (Stripe card/bank, PayPal order) is ready to pay.
         const validUntil = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
         // Upsert a quote by its stable number, refreshing validity/approval on re-run.
@@ -166,16 +175,31 @@ const seedTestCustomer = async () => {
         const eurQuote = await upsertQuote(TEST_QUOTE_NUMBER_EUR, 'EUR', 1500);   // bank transfer (SEPA) success
         const failQuote = await upsertQuote(TEST_QUOTE_NUMBER_FAIL, 'USD', 1500); // Tests 3 & 6  decline / regeneration (reusable)
 
+        // PayPal quotes — pay these with `paymentMethod: paypal`. The success-ending ones
+        // (USD, JPY) each need their OWN quote for the same reason as above: once a webhook
+        // marks them Paid, create() blocks re-payment. The cancel and NGN-reject quotes
+        // never reach Paid, so they're reusable across runs.
+        const ppUsdQuote = await upsertQuote(TEST_QUOTE_NUMBER_PP_USD, 'USD', 1500);       // PayPal happy path (USD)
+        const ppJpyQuote = await upsertQuote(TEST_QUOTE_NUMBER_PP_JPY, 'JPY', 150000);     // PayPal zero-decimal (JPY)
+        const ppCancelQuote = await upsertQuote(TEST_QUOTE_NUMBER_PP_CANCEL, 'USD', 1500); // PayPal cancel/abandon (reusable)
+        const ppNgnQuote = await upsertQuote(TEST_QUOTE_NUMBER_PP_NGN, 'NGN', 1500);       // PayPal currency-guard reject (reusable)
+
         logger.info('--- Test fixture ready ---');
         logger.info(`Login email:     ${TEST_CUSTOMER_EMAIL}`);
         logger.info(`Login password:  ${TEST_CUSTOMER_PASSWORD}`);
         logger.info('quoteId values for POST /api/payment/create:');
+        logger.info('  -- Stripe (paymentMethod: card | bank_transfer) --');
         logger.info(`  ${usdQuote._id}  ${usdQuote.quoteNumber}   (Test 1  card happy path, USD)`);
         logger.info(`  ${jpyQuote._id}  ${jpyQuote.quoteNumber}   (Test 2  zero-decimal, JPY — card only)`);
         logger.info(`  ${dddsQuote._id}  ${dddsQuote.quoteNumber}   (Test 4  3DS success, USD)`);
         logger.info(`  ${bankQuote._id}  ${bankQuote.quoteNumber}   (bank transfer / us_bank_account, USD)`);
         logger.info(`  ${eurQuote._id}  ${eurQuote.quoteNumber}   (bank transfer / SEPA, EUR)`);
         logger.info(`  ${failQuote._id}  ${failQuote.quoteNumber}   (Tests 3 & 6  decline / regeneration — reusable)`);
+        logger.info('  -- PayPal (paymentMethod: paypal) --');
+        logger.info(`  ${ppUsdQuote._id}  ${ppUsdQuote.quoteNumber}   (PayPal happy path, USD)`);
+        logger.info(`  ${ppJpyQuote._id}  ${ppJpyQuote.quoteNumber}   (PayPal zero-decimal, JPY)`);
+        logger.info(`  ${ppCancelQuote._id}  ${ppCancelQuote.quoteNumber}   (PayPal cancel/abandon — reusable)`);
+        logger.info(`  ${ppNgnQuote._id}  ${ppNgnQuote.quoteNumber}   (PayPal currency-guard reject, NGN — reusable)`);
         process.exit(0);
     } catch (error) {
         logger.error('Error seeding test customer:', error);
