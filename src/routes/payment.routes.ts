@@ -1,10 +1,15 @@
 import { Router } from "express";
-import { create, getPaymentById, getPayments, getPaymentStatusByReference, paypalReturn } from "../controllers/payment.controller";
+// import { create, getPaymentById, getPayments, getPaymentStatusByReference, paypalReturn } from "../controllers/payment.controller";
 import { protect } from "../middleware/auth.middleware";
 import { restrictToAdmin } from "../middleware/roleCheck.middleware";
 import { rateLimiter } from "../middleware/rateLimiter.middleware";
 import { validate } from "../middleware/validate.middleware";
 import { validateCreatePayment } from "../validators/payment.validator";
+import { getPaymentStatusByReference } from "../controllers/payment/get-payment-by-reference";
+import { paypalReturn } from "../controllers/payment/webhook/paypal";
+import { getPaymentById } from "../controllers/payment/get-payment-by-id";
+import { CreatePaymentController } from "../controllers/payment/create-payment";
+import { getPayments } from "../controllers/payment/list-payments";
 
 const router = Router();
 
@@ -38,7 +43,7 @@ router.get('/:id', getPaymentById);
  * @desc   Create Payment Link
  * @access   Customer
  */
-router.post('/create', validateCreatePayment, validate, create);
+router.post('/create', validateCreatePayment, validate, CreatePaymentController);
 
 /**
  * @route   GET /api/payment

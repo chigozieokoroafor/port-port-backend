@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
+    "dev:me": "bun --watch  src/server.ts",
     "seed:superadmin": "ts-node src/scripts/seedSuperAdmin.ts",
     "seed:customer": "ts-node src/scripts/seedTestCustomer.ts",
     "paypal:webhooks": "ts-node src/scripts/listPayPalWebhooks.ts",

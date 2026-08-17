@@ -1,5 +1,7 @@
 import  express, { Request, Response, NextFunction, Router } from "express";
-import { webhook, paypalWebhook } from "../controllers/payment.controller";
+import { StripeWebhookController } from "../controllers/payment/webhook/stripe";
+import { PaypalWebhookController } from "../controllers/payment/webhook/paypal";
+// import { webhook, paypalWebhook } from "../controllers/payment.controller";
 
 const router = Router();
 
@@ -10,12 +12,12 @@ const router = Router();
 // unparsed body — express.raw() before the global JSON parser.
 router.post('/stripe/webhook',
     express.raw({ type: 'application/json' }),
-    webhook);
+    StripeWebhookController);
 
 // PayPal: verification is REMOTE and needs the PARSED event body, so this route parses
 // JSON itself (it's mounted before the app's global JSON parser).
 router.post('/paypal/webhook',
     express.json(),
-    paypalWebhook);
+    PaypalWebhookController);
 
 export default router;
