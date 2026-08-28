@@ -9,7 +9,7 @@ import { PayPalWebhookEvent } from '../../../../models/enums/PayPalWebhookEvent.
 import { handleFailedPayment } from '../stripe/util';
 // import { capturePayPalOrder } from '../../../../services/paypal';
 import { OrderStatus } from '@paypal/paypal-server-sdk';
-import { capturePayPalOrder } from '../../create-payment/util';
+import { capturePayPalOrder } from './util';
 
 
 

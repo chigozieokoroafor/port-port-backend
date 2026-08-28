@@ -13,6 +13,8 @@ import {
   validateGenerateQuote,
   validateUpdateQuote
 } from '../validators/quote.validator';
+import { getQuotesController } from '../controllers/admin/quotes/get-quotes';
+import { approveQuoteController } from '../controllers/admin/quotes/approve-quote';
 
 const router = Router();
 
@@ -29,10 +31,10 @@ router.delete('/requests/:id', deleteQuoteRequest);
 
 /**
  * @route   POST /api/admin/quotes/:requestId/generate
- * @desc    Generate pricing quote
+ * @desc    Generate pricing quote (Approve Quote Request)
  * @access  Admin
  */
-router.post('/:requestId/generate', validateGenerateQuote, validate, generateQuote);
+router.post('/:requestId/generate', approveQuoteController);
 
 /**
  * @route   GET /api/admin/quotes
@@ -55,5 +57,7 @@ router.put('/:id', validateUpdateQuote, validate, updateQuote);
  * @access  Admin
  */
 router.post('/:id/send', sendQuote);
+
+router.get("/list", getQuotesController)
 
 export default router;

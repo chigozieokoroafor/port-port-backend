@@ -12,4 +12,5 @@ export enum PaymentMethod {
     Card = 'card',
     BankTransfer = 'bank_transfer',
     Paypal = 'paypal',
+    Stripe = 'stripe'
 }

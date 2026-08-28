@@ -8,8 +8,8 @@ import { validateCreatePayment } from "../validators/payment.validator";
 import { getPaymentStatusByReference } from "../controllers/payment/get-payment-by-reference";
 import { paypalReturn } from "../controllers/payment/webhook/paypal";
 import { getPaymentById } from "../controllers/payment/get-payment-by-id";
-import { CreatePaymentController } from "../controllers/payment/create-payment";
 import { getPayments } from "../controllers/payment/list-payments";
+import { createPaymentV2Controller } from "../controllers/payment/create-payment-v2";
 
 const router = Router();
 
@@ -39,11 +39,11 @@ router.use(protect);
 router.get('/:id', getPaymentById);
 
 /**
- * @route   POST /api/payment/create
- * @desc   Create Payment Link
+ * @route   POST /api/payment/v2/create
+ * @desc   Create Payment Link (V2 Prisma)
  * @access   Customer
  */
-router.post('/create', validateCreatePayment, validate, CreatePaymentController);
+router.post('/v2/create', createPaymentV2Controller);
 
 /**
  * @route   GET /api/payment
