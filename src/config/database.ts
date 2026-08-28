@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import logger from '../utils/logger';
+import { PrismaClient } from '../../generated/prisma';
+import { pagination } from "prisma-extension-pagination"
 
 export const connectDB = async (): Promise<void> => {
   try {
@@ -10,3 +12,9 @@ export const connectDB = async (): Promise<void> => {
     process.exit(1);
   }
 };
+
+export const prisma = new PrismaClient(
+  {
+    log: ["error", "warn"],
+  }
+).$extends(pagination())

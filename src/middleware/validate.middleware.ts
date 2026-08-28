@@ -13,8 +13,9 @@ export const validate = (
 
   if (!errors.isEmpty()) {
     const extractedErrors: any[] = [];
-    
+    const errString: string[] = []
     errors.array().forEach((err: any) => {
+      errString.push(err.msg)
       extractedErrors.push({
         field: err.path || err.param,
         message: err.msg,
@@ -23,9 +24,12 @@ export const validate = (
     });
     // throw new ApiError(400, 'Validation failed', errors as any);
 
+    // console.log("Errors here retard ===> ")
+    // console.dir(errors, { depth: 12 })
+
     return res.status(400).json({
       success: false,
-      message: 'Validation failed',
+      message: errString.length > 0 ? errString.toLocaleString() : 'Validation failed',
       errors: extractedErrors,
     });
   }

@@ -56,7 +56,7 @@ export const validateQuoteRequest = [
     
     body('vehicle.year')
         .isInt({ min: 1900, max: new Date().getFullYear() + 1 })
-        .withMessage(`Year must be between 1900 and ${new Date().getFullYear() + 1}`),
+        .withMessage(`Vehicle Year must be between 1900 and ${new Date().getFullYear() + 1}`),
     
     body('vehicle.vin')
         .trim()

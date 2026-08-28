@@ -1,9 +1,10 @@
+import { OrderStatus } from '@paypal/paypal-server-sdk';
 import { PaymentProvider } from '../../../../models/enums/PaymentProvider.enum';
 import { PaymentStatus } from '../../../../models/enums/PaymentStatus.enum';
 import Payment from '../../../../models/Payment.model';
 // import { fromPayPalAmount } from '../../../../services/paypal';
 import logger from '../../../../utils/logger';
-import { fromPayPalAmount, paypalApiBaseUrl } from '../../create-payment/util';
+import { fromPayPalAmount, paypalApiBaseUrl, getOrdersController, CapturedPayPalOrder } from '../../create-payment-v2/util';
 import { capturedAmountMatchesExpectation, fulfillPaidPayment } from '../stripe/util';
 
 /**
@@ -199,4 +200,33 @@ export const verifyPayPalWebhook = async (
     return data.verification_status === 'SUCCESS';
 };
 
+
+export const capturePayPalOrder = async (orderId: string): Promise<CapturedPayPalOrder> => {
+    try {
+        const { result } = await getOrdersController().captureOrder({
+            id: orderId,
+            prefer: 'return=representation',
+        });
+
+        const unit = result.purchaseUnits?.[0];
+        const capture = unit?.payments?.captures?.[0];
+
+        return {
+            status: result.status,
+            captureId: capture?.id,
+            quoteReference: unit?.customId ?? capture?.customId,
+            currency: capture?.amount?.currencyCode,
+            amount: capture?.amount?.value,
+            alreadyCaptured: false,
+        };
+    } catch (err: any) {
+        // The SDK throws its own ApiError on non-2xx. Detect the already-captured
+        // case from the body so a repeat capture is a no-op rather than a 500.
+        const body = typeof err?.body === 'string' ? err.body : JSON.stringify(err?.body ?? '');
+        if (err?.statusCode === 422 && body.includes('ORDER_ALREADY_CAPTURED')) {
+            return { status: OrderStatus.Completed, alreadyCaptured: true };
+        }
+        throw err;
+    }
+};
 
