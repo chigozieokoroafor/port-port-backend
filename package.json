@@ -5,17 +5,24 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
+    "dev:me": "bun --watch  src/server.ts",
     "seed:superadmin": "ts-node src/scripts/seedSuperAdmin.ts",
+    "seed:customer": "ts-node src/scripts/seedTestCustomer.ts",
+    "paypal:webhooks": "ts-node src/scripts/listPayPalWebhooks.ts",
+    "backfill:payment-currency": "ts-node src/scripts/backfillPaymentCurrency.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
-    "test": "jest"
+    "test": "jest",
+    "migrate": "npx prisma db push && sleep 2 && npx prisma generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@paypal/paypal-server-sdk": "^2.4.0",
+    "@prisma/client": "^6.19.3",
     "@sendgrid/mail": "^8.1.6",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
@@ -32,9 +39,11 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.12",
     "pdfkit": "^0.17.2",
+    "prisma-extension-pagination": "^0.7.6",
     "stripe": "^20.4.1",
     "uuid": "^13.0.0",
-    "winston": "^3.19.0"
+    "winston": "^3.19.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -47,6 +56,7 @@
     "@types/nodemailer": "^7.0.4",
     "@types/pdfkit": "^0.17.4",
     "nodemon": "^3.1.11",
+    "prisma": "^6.19.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

@@ -244,11 +244,13 @@ Configure email templates in SendGrid dashboard.
 ### Stripe Setup
 1. Create a Stripe account at https://stripe.com
 2. Get your API keys from the dashboard
-3. Configure webhook endpoint: `https://yourdomain.com/api/payments/webhook`
+3. Configure webhook endpoint: `https://yourdomain.com/stripe/webhook`
 4. Add webhook secret to `.env`
 
 ### Supported Events
-- `payment_intent.succeeded`
+- `checkout.session.completed`
+- `checkout.session.async_payment_succeeded`
+- `checkout.session.async_payment_failed`
 - `payment_intent.payment_failed`
 
 ## 📦 File Storage

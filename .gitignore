@@ -7,3 +7,6 @@ uploads/
 .DS_Store
 notes.txt
 package-lock.json
+/.CLAUDE.md
+dist/
+generated

@@ -9,6 +9,19 @@ import { verifyEmailConnection } from './services/email/service';
 
 const PORT = process.env.PORT || 5000;
 
+/**
+ * Fail fast at boot if required secrets are missing, rather than letting
+ * the app start and silently fail the first time a webhook arrives.
+ */
+const requiredEnv = ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'FRONTEND_URL'];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+if (missingEnv.length > 0) {
+  logger.error(
+    `Missing required environment variable(s): ${missingEnv.join(', ')}`
+  );
+  process.exit(1);
+}
+
 let server: Server;
 
 const startServer = async () => {

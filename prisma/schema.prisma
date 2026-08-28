@@ -1,0 +1,375 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URI")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  binaryTargets   = ["native", "darwin-arm64", "debian-openssl-3.0.x"]
+}
+
+
+enum UserType {
+  Admin
+  Customer
+  SuperAdmin
+}
+
+enum UserStatus {
+  Pending
+  Active
+  Suspended
+}
+
+enum AdminRole {
+  admin
+  superadmin
+}
+
+enum AdminStatus {
+  pending
+  active
+  suspended
+}
+
+enum Status {
+  Pending
+  Approved
+  Rejected
+}
+
+enum VehicleType {
+  // Add your vehicle types here
+  Car
+}
+
+enum VehicleCondition {
+  // Add vehicle conditions here
+  New
+  Used
+}
+
+enum PaymentProvider {
+  Stripe
+  Paypal
+}
+
+enum PaymentStatus {
+  Unpaid
+  Paid
+  Failed
+}
+
+enum ShipmentStatus {
+  Dock
+  InTransit
+  Delivered
+}
+
+enum TicketStatus {
+  Open
+  Closed
+}
+
+enum TokenType {
+  EmailVerification
+  InviteUser
+  ResetPassword
+}
+
+// -----------------------------------------
+// Composite Types (Embedded Documents)
+// -----------------------------------------
+
+type CustomerInfo {
+  fullName    String
+  email       String
+  phone       String
+  companyName String?
+}
+
+type VehicleDimensions {
+  length Float
+  width  Float
+  height Float
+}
+
+type VehicleInfo {
+  type       VehicleType
+  make       String
+  model      String
+  year       Int
+  vin        String
+  dimensions VehicleDimensions
+  weight     Float
+  condition  VehicleCondition
+}
+
+type RouteInfo {
+  originCountry         String
+  originPort            String
+  destinationCountry    String
+  destinationPort       String
+  preferredShippingDate DateTime?
+}
+
+type AdditionalCharge {
+  description String
+  amount      Float
+}
+
+type PricingInfo {
+  shippingCost      Float
+  insuranceCost     Float?
+  handlingFees      Float?
+  additionalCharges AdditionalCharge[]
+  totalAmount       Float
+  currency          String             @default("USD")
+}
+
+type TermsInfo {
+  validUntil        DateTime
+  paymentTerms      String
+  specialConditions String?
+}
+
+type TicketConversation {
+  userId String?   @db.ObjectId
+  text   String?
+  sentAt DateTime?
+}
+
+// -----------------------------------------
+// Models
+// -----------------------------------------
+
+model User {
+  id                           String     @id @default(auto()) @map("_id") @db.ObjectId
+  email                        String     @unique
+  password                     String
+  firstName                    String
+  lastName                     String
+  role                         UserType   @default(Customer)
+  status                       UserStatus @default(Pending)
+  
+  invitedById                  String?    @db.ObjectId
+  invitedBy                    User?      @relation("UserInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invitedUsers                 User[]     @relation("UserInvites")
+
+  inviteToken                  String?
+  inviteTokenExpiry            DateTime?
+  passwordResetToken           String?
+  passwordResetExpiry          DateTime?
+  lastLogin                    DateTime?
+  isSubscribedToNewsletter     Boolean?   @default(false)
+  isAgreedToTermsAndConditions Boolean?   @default(false)
+
+  createdAt                    DateTime   @default(now())
+  updatedAt                    DateTime   @updatedAt
+
+  quoteRequests                QuoteRequest[]
+  quoteRequestsReviewed        QuoteRequest[] @relation("QuoteRequestReviewer")
+  quotesGenerated              Quote[]        @relation("QuoteGenerator")
+  quotesCreated                Quote[]        @relation("QuoteCreator")
+  quotesUpdated                Quote[]        @relation("QuoteUpdater")
+  paymentsCreated              Payment[]      @relation("PaymentCreator")
+  paymentsUpdated              Payment[]      @relation("PaymentUpdater")
+  shipmentsUpdated             Shipment[]     @relation("ShipmentUpdater")
+  ticketsOwned                 Ticket[]       @relation("TicketOwner")
+  ticketsClosed                Ticket[]       @relation("TicketCloser")
+  tokens                       Token[]
+  blacklistedTokens            TokenBlacklist[]
+}
+
+model AdminUser {
+  id                  String      @id @default(auto()) @map("_id") @db.ObjectId
+  email               String      @unique
+  password            String
+  firstName           String
+  lastName            String
+  role                AdminRole   @default(admin)
+  status              AdminStatus @default(pending)
+  
+  invitedById         String?     @db.ObjectId
+  invitedBy           AdminUser?  @relation("AdminInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invitedAdmins       AdminUser[] @relation("AdminInvites")
+
+  inviteToken         String?
+  inviteTokenExpiry   DateTime?
+  passwordResetToken  String?
+  passwordResetExpiry DateTime?
+  lastLogin           DateTime?
+
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+}
+
+model QuoteRequest {
+  id               String       @id @default(auto()) @map("_id") @db.ObjectId
+  referenceId      String       @unique
+  userId           String?      @db.ObjectId
+  user             User?        @relation(fields: [userId], references: [id])
+  customer         CustomerInfo
+  vehicle          VehicleInfo
+  route            RouteInfo
+  status           Status       @default(Pending)
+  notes            String?
+  reviewedByUserId String?      @db.ObjectId
+  reviewedByUser   User?        @relation("QuoteRequestReviewer", fields: [reviewedByUserId], references: [id])
+  reviewedBy       String?
+  reviewedDate     DateTime?
+
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  quotes           Quote?
+}
+
+model Quote {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  quoteNumber    String       @unique
+  quoteRequestId String       @db.ObjectId @unique
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id])
+  productId      String?
+  notes          String?
+  pricing        PricingInfo
+  terms          TermsInfo
+  status         Status       @default(Pending)
+  sentAt         DateTime?
+  viewedAt       DateTime?
+  generatedById  String       @db.ObjectId
+  generatedBy    User         @relation("QuoteGenerator", fields: [generatedById], references: [id])
+  createdById    String?      @db.ObjectId
+  createdBy      User?        @relation("QuoteCreator", fields: [createdById], references: [id])
+  updatedById    String?      @db.ObjectId
+  updatedBy      User?        @relation("QuoteUpdater", fields: [updatedById], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  payments       Payment[]
+  shipments      Shipment[]
+  tickets        Ticket[]
+}
+
+model Payment {
+  id                    String          @id @default(auto()) @map("_id") @db.ObjectId
+  quoteId               String          @db.ObjectId
+  quote                 Quote           @relation(fields: [quoteId], references: [id])
+  
+  quoteReference        String?         @unique
+  provider              PaymentProvider @default(Stripe)
+  
+  paidAt                DateTime?
+  amountPaid            Float?
+  currency              String?
+  
+  expectedAmount        Float?
+  expectedCurrency      String?
+  amountMismatch        Boolean?
+  
+  stripeSessionId       String?
+  stripePaymentIntentId String?
+  paypalOrderId         String?
+  paypalCaptureId       String?
+  
+  status                PaymentStatus   @default(Unpaid)
+  paymentUrl            String?
+  
+  createdById           String?         @db.ObjectId
+  createdBy             User?           @relation("PaymentCreator", fields: [createdById], references: [id])
+  updatedById           String?         @db.ObjectId
+  updatedBy             User?           @relation("PaymentUpdater", fields: [updatedById], references: [id])
+
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  shipments             Shipment[]
+}
+
+model Shipment {
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  
+  quoteId     String?        @db.ObjectId
+  quote       Quote?         @relation(fields: [quoteId], references: [id])
+  
+  paymentId   String?        @unique @db.ObjectId
+  payment     Payment?       @relation(fields: [paymentId], references: [id])
+  
+  status      ShipmentStatus @default(Dock)
+  
+  updatedById String?        @db.ObjectId
+  updatedBy   User?          @relation("ShipmentUpdater", fields: [updatedById], references: [id])
+  
+  isManual    Boolean?       @default(false)
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  tickets     Ticket[]
+}
+
+model Ticket {
+  id           String             @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId       String?            @db.ObjectId
+  user         User?              @relation("TicketOwner", fields: [userId], references: [id])
+  
+  closedById   String?            @db.ObjectId
+  closedBy     User?              @relation("TicketCloser", fields: [closedById], references: [id])
+  
+  subject      String?
+  status       TicketStatus       @default(Open)
+  
+  quoteId      String?            @db.ObjectId
+  quote        Quote?             @relation(fields: [quoteId], references: [id])
+  
+  shipmentId   String?            @db.ObjectId
+  shipment     Shipment?          @relation(fields: [shipmentId], references: [id])
+  
+  conversation TicketConversation?
+  
+  closedAt     DateTime?
+  
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model Token {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userId    String?   @db.ObjectId
+  user      User?     @relation(fields: [userId], references: [id])
+  
+  expiresIn DateTime?
+  type      TokenType?
+  hash      String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model TokenBlacklist {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  
+  expiresAt DateTime
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WebhookEvent {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  stripeEventId String          @unique
+  provider      PaymentProvider @default(Stripe)
+  type          String
+  success       Boolean?        @default(false)
+  error         String?
+  processedAt   DateTime?
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}

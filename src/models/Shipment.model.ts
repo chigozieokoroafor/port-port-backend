@@ -29,6 +29,14 @@ const shipmentSchema = new Schema<IShipment>({
     timestamps: true
 })
 
+// One shipment per payment: makes webhook-driven fulfillment idempotent under
+// duplicate/retried Stripe deliveries. Partial (not sparse) so it ignores manual
+// shipments that carry no payment, while still rejecting a duplicate real payment.
+shipmentSchema.index(
+    { payment: 1 },
+    { unique: true, partialFilterExpression: { payment: { $type: 'objectId' } } }
+);
+
 const Shipment = mongoose.model<IShipment>('Shipment', shipmentSchema);
 
 export default Shipment;

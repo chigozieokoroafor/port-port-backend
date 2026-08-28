@@ -28,7 +28,11 @@ app.use(
   })
 );
 
-app.use('/stripe', webhookRoutes);
+// Webhook routes are mounted at the app root, BEFORE the global JSON parser, so each
+// provider's route controls its own body handling (Stripe needs the raw bytes for its
+// HMAC signature; PayPal parses JSON itself). Paths are provider-scoped inside the router
+// (/stripe/webhook, /paypal/webhook).
+app.use('/', webhookRoutes);
 
 // Body parsing
 app.use(express.json());
