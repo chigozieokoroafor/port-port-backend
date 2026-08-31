@@ -100,7 +100,7 @@ export const createCheckoutSession = async (
 
     const metadata = {
         quoteRef: quote.quoteNumber,
-        quoteId: quote._id.toString(),
+        quoteId: ((quote as any).id || (quote as any)._id).toString(),
     };
 
     const frontendUrl = process.env.FRONTEND_URL as string;

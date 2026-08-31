@@ -21,6 +21,8 @@ export const approveQuoteController = catchAsync(async (req: Request, res: Respo
 
     const dto = await validateDTO<TApproveQuoteDTO>(input, ApproveQuoteDTO);
 
+    console.log("DTO ====> ", dto)
+
     const quote = await approveQuoteAction(dto, user._id.toString());
 
     res.status(200).json({

@@ -41,6 +41,6 @@ const ticketSchema = new Schema<ITicket>({
     timestamps: true
 });
 
-const Ticket = mongoose.model<ITicket>('Ticket', ticketSchema);
+const Ticket = mongoose.model<ITicket>('Ticket', ticketSchema, 'Ticket');
 
 export default Ticket;

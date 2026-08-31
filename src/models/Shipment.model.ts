@@ -37,6 +37,6 @@ shipmentSchema.index(
     { unique: true, partialFilterExpression: { payment: { $type: 'objectId' } } }
 );
 
-const Shipment = mongoose.model<IShipment>('Shipment', shipmentSchema);
+const Shipment = mongoose.model<IShipment>('Shipment', shipmentSchema, 'Shipment');
 
 export default Shipment;

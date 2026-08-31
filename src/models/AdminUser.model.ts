@@ -166,7 +166,7 @@ interface IAdminUserModel extends Model<IAdminUser> {
 // Create and export the model
 const AdminUser = mongoose.model<IAdminUser, IAdminUserModel>(
     'AdminUser',
-    adminUserSchema
+    adminUserSchema, 'AdminUser'
 );
 
 export default AdminUser;

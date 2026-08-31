@@ -10,13 +10,13 @@ const router = Router();
 
 // Stripe: signature is an HMAC over the EXACT raw bytes, so this route must see the
 // unparsed body — express.raw() before the global JSON parser.
-router.post('/stripe/webhook',
+router.post('/stripe',
     express.raw({ type: 'application/json' }),
     StripeWebhookController);
 
 // PayPal: verification is REMOTE and needs the PARSED event body, so this route parses
 // JSON itself (it's mounted before the app's global JSON parser).
-router.post('/paypal/webhook',
+router.post('/paypal',
     express.json(),
     PaypalWebhookController);
 

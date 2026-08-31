@@ -66,6 +66,6 @@ const paymentSchema = new Schema<IPayment>({
     timestamps: true
 })
 
-const Payment = mongoose.model<IPayment>('Payment', paymentSchema);
+const Payment = mongoose.model<IPayment>('Payment', paymentSchema, 'Payment');
 
 export default Payment;

@@ -2,7 +2,9 @@ import { Router } from 'express';
 import { validateQuoteRequest, validateUpdateStatus } from '../validators/quote.validator';
 import { validate } from '../middleware/validate.middleware';
 import { rateLimiter } from '../middleware/rateLimiter.middleware';
-import { submitQuoteRequest, trackQuoteRequest, getUserQuoteRequests } from '../controllers/quoteRequest.controller';
+import { submitQuoteRequest, trackQuoteRequest } from '../controllers/quoteRequest.controller';
+import { listQuoteRequestsController } from '../controllers/user-quote/list-quote-requests';
+import { getUserQuoteMetricsController } from '../controllers/user-quote/get-quote-metrics';
 import { approveQuoteRequest, getAllQuoteRequests, getQuoteById, getQuoteRequestById, rejectQuoteRequest } from '../controllers/quote.controller';
 import { protect } from '../middleware/auth.middleware';
 
@@ -38,12 +40,18 @@ router.get('/requests', getAllQuoteRequests);
 router.get('/:id', getQuoteById);
 
 /**
+ * @route   GET /api/quotes/metrics/user/:userId
+ * @desc    Get quote request metrics for current user
+ * @access  Public
+ */
+router.get('/metrics/user/:userId', getUserQuoteMetricsController);
+
+/**
  * @route   GET /api/quotes/requests/user/:userId
  * @desc    List all quote requests with filters for current user
  * @access  Public
  */
-router.get('/requests/user/:userId', getUserQuoteRequests);
-
+router.get('/requests/user/:userId', listQuoteRequestsController);
 
 /**
  * @route   GET /api/quotes/requests/:id

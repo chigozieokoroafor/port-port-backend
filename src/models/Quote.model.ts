@@ -149,6 +149,6 @@ quoteSchema.virtual('isExpired').get(function () {
 quoteSchema.set('toJSON', { virtuals: true });
 quoteSchema.set('toObject', { virtuals: true });
 
-const Quote = mongoose.model<IQuote>('Quote', quoteSchema);
+const Quote = mongoose.model<IQuote>('Quote', quoteSchema, 'Quote');
 
 export default Quote;

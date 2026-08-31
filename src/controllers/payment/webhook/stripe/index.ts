@@ -17,6 +17,8 @@ export const StripeWebhookController = catchAsync(async (req: Request, res: Resp
     let event: Stripe.Event;
     const signature: string | string[] = req.headers['stripe-signature'] || '';
 
+    console.dir(req.body, { depth: 12 })
+
     try {
         // Signature verification needs the exact raw bytes Stripe sent (guide 1.5);
         // this route is mounted with express.raw() before the global JSON parser.

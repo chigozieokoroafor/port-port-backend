@@ -22,7 +22,7 @@ const tokenSchema = new Schema<IToken>({
 
 const Token = mongoose.model<IToken>(
   'Token',
-  tokenSchema
+  tokenSchema, 'Token'
 );
 
 export default Token;

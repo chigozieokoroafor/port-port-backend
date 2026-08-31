@@ -189,6 +189,6 @@ const quoteRequestSchema = new Schema<IQuoteRequest>(
 // quoteRequestSchema.index({ 'customer.email': 1 });
 // quoteRequestSchema.index({ createdAt: -1 });
 
-const QuoteRequest = mongoose.model<IQuoteRequest>('QuoteRequest', quoteRequestSchema);
+const QuoteRequest = mongoose.model<IQuoteRequest>('QuoteRequest', quoteRequestSchema, 'QuoteRequest');
 
 export default QuoteRequest;
