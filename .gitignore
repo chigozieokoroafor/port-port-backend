@@ -10,3 +10,5 @@ package-lock.json
 /.CLAUDE.md
 dist/
 generated
+scratch
+.agents

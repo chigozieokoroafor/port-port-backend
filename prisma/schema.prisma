@@ -16,60 +16,14 @@ enum UserType {
   SuperAdmin
 }
 
-enum UserStatus {
-  Pending
-  Active
-  Suspended
-}
-
 enum AdminRole {
   admin
   superadmin
 }
 
-enum AdminStatus {
-  pending
-  active
-  suspended
-}
-
-enum Status {
-  Pending
-  Approved
-  Rejected
-}
-
-enum VehicleType {
-  // Add your vehicle types here
-  Car
-}
-
-enum VehicleCondition {
-  // Add vehicle conditions here
-  New
-  Used
-}
-
 enum PaymentProvider {
   Stripe
   Paypal
-}
-
-enum PaymentStatus {
-  Unpaid
-  Paid
-  Failed
-}
-
-enum ShipmentStatus {
-  Dock
-  InTransit
-  Delivered
-}
-
-enum TicketStatus {
-  Open
-  Closed
 }
 
 enum TokenType {
@@ -96,14 +50,14 @@ type VehicleDimensions {
 }
 
 type VehicleInfo {
-  type       VehicleType
+  type       String
   make       String
   model      String
   year       Int
   vin        String
   dimensions VehicleDimensions
   weight     Float
-  condition  VehicleCondition
+  condition  String
 }
 
 type RouteInfo {
@@ -135,7 +89,7 @@ type TermsInfo {
 }
 
 type TicketConversation {
-  userId String?   @db.ObjectId
+  userId String?   @map("user") @db.ObjectId
   text   String?
   sentAt DateTime?
 }
@@ -151,9 +105,9 @@ model User {
   firstName                    String
   lastName                     String
   role                         UserType   @default(Customer)
-  status                       UserStatus @default(Pending)
+  status                       String @default("Pending")
   
-  invitedById                  String?    @db.ObjectId
+  invitedById                  String?    @map("invitedBy") @db.ObjectId
   invitedBy                    User?      @relation("UserInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   invitedUsers                 User[]     @relation("UserInvites")
 
@@ -189,9 +143,9 @@ model AdminUser {
   firstName           String
   lastName            String
   role                AdminRole   @default(admin)
-  status              AdminStatus @default(pending)
+  status              String @default("pending")
   
-  invitedById         String?     @db.ObjectId
+  invitedById         String?     @map("invitedBy") @db.ObjectId
   invitedBy           AdminUser?  @relation("AdminInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   invitedAdmins       AdminUser[] @relation("AdminInvites")
 
@@ -208,12 +162,12 @@ model AdminUser {
 model QuoteRequest {
   id               String       @id @default(auto()) @map("_id") @db.ObjectId
   referenceId      String       @unique
-  userId           String?      @db.ObjectId
+  userId           String?      @map("user") @db.ObjectId
   user             User?        @relation(fields: [userId], references: [id])
   customer         CustomerInfo
   vehicle          VehicleInfo
   route            RouteInfo
-  status           Status       @default(Pending)
+  status           String       @default("Pending")
   notes            String?
   reviewedByUserId String?      @db.ObjectId
   reviewedByUser   User?        @relation("QuoteRequestReviewer", fields: [reviewedByUserId], references: [id])
@@ -234,14 +188,14 @@ model Quote {
   notes          String?
   pricing        PricingInfo
   terms          TermsInfo
-  status         Status       @default(Pending)
+  status         String       @default("Pending")
   sentAt         DateTime?
   viewedAt       DateTime?
-  generatedById  String       @db.ObjectId
-  generatedBy    User         @relation("QuoteGenerator", fields: [generatedById], references: [id])
-  createdById    String?      @db.ObjectId
+  generatedById  String?      @map("generatedBy") @db.ObjectId
+  generatedBy    User?        @relation("QuoteGenerator", fields: [generatedById], references: [id])
+  createdById    String?      @map("createdBy") @db.ObjectId
   createdBy      User?        @relation("QuoteCreator", fields: [createdById], references: [id])
-  updatedById    String?      @db.ObjectId
+  updatedById    String?      @map("updatedBy") @db.ObjectId
   updatedBy      User?        @relation("QuoteUpdater", fields: [updatedById], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -272,12 +226,12 @@ model Payment {
   paypalOrderId         String?
   paypalCaptureId       String?
   
-  status                PaymentStatus   @default(Unpaid)
+  status                String   @default("Unpaid")
   paymentUrl            String?
   
-  createdById           String?         @db.ObjectId
+  createdById           String?         @map("createdBy") @db.ObjectId
   createdBy             User?           @relation("PaymentCreator", fields: [createdById], references: [id])
-  updatedById           String?         @db.ObjectId
+  updatedById           String?         @map("updatedBy") @db.ObjectId
   updatedBy             User?           @relation("PaymentUpdater", fields: [updatedById], references: [id])
 
   createdAt             DateTime        @default(now())
@@ -289,15 +243,15 @@ model Payment {
 model Shipment {
   id          String         @id @default(auto()) @map("_id") @db.ObjectId
   
-  quoteId     String?        @db.ObjectId
+  quoteId     String?        @map("quote") @db.ObjectId
   quote       Quote?         @relation(fields: [quoteId], references: [id])
   
-  paymentId   String?        @unique @db.ObjectId
+  paymentId   String?        @map("payment") @unique @db.ObjectId
   payment     Payment?       @relation(fields: [paymentId], references: [id])
   
-  status      ShipmentStatus @default(Dock)
+  status      String @default("Dock")
   
-  updatedById String?        @db.ObjectId
+  updatedById String?        @map("updatedBy") @db.ObjectId
   updatedBy   User?          @relation("ShipmentUpdater", fields: [updatedById], references: [id])
   
   isManual    Boolean?       @default(false)
@@ -311,19 +265,19 @@ model Shipment {
 model Ticket {
   id           String             @id @default(auto()) @map("_id") @db.ObjectId
   
-  userId       String?            @db.ObjectId
+  userId       String?            @map("user") @db.ObjectId
   user         User?              @relation("TicketOwner", fields: [userId], references: [id])
   
-  closedById   String?            @db.ObjectId
+  closedById   String?            @map("closedBy") @db.ObjectId
   closedBy     User?              @relation("TicketCloser", fields: [closedById], references: [id])
   
   subject      String?
-  status       TicketStatus       @default(Open)
+  status       String       @default("Open")
   
-  quoteId      String?            @db.ObjectId
+  quoteId      String?            @map("quote") @db.ObjectId
   quote        Quote?             @relation(fields: [quoteId], references: [id])
   
-  shipmentId   String?            @db.ObjectId
+  shipmentId   String?            @map("shipment") @db.ObjectId
   shipment     Shipment?          @relation(fields: [shipmentId], references: [id])
   
   conversation TicketConversation?
@@ -337,7 +291,7 @@ model Ticket {
 model Token {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   
-  userId    String?   @db.ObjectId
+  userId    String?   @map("user") @db.ObjectId
   user      User?     @relation(fields: [userId], references: [id])
   
   expiresIn DateTime?

@@ -179,7 +179,7 @@ interface IUserModel extends Model<IUser> {
 // Create and export the model
 const User = mongoose.model<IUser, IUserModel>(
     'User',
-    userSchema
+    userSchema, 'User'
 );
 
 export default User;
