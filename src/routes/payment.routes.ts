@@ -10,6 +10,7 @@ import { paypalReturn } from "../controllers/payment/webhook/paypal";
 import { getPaymentById } from "../controllers/payment/get-payment-by-id";
 import { getPayments } from "../controllers/payment/list-payments";
 import { createPaymentV2Controller } from "../controllers/payment/create-payment-v2";
+import { listUserPaymentsController } from "../controllers/payment/list-user-payments";
 
 const router = Router();
 
@@ -44,6 +45,13 @@ router.get('/:id', getPaymentById);
  * @access   Customer
  */
 router.post('/v2/create', createPaymentV2Controller);
+
+/**
+ * @route   GET /api/payment/history/user/:userId
+ * @desc    List payment history for a user
+ * @access  Customer
+ */
+router.get('/history/user/:userId', listUserPaymentsController);
 
 /**
  * @route   GET /api/payment

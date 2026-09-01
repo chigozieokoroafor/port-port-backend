@@ -79,7 +79,7 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
-    throw new ApiError(401, 'Invalid credentials');
+    throw new ApiError(400, 'Invalid credentials');
   }
 
   // Check if account is active
@@ -95,7 +95,7 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   const isPasswordCorrect = await user.comparePassword(password);
 
   if (!isPasswordCorrect) {
-    throw new ApiError(401, 'Invalid credentials');
+    throw new ApiError(400, 'Invalid credentials');
   }
 
   // Update last login

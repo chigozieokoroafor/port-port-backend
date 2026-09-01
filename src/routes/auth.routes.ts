@@ -38,7 +38,7 @@ router.get('/', protect, getCurrentUser);
  * @access  Public
  */
 // 5 requests per 15 minutes
-router.post( '/login', rateLimiter({ windowMs: 15 * 60 * 1000, max: 5 }), validateLogin, validate, login);
+router.post( '/login', rateLimiter({ windowMs: 2 * 60 * 1000, max: 10 }), validateLogin, validate, login);
 
 /**
  * @route   POST /api/auth/create

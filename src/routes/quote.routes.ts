@@ -22,6 +22,23 @@ router.use(protect);
 router.use(restrictToAdmin);
 
 
+import { getQuoteRequestAdminController } from '../controllers/admin/quotes/get-quote-request';
+import { getAdminQuoteMetricsController } from '../controllers/admin/quotes/get-metrics';
+
+/**
+ * @route   GET /api/admin/quotes/metrics
+ * @desc    Get admin quote metrics
+ * @access  Admin
+ */
+router.get('/metrics', getAdminQuoteMetricsController);
+
+/**
+ * @route   GET /api/admin/quotes/requests/:id
+ * @desc    Get specific quote request
+ * @access  Admin
+ */
+router.get('/requests/:id', getQuoteRequestAdminController);
+
 /**
  * @route   DELETE /api/admin/quotes/requests/:id
  * @desc    Delete quote request

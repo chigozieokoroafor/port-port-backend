@@ -8,6 +8,7 @@ import Quote from '../../../../models/Quote.model';
 import { fromMinorUnits } from '../../../../services/payment/currency';
 import { sendPaymentConfirmationEmail } from '../../../../services/email';
 import logger from '../../../../utils/logger';
+import { prisma } from '../../../../config/database';
 
 
 
@@ -78,6 +79,20 @@ export const fulfillPaidPayment = async (
                 `${process.env.FRONTEND_URL}/receipts/${payment._id}`
             );
         }
+        if (quote) {
+            await prisma.quote.update(
+                {
+                    where: {
+                        id: String(payment.quoteId)
+                    },
+                    data: {
+                        status: "Paid"
+                    }
+                }
+            )
+            // quote.status = "Paid";
+            // await quote?.save();
+        }
     } catch (emailError) {
         logger.error('Failed to send payment confirmation email:', emailError);
         // Continue — payment and shipment are already recorded.
@@ -120,7 +135,7 @@ export const capturedAmountMatchesExpectation = (
  * won, so a retry after a crash between the flip and fulfillment still creates the
  * shipment rather than silently dropping it.
  */
-export  const handleSuccessfulPayment = async (session: Stripe.Checkout.Session): Promise<void> => {
+export const handleSuccessfulPayment = async (session: Stripe.Checkout.Session): Promise<void> => {
     const quoteRef = session.client_reference_id ?? session.metadata?.quoteRef;
     if (!quoteRef) {
         logger.error(`Checkout session ${session.id} completed with no quote reference; cannot reconcile`);
