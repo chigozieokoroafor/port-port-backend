@@ -23,6 +23,14 @@ const shipmentSchema = new Schema<IShipment>({
     isManual: {
         type: Boolean,
         default: false
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    sku: {
+        type: String,
+        required: false
     }
 }, 
 {

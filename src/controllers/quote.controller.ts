@@ -83,34 +83,34 @@ export const getAllQuoteRequests = catchAsync(
     }
 );
 
-/**
- * @desc    Get specific quote request details
- * @route   GET /api/admin/quotes/requests/:id
- * @access  Admin
- */
-export const getQuoteRequestById = catchAsync(
-    async (req: Request, res: Response) => {
-        const { id } = req.params;
-        const request = await QuoteRequest.findOne({ _id: id });
-        if (!request) {
-            throw new ApiError(404, 'Quote not found');
-        }
+// /**
+//  * @desc    Get specific quote request details
+// //  * @route   GET /api/admin/quotes/requests/:id
+// //  * @access  Admin
+// //  */
+// export const getQuoteRequestById = catchAsync(
+//     async (req: Request, res: Response) => {
+//         const { id } = req.params;
+//         const request = await QuoteRequest.findOne({ _id: id });
+//         if (!request) {
+//             throw new ApiError(404, 'Quote not found');
+//         }
 
-        // Get associated quote if exists
-        const quote: IQuote | null = await Quote.findOne({ quoteRequestId: id }).populate(
-            'generatedBy',
-            'firstName lastName email'
-        );
+//         // Get associated quote if exists
+//         const quote: IQuote | null = await Quote.findOne({ quoteRequestId: id }).populate(
+//             'generatedBy',
+//             'firstName lastName email'
+//         );
 
-        res.status(200).json({
-            success: true,
-            data: {
-                request,
-                quote,
-            },
-        });
-    }
-);
+//         res.status(200).json({
+//             success: true,
+//             data: {
+//                 request,
+//                 quote,
+//             },
+//         });
+//     }
+// );
 
 /**
  * @desc    Update quote request status
@@ -316,6 +316,8 @@ export const updateQuote = catchAsync(
     async (req: Request, res: Response) => {
         const { id } = req.params;
         const { pricing, terms } = req.body;
+
+        console.log("Fucking retard ===> ",req.body)
 
         const quote: IQuote | null = await Quote.findById(id);
 

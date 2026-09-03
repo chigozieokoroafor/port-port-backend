@@ -4,8 +4,9 @@ import { validate } from '../middleware/validate.middleware';
 import { rateLimiter } from '../middleware/rateLimiter.middleware';
 import { submitQuoteRequest, trackQuoteRequest } from '../controllers/quoteRequest.controller';
 import { listQuoteRequestsController } from '../controllers/user-quote/list-quote-requests';
+import { getQuoteRequestController } from '../controllers/user-quote/get-quote-request';
 import { getUserQuoteMetricsController } from '../controllers/user-quote/get-quote-metrics';
-import { approveQuoteRequest, getAllQuoteRequests, getQuoteById, getQuoteRequestById, rejectQuoteRequest } from '../controllers/quote.controller';
+import { approveQuoteRequest, getAllQuoteRequests, getQuoteById, rejectQuoteRequest } from '../controllers/quote.controller';
 import { protect } from '../middleware/auth.middleware';
 
 const router = Router();
@@ -58,14 +59,14 @@ router.get('/requests/user/:userId', listQuoteRequestsController);
  * @desc    Get specific quote request details
  * @access  Public
  */
-router.get('/request/:id', getQuoteRequestById);
+router.get('/request/:id', getQuoteRequestController);
 
-/**
- * @route   GET /api/quotes/request/:id
- * @desc    Get quote details
- * @access  Admin
- */
-router.get('/request/:id', getQuoteRequestById);
+// /**
+//  * @route   GET /api/quotes/request/:id
+//  * @desc    Get quote details
+//  * @access  Admin
+//  */
+// router.get('/request/:id', getQuoteRequestById);
 
 /**
  * @route   PATCH /api/quotes/approve/:id

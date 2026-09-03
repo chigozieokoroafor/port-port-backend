@@ -8,6 +8,7 @@ import Quote from '../../../../models/Quote.model';
 import { fromMinorUnits } from '../../../../services/payment/currency';
 import { sendPaymentConfirmationEmail } from '../../../../services/email';
 import logger from '../../../../utils/logger';
+import { prisma } from '../../../../config/database';
 
 
 
@@ -37,9 +38,10 @@ export const handleExpiredPayment = async (session: Stripe.Checkout.Session): Pr
  */
 export const ensureShipment = async (payment: IPayment): Promise<void> => {
     try {
+        const sku = `SKU-${new Date(payment.createdAt).getFullYear()}-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
         await Shipment.findOneAndUpdate(
             { payment: payment._id },
-            { $setOnInsert: { quote: payment.quoteId, payment: payment._id } },
+            { $setOnInsert: { quote: payment.quoteId, payment: payment._id, sku, user: payment.user } },
             { upsert: true, new: true }
         );
     } catch (err: any) {
@@ -77,6 +79,20 @@ export const fulfillPaidPayment = async (
                 quoteRef,
                 `${process.env.FRONTEND_URL}/receipts/${payment._id}`
             );
+        }
+        if (quote) {
+            await prisma.quote.update(
+                {
+                    where: {
+                        id: String(payment.quoteId)
+                    },
+                    data: {
+                        status: "Paid"
+                    }
+                }
+            )
+            // quote.status = "Paid";
+            // await quote?.save();
         }
     } catch (emailError) {
         logger.error('Failed to send payment confirmation email:', emailError);
@@ -120,7 +136,7 @@ export const capturedAmountMatchesExpectation = (
  * won, so a retry after a crash between the flip and fulfillment still creates the
  * shipment rather than silently dropping it.
  */
-export  const handleSuccessfulPayment = async (session: Stripe.Checkout.Session): Promise<void> => {
+export const handleSuccessfulPayment = async (session: Stripe.Checkout.Session): Promise<void> => {
     const quoteRef = session.client_reference_id ?? session.metadata?.quoteRef;
     if (!quoteRef) {
         logger.error(`Checkout session ${session.id} completed with no quote reference; cannot reconcile`);
@@ -158,7 +174,7 @@ export  const handleSuccessfulPayment = async (session: Stripe.Checkout.Session)
             { quoteReference: quoteRef, status: { $ne: PaymentStatus.Paid } },
             {
                 amountMismatch: true,
-                amountPaid: session.amount_total,
+                amountPaid: Number(session.amount_total) /100,
                 currency: capturedCurrency,
                 stripeSessionId: session.id,
                 stripePaymentIntentId: paymentIntentId,
@@ -172,7 +188,7 @@ export  const handleSuccessfulPayment = async (session: Stripe.Checkout.Session)
         {
             status: PaymentStatus.Paid,
             paidAt: new Date(),
-            amountPaid: session.amount_total,
+            amountPaid: Number(session.amount_total) /100,
             currency: capturedCurrency,
             stripeSessionId: session.id,
             stripePaymentIntentId: paymentIntentId,

@@ -54,7 +54,7 @@ export const handlePayPalCaptureCompleted = async (resource: any): Promise<void>
             { quoteReference: quoteRef, status: { $ne: PaymentStatus.Paid } },
             {
                 amountMismatch: true,
-                amountPaid: capturedAmount,
+                amountPaid: Number(capturedAmount)/100,
                 currency: capturedCurrency,
                 paypalCaptureId: captureId,
             }
@@ -68,7 +68,7 @@ export const handlePayPalCaptureCompleted = async (resource: any): Promise<void>
             status: PaymentStatus.Paid,
             provider: PaymentProvider.Paypal,
             paidAt: new Date(),
-            amountPaid: capturedAmount,
+            amountPaid: Number(capturedAmount)/100,
             currency: capturedCurrency,
             paypalCaptureId: captureId,
         },

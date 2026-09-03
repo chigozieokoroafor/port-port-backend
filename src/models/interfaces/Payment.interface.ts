@@ -20,6 +20,7 @@ export interface IPayment extends Document{
     stripePaymentIntentId?: string;
     paypalOrderId?: string;
     paypalCaptureId?: string;
+    user?: mongoose.Types.ObjectId | string;
     createdAt: Date;
     updatedAt: Date;
     paidAt: Date;
