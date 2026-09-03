@@ -24,9 +24,9 @@ export async function getQuotesList(
 ) {
     const where: any = {};
 
-    if (status) {
-        where.status = status;
-    }
+    // if (status) {
+    //     where.status = status;
+    // }
 
     if (dto.search) {
         where.OR = [
@@ -64,7 +64,8 @@ export async function getQuotesList(
     }).withPages(
         {
             page: dto.page,
-            limit: dto.limit
+            limit: dto.limit,
+            includePageCount: true
         }
     )
 
@@ -76,6 +77,7 @@ export function getQuoteListDAO(data: Awaited<ReturnType<typeof getQuotesList>>)
     return {
         quoteRequests: data[0].map(i => {
             return {
+                id: i.id,
                 referenceId: i.referenceId,
                 customerName: i.customer.fullName,
                 vehicle: `${i.vehicle.make} ${i.vehicle.model} ${i.vehicle.year}`,

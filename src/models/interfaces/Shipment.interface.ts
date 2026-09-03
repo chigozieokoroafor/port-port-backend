@@ -4,9 +4,11 @@ import { ShipmentStatus } from '../enums/ShipmentStatus.enum';
 export interface IShipment extends Document {
     quote: mongoose.Types.ObjectId,
     payment: mongoose.Types.ObjectId,
-    status: ShipmentStatus,
-    createdAt: Date,
-    updatedAt: Date,
-    updatedBy: mongoose.Types.ObjectId,
-    isManual: Boolean
+    status: string;
+    updatedBy?: mongoose.Types.ObjectId | string;
+    isManual?: boolean;
+    user?: mongoose.Types.ObjectId | string;
+    sku?: string;
+    createdAt?: Date;
+    updatedAt: Date;
 }

@@ -4,11 +4,10 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  output          = "../generated/prisma"
-  binaryTargets   = ["native", "darwin-arm64", "debian-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["native", "darwin-arm64", "debian-openssl-3.0.x"]
 }
-
 
 enum UserType {
   Admin
@@ -99,55 +98,57 @@ type TicketConversation {
 // -----------------------------------------
 
 model User {
-  id                           String     @id @default(auto()) @map("_id") @db.ObjectId
-  email                        String     @unique
-  password                     String
-  firstName                    String
-  lastName                     String
-  role                         UserType   @default(Customer)
-  status                       String @default("Pending")
-  
-  invitedById                  String?    @map("invitedBy") @db.ObjectId
-  invitedBy                    User?      @relation("UserInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  invitedUsers                 User[]     @relation("UserInvites")
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  role      UserType @default(Customer)
+  status    String   @default("Pending")
+
+  invitedById  String? @map("invitedBy") @db.ObjectId
+  invitedBy    User?   @relation("UserInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invitedUsers User[]  @relation("UserInvites")
 
   inviteToken                  String?
   inviteTokenExpiry            DateTime?
   passwordResetToken           String?
   passwordResetExpiry          DateTime?
   lastLogin                    DateTime?
-  isSubscribedToNewsletter     Boolean?   @default(false)
-  isAgreedToTermsAndConditions Boolean?   @default(false)
+  isSubscribedToNewsletter     Boolean?  @default(false)
+  isAgreedToTermsAndConditions Boolean?  @default(false)
 
-  createdAt                    DateTime   @default(now())
-  updatedAt                    DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  quoteRequests                QuoteRequest[]
-  quoteRequestsReviewed        QuoteRequest[] @relation("QuoteRequestReviewer")
-  quotesGenerated              Quote[]        @relation("QuoteGenerator")
-  quotesCreated                Quote[]        @relation("QuoteCreator")
-  quotesUpdated                Quote[]        @relation("QuoteUpdater")
-  paymentsCreated              Payment[]      @relation("PaymentCreator")
-  paymentsUpdated              Payment[]      @relation("PaymentUpdater")
-  shipmentsUpdated             Shipment[]     @relation("ShipmentUpdater")
-  ticketsOwned                 Ticket[]       @relation("TicketOwner")
-  ticketsClosed                Ticket[]       @relation("TicketCloser")
-  tokens                       Token[]
-  blacklistedTokens            TokenBlacklist[]
+  quoteRequests         QuoteRequest[]
+  quoteRequestsReviewed QuoteRequest[]   @relation("QuoteRequestReviewer")
+  quotesGenerated       Quote[]          @relation("QuoteGenerator")
+  quotesCreated         Quote[]          @relation("QuoteCreator")
+  quotesUpdated         Quote[]          @relation("QuoteUpdater")
+  paymentsCreated       Payment[]        @relation("PaymentCreator")
+  paymentsUpdated       Payment[]        @relation("PaymentUpdater")
+  payments              Payment[]        @relation("PaymentUser")
+  shipmentsUpdated      Shipment[]       @relation("ShipmentUpdater")
+  shipments             Shipment[]       @relation("ShipmentUser")
+  ticketsOwned          Ticket[]         @relation("TicketOwner")
+  ticketsClosed         Ticket[]         @relation("TicketCloser")
+  tokens                Token[]
+  blacklistedTokens     TokenBlacklist[]
 }
 
 model AdminUser {
-  id                  String      @id @default(auto()) @map("_id") @db.ObjectId
-  email               String      @unique
-  password            String
-  firstName           String
-  lastName            String
-  role                AdminRole   @default(admin)
-  status              String @default("pending")
-  
-  invitedById         String?     @map("invitedBy") @db.ObjectId
-  invitedBy           AdminUser?  @relation("AdminInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  invitedAdmins       AdminUser[] @relation("AdminInvites")
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  password  String
+  firstName String
+  lastName  String
+  role      AdminRole @default(admin)
+  status    String    @default("pending")
+
+  invitedById   String?     @map("invitedBy") @db.ObjectId
+  invitedBy     AdminUser?  @relation("AdminInvites", fields: [invitedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invitedAdmins AdminUser[] @relation("AdminInvites")
 
   inviteToken         String?
   inviteTokenExpiry   DateTime?
@@ -155,8 +156,8 @@ model AdminUser {
   passwordResetExpiry DateTime?
   lastLogin           DateTime?
 
-  createdAt           DateTime    @default(now())
-  updatedAt           DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model QuoteRequest {
@@ -174,15 +175,15 @@ model QuoteRequest {
   reviewedBy       String?
   reviewedDate     DateTime?
 
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-  quotes           Quote?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quotes    Quote?
 }
 
 model Quote {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
   quoteNumber    String       @unique
-  quoteRequestId String       @db.ObjectId @unique
+  quoteRequestId String       @unique @db.ObjectId
   quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id])
   productId      String?
   notes          String?
@@ -200,117 +201,119 @@ model Quote {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  payments       Payment[]
-  shipments      Shipment[]
-  tickets        Ticket[]
+  payments  Payment[]
+  shipments Shipment[]
+  tickets   Ticket[]
 }
 
 model Payment {
-  id                    String          @id @default(auto()) @map("_id") @db.ObjectId
-  quoteId               String          @db.ObjectId
-  quote                 Quote           @relation(fields: [quoteId], references: [id])
-  
-  quoteReference        String?         @unique
-  provider              PaymentProvider @default(Stripe)
-  
-  paidAt                DateTime?
-  amountPaid            Float?
-  currency              String?
-  
-  expectedAmount        Float?
-  expectedCurrency      String?
-  amountMismatch        Boolean?
-  
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  quoteId String @db.ObjectId
+  quote   Quote  @relation(fields: [quoteId], references: [id])
+
+  quoteReference String?         @unique
+  provider       PaymentProvider @default(Stripe)
+
+  paidAt     DateTime?
+  amountPaid Float?
+  currency   String?
+
+  expectedAmount   Float?
+  expectedCurrency String?
+  amountMismatch   Boolean?
+
   stripeSessionId       String?
   stripePaymentIntentId String?
   paypalOrderId         String?
   paypalCaptureId       String?
-  
-  status                String   @default("Unpaid")
-  paymentUrl            String?
-  
-  createdById           String?         @map("createdBy") @db.ObjectId
-  createdBy             User?           @relation("PaymentCreator", fields: [createdById], references: [id])
-  updatedById           String?         @map("updatedBy") @db.ObjectId
-  updatedBy             User?           @relation("PaymentUpdater", fields: [updatedById], references: [id])
 
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
+  status     String  @default("Unpaid")
+  paymentUrl String?
 
-  shipments             Shipment[]
+  createdById String? @map("createdBy") @db.ObjectId
+  createdBy   User?   @relation("PaymentCreator", fields: [createdById], references: [id])
+  updatedById String? @map("updatedBy") @db.ObjectId
+  updatedBy   User?   @relation("PaymentUpdater", fields: [updatedById], references: [id])
+  
+  userId      String? @map("user") @db.ObjectId
+  user        User?   @relation("PaymentUser", fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  shipments Shipment[]
 }
 
 model Shipment {
-  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  sku         String?
+  quoteId     String?  @map("quote") @db.ObjectId
+  quote       Quote?   @relation(fields: [quoteId], references: [id])
+  paymentId   String?  @unique @map("payment") @db.ObjectId
+  payment     Payment? @relation(fields: [paymentId], references: [id])
+  status      String   @default("Dock")
+  updatedById String?  @map("updatedBy") @db.ObjectId
+  updatedBy   User?    @relation("ShipmentUpdater", fields: [updatedById], references: [id])
+  isManual    Boolean? @default(false)
   
-  quoteId     String?        @map("quote") @db.ObjectId
-  quote       Quote?         @relation(fields: [quoteId], references: [id])
-  
-  paymentId   String?        @map("payment") @unique @db.ObjectId
-  payment     Payment?       @relation(fields: [paymentId], references: [id])
-  
-  status      String @default("Dock")
-  
-  updatedById String?        @map("updatedBy") @db.ObjectId
-  updatedBy   User?          @relation("ShipmentUpdater", fields: [updatedById], references: [id])
-  
-  isManual    Boolean?       @default(false)
+  userId      String? @map("user") @db.ObjectId
+  user        User?   @relation("ShipmentUser", fields: [userId], references: [id])
 
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  tickets     Ticket[]
+  tickets Ticket[]
 }
 
 model Ticket {
-  id           String             @id @default(auto()) @map("_id") @db.ObjectId
-  
-  userId       String?            @map("user") @db.ObjectId
-  user         User?              @relation("TicketOwner", fields: [userId], references: [id])
-  
-  closedById   String?            @map("closedBy") @db.ObjectId
-  closedBy     User?              @relation("TicketCloser", fields: [closedById], references: [id])
-  
-  subject      String?
-  status       String       @default("Open")
-  
-  quoteId      String?            @map("quote") @db.ObjectId
-  quote        Quote?             @relation(fields: [quoteId], references: [id])
-  
-  shipmentId   String?            @map("shipment") @db.ObjectId
-  shipment     Shipment?          @relation(fields: [shipmentId], references: [id])
-  
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String? @map("user") @db.ObjectId
+  user   User?   @relation("TicketOwner", fields: [userId], references: [id])
+
+  closedById String? @map("closedBy") @db.ObjectId
+  closedBy   User?   @relation("TicketCloser", fields: [closedById], references: [id])
+
+  subject String?
+  status  String  @default("Open")
+
+  quoteId String? @map("quote") @db.ObjectId
+  quote   Quote?  @relation(fields: [quoteId], references: [id])
+
+  shipmentId String?   @map("shipment") @db.ObjectId
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+
   conversation TicketConversation?
-  
-  closedAt     DateTime?
-  
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
+
+  closedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Token {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  
-  userId    String?   @map("user") @db.ObjectId
-  user      User?     @relation(fields: [userId], references: [id])
-  
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String? @map("user") @db.ObjectId
+  user   User?   @relation(fields: [userId], references: [id])
+
   expiresIn DateTime?
   type      TokenType?
   hash      String?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model TokenBlacklist {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  token     String   @unique
-  
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  token String @unique
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
   expiresAt DateTime
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -324,6 +327,6 @@ model WebhookEvent {
   error         String?
   processedAt   DateTime?
 
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

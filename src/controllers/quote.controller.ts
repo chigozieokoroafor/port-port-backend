@@ -317,6 +317,8 @@ export const updateQuote = catchAsync(
         const { id } = req.params;
         const { pricing, terms } = req.body;
 
+        console.log("Fucking retard ===> ",req.body)
+
         const quote: IQuote | null = await Quote.findById(id);
 
         if (!quote) {

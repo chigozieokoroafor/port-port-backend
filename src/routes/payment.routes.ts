@@ -53,6 +53,15 @@ router.post('/v2/create', createPaymentV2Controller);
  */
 router.get('/history/user/:userId', listUserPaymentsController);
 
+import { getPaymentMetricsController } from "../controllers/admin/payments/get-metrics";
+
+/**
+ * @route   GET /api/payment/admin/metrics
+ * @desc    Get payment metrics for admin
+ * @access  Admin
+ */
+router.get('/admin/metrics', restrictToAdmin, getPaymentMetricsController);
+
 /**
  * @route   GET /api/payment
  * @desc    List/search all payments (admin tool — filters by arbitrary customer,

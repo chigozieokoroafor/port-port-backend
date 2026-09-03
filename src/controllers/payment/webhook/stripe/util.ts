@@ -38,9 +38,10 @@ export const handleExpiredPayment = async (session: Stripe.Checkout.Session): Pr
  */
 export const ensureShipment = async (payment: IPayment): Promise<void> => {
     try {
+        const sku = `SKU-${new Date(payment.createdAt).getFullYear()}-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
         await Shipment.findOneAndUpdate(
             { payment: payment._id },
-            { $setOnInsert: { quote: payment.quoteId, payment: payment._id } },
+            { $setOnInsert: { quote: payment.quoteId, payment: payment._id, sku, user: payment.user } },
             { upsert: true, new: true }
         );
     } catch (err: any) {
@@ -173,7 +174,7 @@ export const handleSuccessfulPayment = async (session: Stripe.Checkout.Session):
             { quoteReference: quoteRef, status: { $ne: PaymentStatus.Paid } },
             {
                 amountMismatch: true,
-                amountPaid: session.amount_total,
+                amountPaid: Number(session.amount_total) /100,
                 currency: capturedCurrency,
                 stripeSessionId: session.id,
                 stripePaymentIntentId: paymentIntentId,
@@ -187,7 +188,7 @@ export const handleSuccessfulPayment = async (session: Stripe.Checkout.Session):
         {
             status: PaymentStatus.Paid,
             paidAt: new Date(),
-            amountPaid: session.amount_total,
+            amountPaid: Number(session.amount_total) /100,
             currency: capturedCurrency,
             stripeSessionId: session.id,
             stripePaymentIntentId: paymentIntentId,

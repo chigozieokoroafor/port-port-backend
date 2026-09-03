@@ -59,6 +59,10 @@ const paymentSchema = new Schema<IPayment>({
     updatedBy:{
          type: Schema.Types.ObjectId,
         ref:'User',
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 },
 
