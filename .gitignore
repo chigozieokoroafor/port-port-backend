@@ -9,6 +9,6 @@ notes.txt
 package-lock.json
 /.CLAUDE.md
 dist/
-generated
+# generated
 scratch
 .agents
