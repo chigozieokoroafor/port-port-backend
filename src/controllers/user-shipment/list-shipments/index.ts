@@ -5,11 +5,11 @@ import { getListUserShipmentsAction, ListUserShipmentsDTO, validateDTO } from '.
 
 export const listUserShipmentsController = catchAsync(async (req: Request, res: Response) => {
     const { userId: requestedUserId } = req.params;
-    const userId = req.user?._id?.toString() //|| req.user?.id;
+    // const userId = req.user?._id?.toString() //|| req.user?.id;
 
-    if (userId !== requestedUserId) {
-        throw new ApiError(403, 'You are not authorized to view this user\'s shipments');
-    }
+    // if (userId !== requestedUserId) {
+    //     throw new ApiError(403, 'You are not authorized to view this user\'s shipments');
+    // }
 
     let validatedQuery;
     try {
@@ -20,7 +20,7 @@ export const listUserShipmentsController = catchAsync(async (req: Request, res: 
 
     console.log("QUERY = ==> ",validatedQuery)
 
-    const { shipments, meta } = await getListUserShipmentsAction(userId, validatedQuery);
+    const { shipments, meta } = await getListUserShipmentsAction(requestedUserId, validatedQuery);
 
     res.status(200).json({
         success: true,

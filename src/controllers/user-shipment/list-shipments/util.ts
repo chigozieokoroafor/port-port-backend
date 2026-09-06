@@ -43,7 +43,8 @@ export const getListUserShipmentsAction = async (userId: string, dto: TListUserS
                     quoteRequest: {
                         select: {
                             vehicle: true,
-                            route: true
+                            route: true,
+                            customer: true
                         }
                     }
                 }
@@ -67,6 +68,7 @@ export const getListUserShipmentsAction = async (userId: string, dto: TListUserS
             vehicle: vehicle ? `${vehicle.make} ${vehicle.model} ${vehicle.year}` : 'N/A',
             route: route ? `${route.originPort}, ${route.originCountry} -> ${route.destinationPort}, ${route.destinationCountry}` : 'N/A',
             status: shipment.status,
+            customer: shipment.quote?.quoteRequest.customer.fullName,
             estimatedArrival: null // Update this if an estimated arrival date is added to the schema in the future
         };
     });

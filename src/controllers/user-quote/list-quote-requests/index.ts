@@ -7,9 +7,9 @@ export const listQuoteRequestsController = catchAsync(async (req: Request, res: 
     const { userId: requestedUserId } = req.params;
     const userId = req.user?._id?.toString() //|| req.user?.id;
 
-    if (userId !== requestedUserId) {
-        throw new ApiError(400, 'You cannot view other users quote requests');
-    }
+    // if (userId !== requestedUserId) {
+    //     throw new ApiError(400, 'You cannot view other users quote requests');
+    // }
 
     let validatedQuery;
     try {
@@ -18,7 +18,7 @@ export const listQuoteRequestsController = catchAsync(async (req: Request, res: 
         throw new ApiError(400, error.errors?.[0] || 'Invalid pagination query');
     }
 
-    const quoterequests = await getUserQuoteRequestsAction(userId, validatedQuery);
+    const quoterequests = await getUserQuoteRequestsAction(requestedUserId, validatedQuery);
 
     res.status(200).json({
         success: true,
