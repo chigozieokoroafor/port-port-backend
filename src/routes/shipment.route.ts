@@ -3,6 +3,7 @@ import { protect } from "../middleware/auth.middleware";
 // import { createShipmentController } from "../controllers/shipment/create-shipment";
 
 import { listUserShipmentsController } from "../controllers/user-shipment/list-shipments";
+import { getUserShipmentMetricsController } from "../controllers/user-shipment/get-metrics";
 import { restrictToAdmin } from "../middleware/roleCheck.middleware";
 import { listAdminShipmentsController } from "../controllers/admin/shipments/list-shipments";
 import { createShipmentController } from "../controllers/admin/shipments/create-shipment";
@@ -19,6 +20,13 @@ router.post('/create', createShipmentController);
  * @access  Admin
  */
 router.get('/admin/metrics', restrictToAdmin, getShipmentMetricsController);
+
+/**
+ * @route   GET /api/shipments/user/:userId/metrics
+ * @desc    Get shipment metrics for a user
+ * @access  Customer
+ */
+router.get('/user/:userId/metrics', getUserShipmentMetricsController);
 
 /**
  * @route   GET /api/shipments/user/:userId
