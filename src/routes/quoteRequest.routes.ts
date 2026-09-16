@@ -7,10 +7,9 @@ import { listQuoteRequestsController } from '../controllers/user-quote/list-quot
 import { getQuoteRequestController } from '../controllers/user-quote/get-quote-request';
 import { getUserQuoteMetricsController } from '../controllers/user-quote/get-quote-metrics';
 import { approveQuoteRequest, getAllQuoteRequests, getQuoteById, rejectQuoteRequest } from '../controllers/quote.controller';
-import { protect } from '../middleware/auth.middleware';
+import { optionalAuth, protect } from '../middleware/auth.middleware';
 
 const router = Router();
-router.use(protect);
 
 /**
  * @route   POST /api/quotes/request
@@ -18,7 +17,7 @@ router.use(protect);
  * @access  Public
  */
 // 5 requests per hour
-router.post('/request', rateLimiter({ windowMs: 60 * 60 * 1000, max: 5 }),  validateQuoteRequest, validate, submitQuoteRequest);
+router.post('/request', rateLimiter({ windowMs: 60 * 60 * 1000, max: 5 }), optionalAuth,  validateQuoteRequest, validate, submitQuoteRequest);
 
 /**
  * @route   GET /api/quotes/track/:referenceId
@@ -27,6 +26,8 @@ router.post('/request', rateLimiter({ windowMs: 60 * 60 * 1000, max: 5 }),  vali
  */
 router.get('/track/:referenceId', trackQuoteRequest);
 
+
+router.use(protect); //protect routes from this point only.
 /**
  * @route   GET /api/quotes/requests
  * @desc    List all quote requests with filters
