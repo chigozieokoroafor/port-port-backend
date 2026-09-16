@@ -11,10 +11,10 @@
     "paypal:webhooks": "ts-node src/scripts/listPayPalWebhooks.ts",
     "backfill:payment-currency": "ts-node src/scripts/backfillPaymentCurrency.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "bun --watch  src/server.ts",
     "lint": "eslint . --ext .ts",
     "test": "jest",
-    "migrate": "npx prisma db push && sleep 2 && npx prisma generate"
+    "prestart": "bun prisma db push && sleep 0.1 && bun run prisma generate"
   },
   "keywords": [],
   "author": "",

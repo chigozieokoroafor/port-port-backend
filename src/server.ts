@@ -7,7 +7,7 @@ import logger from './utils/logger';
 import { Server } from 'http';
 import { verifyEmailConnection } from './services/email/service';
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 /**
  * Fail fast at boot if required secrets are missing, rather than letting
