@@ -95,6 +95,6 @@ router.post( '/forgot-password', rateLimiter({ windowMs: 15 * 60 * 1000, max: 3 
  * @access  Public
  */
 // 5 requests per 15 minutes
-router.post('/reset-password/:hash', rateLimiter({ windowMs: 15 * 60 * 1000, max: 5 }),  validateResetPassword, validate, resetPassword);
+router.post('/reset-password/:hash', rateLimiter({ windowMs: 5 * 60 * 1000, max: 15 }),  validateResetPassword, validate, resetPassword);
 
 export default router;
