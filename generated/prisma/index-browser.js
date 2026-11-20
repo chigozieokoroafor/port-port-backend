@@ -262,6 +262,19 @@ exports.Prisma.WebhookEventScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DocumentsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  url: 'url',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  status: 'status',
+  userId: 'userId',
+  shipmentId: 'shipmentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -303,7 +316,8 @@ exports.Prisma.ModelName = {
   Ticket: 'Ticket',
   Token: 'Token',
   TokenBlacklist: 'TokenBlacklist',
-  WebhookEvent: 'WebhookEvent'
+  WebhookEvent: 'WebhookEvent',
+  Documents: 'Documents'
 };
 
 /**

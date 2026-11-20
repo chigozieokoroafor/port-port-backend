@@ -13,3 +13,4 @@ dist/
 scratch
 .agents
 *.env
+._*

@@ -133,6 +133,7 @@ model User {
   shipments             Shipment[]       @relation("ShipmentUser")
   ticketsOwned          Ticket[]         @relation("TicketOwner")
   ticketsClosed         Ticket[]         @relation("TicketCloser")
+  documents             Documents[]      @relation("UserDocuments")
   tokens                Token[]
   blacklistedTokens     TokenBlacklist[]
 }
@@ -262,7 +263,8 @@ model Shipment {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  tickets Ticket[]
+  tickets   Ticket[]
+  documents Documents[]
 }
 
 model Ticket {
@@ -326,6 +328,22 @@ model WebhookEvent {
   success       Boolean?        @default(false)
   error         String?
   processedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Documents {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  url        String
+  mimeType   String?
+  fileSize   Int?
+  status     String    @default("Pending")
+  userId     String    @map("user") @db.ObjectId
+  user       User      @relation("UserDocuments", fields: [userId], references: [id])
+  shipmentId String?   @map("shipment") @db.ObjectId
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

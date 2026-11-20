@@ -103,6 +103,11 @@ export type TokenBlacklist = $Result.DefaultSelection<Prisma.$TokenBlacklistPayl
  * 
  */
 export type WebhookEvent = $Result.DefaultSelection<Prisma.$WebhookEventPayload>
+/**
+ * Model Documents
+ * 
+ */
+export type Documents = $Result.DefaultSelection<Prisma.$DocumentsPayload>
 
 /**
  * Enums
@@ -343,6 +348,16 @@ export class PrismaClient<
     * ```
     */
   get webhookEvent(): Prisma.WebhookEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documents`: Exposes CRUD operations for the **Documents** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Documents
+    * const documents = await prisma.documents.findMany()
+    * ```
+    */
+  get documents(): Prisma.DocumentsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -793,7 +808,8 @@ export namespace Prisma {
     Ticket: 'Ticket',
     Token: 'Token',
     TokenBlacklist: 'TokenBlacklist',
-    WebhookEvent: 'WebhookEvent'
+    WebhookEvent: 'WebhookEvent',
+    Documents: 'Documents'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -812,7 +828,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "adminUser" | "quoteRequest" | "quote" | "payment" | "shipment" | "ticket" | "token" | "tokenBlacklist" | "webhookEvent"
+      modelProps: "user" | "adminUser" | "quoteRequest" | "quote" | "payment" | "shipment" | "ticket" | "token" | "tokenBlacklist" | "webhookEvent" | "documents"
       txIsolationLevel: never
     }
     model: {
@@ -1556,6 +1572,80 @@ export namespace Prisma {
           }
         }
       }
+      Documents: {
+        payload: Prisma.$DocumentsPayload<ExtArgs>
+        fields: Prisma.DocumentsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DocumentsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload>
+          }
+          update: {
+            args: Prisma.DocumentsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DocumentsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentsPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocuments>
+          }
+          groupBy: {
+            args: Prisma.DocumentsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentsGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.DocumentsFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.DocumentsAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.DocumentsCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1645,6 +1735,7 @@ export namespace Prisma {
     token?: TokenOmit
     tokenBlacklist?: TokenBlacklistOmit
     webhookEvent?: WebhookEventOmit
+    documents?: DocumentsOmit
   }
 
   /* Types for Logging */
@@ -1738,6 +1829,7 @@ export namespace Prisma {
     shipments: number
     ticketsOwned: number
     ticketsClosed: number
+    documents: number
     tokens: number
     blacklistedTokens: number
   }
@@ -1756,6 +1848,7 @@ export namespace Prisma {
     shipments?: boolean | UserCountOutputTypeCountShipmentsArgs
     ticketsOwned?: boolean | UserCountOutputTypeCountTicketsOwnedArgs
     ticketsClosed?: boolean | UserCountOutputTypeCountTicketsClosedArgs
+    documents?: boolean | UserCountOutputTypeCountDocumentsArgs
     tokens?: boolean | UserCountOutputTypeCountTokensArgs
     blacklistedTokens?: boolean | UserCountOutputTypeCountBlacklistedTokensArgs
   }
@@ -1860,6 +1953,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTicketsClosedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TicketWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentsWhereInput
   }
 
   /**
@@ -1994,10 +2094,12 @@ export namespace Prisma {
 
   export type ShipmentCountOutputType = {
     tickets: number
+    documents: number
   }
 
   export type ShipmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tickets?: boolean | ShipmentCountOutputTypeCountTicketsArgs
+    documents?: boolean | ShipmentCountOutputTypeCountDocumentsArgs
   }
 
   // Custom InputTypes
@@ -2016,6 +2118,13 @@ export namespace Prisma {
    */
   export type ShipmentCountOutputTypeCountTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TicketWhereInput
+  }
+
+  /**
+   * ShipmentCountOutputType without action
+   */
+  export type ShipmentCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentsWhereInput
   }
 
 
@@ -2881,6 +2990,7 @@ export namespace Prisma {
     shipments?: boolean | User$shipmentsArgs<ExtArgs>
     ticketsOwned?: boolean | User$ticketsOwnedArgs<ExtArgs>
     ticketsClosed?: boolean | User$ticketsClosedArgs<ExtArgs>
+    documents?: boolean | User$documentsArgs<ExtArgs>
     tokens?: boolean | User$tokensArgs<ExtArgs>
     blacklistedTokens?: boolean | User$blacklistedTokensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2924,6 +3034,7 @@ export namespace Prisma {
     shipments?: boolean | User$shipmentsArgs<ExtArgs>
     ticketsOwned?: boolean | User$ticketsOwnedArgs<ExtArgs>
     ticketsClosed?: boolean | User$ticketsClosedArgs<ExtArgs>
+    documents?: boolean | User$documentsArgs<ExtArgs>
     tokens?: boolean | User$tokensArgs<ExtArgs>
     blacklistedTokens?: boolean | User$blacklistedTokensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2946,6 +3057,7 @@ export namespace Prisma {
       shipments: Prisma.$ShipmentPayload<ExtArgs>[]
       ticketsOwned: Prisma.$TicketPayload<ExtArgs>[]
       ticketsClosed: Prisma.$TicketPayload<ExtArgs>[]
+      documents: Prisma.$DocumentsPayload<ExtArgs>[]
       tokens: Prisma.$TokenPayload<ExtArgs>[]
       blacklistedTokens: Prisma.$TokenBlacklistPayload<ExtArgs>[]
     }
@@ -3344,6 +3456,7 @@ export namespace Prisma {
     shipments<T extends User$shipmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$shipmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShipmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ticketsOwned<T extends User$ticketsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$ticketsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ticketsClosed<T extends User$ticketsClosedArgs<ExtArgs> = {}>(args?: Subset<T, User$ticketsClosedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends User$documentsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tokens<T extends User$tokensArgs<ExtArgs> = {}>(args?: Subset<T, User$tokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     blacklistedTokens<T extends User$blacklistedTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$blacklistedTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TokenBlacklistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4090,6 +4203,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TicketScalarFieldEnum | TicketScalarFieldEnum[]
+  }
+
+  /**
+   * User.documents
+   */
+  export type User$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    where?: DocumentsWhereInput
+    orderBy?: DocumentsOrderByWithRelationInput | DocumentsOrderByWithRelationInput[]
+    cursor?: DocumentsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
   }
 
   /**
@@ -9131,6 +9268,7 @@ export namespace Prisma {
     updatedBy?: boolean | Shipment$updatedByArgs<ExtArgs>
     user?: boolean | Shipment$userArgs<ExtArgs>
     tickets?: boolean | Shipment$ticketsArgs<ExtArgs>
+    documents?: boolean | Shipment$documentsArgs<ExtArgs>
     _count?: boolean | ShipmentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["shipment"]>
 
@@ -9156,6 +9294,7 @@ export namespace Prisma {
     updatedBy?: boolean | Shipment$updatedByArgs<ExtArgs>
     user?: boolean | Shipment$userArgs<ExtArgs>
     tickets?: boolean | Shipment$ticketsArgs<ExtArgs>
+    documents?: boolean | Shipment$documentsArgs<ExtArgs>
     _count?: boolean | ShipmentCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -9167,6 +9306,7 @@ export namespace Prisma {
       updatedBy: Prisma.$UserPayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs> | null
       tickets: Prisma.$TicketPayload<ExtArgs>[]
+      documents: Prisma.$DocumentsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9547,6 +9687,7 @@ export namespace Prisma {
     updatedBy<T extends Shipment$updatedByArgs<ExtArgs> = {}>(args?: Subset<T, Shipment$updatedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user<T extends Shipment$userArgs<ExtArgs> = {}>(args?: Subset<T, Shipment$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tickets<T extends Shipment$ticketsArgs<ExtArgs> = {}>(args?: Subset<T, Shipment$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends Shipment$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Shipment$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10053,6 +10194,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TicketScalarFieldEnum | TicketScalarFieldEnum[]
+  }
+
+  /**
+   * Shipment.documents
+   */
+  export type Shipment$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    where?: DocumentsWhereInput
+    orderBy?: DocumentsOrderByWithRelationInput | DocumentsOrderByWithRelationInput[]
+    cursor?: DocumentsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
   }
 
   /**
@@ -14186,6 +14351,1097 @@ export namespace Prisma {
 
 
   /**
+   * Model Documents
+   */
+
+  export type AggregateDocuments = {
+    _count: DocumentsCountAggregateOutputType | null
+    _avg: DocumentsAvgAggregateOutputType | null
+    _sum: DocumentsSumAggregateOutputType | null
+    _min: DocumentsMinAggregateOutputType | null
+    _max: DocumentsMaxAggregateOutputType | null
+  }
+
+  export type DocumentsAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type DocumentsSumAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type DocumentsMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    url: string | null
+    mimeType: string | null
+    fileSize: number | null
+    status: string | null
+    userId: string | null
+    shipmentId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentsMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    url: string | null
+    mimeType: string | null
+    fileSize: number | null
+    status: string | null
+    userId: string | null
+    shipmentId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentsCountAggregateOutputType = {
+    id: number
+    name: number
+    url: number
+    mimeType: number
+    fileSize: number
+    status: number
+    userId: number
+    shipmentId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentsAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type DocumentsSumAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type DocumentsMinAggregateInputType = {
+    id?: true
+    name?: true
+    url?: true
+    mimeType?: true
+    fileSize?: true
+    status?: true
+    userId?: true
+    shipmentId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentsMaxAggregateInputType = {
+    id?: true
+    name?: true
+    url?: true
+    mimeType?: true
+    fileSize?: true
+    status?: true
+    userId?: true
+    shipmentId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentsCountAggregateInputType = {
+    id?: true
+    name?: true
+    url?: true
+    mimeType?: true
+    fileSize?: true
+    status?: true
+    userId?: true
+    shipmentId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Documents to aggregate.
+     */
+    where?: DocumentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentsOrderByWithRelationInput | DocumentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DocumentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Documents
+    **/
+    _count?: true | DocumentsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DocumentsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DocumentsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentsMaxAggregateInputType
+  }
+
+  export type GetDocumentsAggregateType<T extends DocumentsAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocuments]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocuments[P]>
+      : GetScalarType<T[P], AggregateDocuments[P]>
+  }
+
+
+
+
+  export type DocumentsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentsWhereInput
+    orderBy?: DocumentsOrderByWithAggregationInput | DocumentsOrderByWithAggregationInput[]
+    by: DocumentsScalarFieldEnum[] | DocumentsScalarFieldEnum
+    having?: DocumentsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentsCountAggregateInputType | true
+    _avg?: DocumentsAvgAggregateInputType
+    _sum?: DocumentsSumAggregateInputType
+    _min?: DocumentsMinAggregateInputType
+    _max?: DocumentsMaxAggregateInputType
+  }
+
+  export type DocumentsGroupByOutputType = {
+    id: string
+    name: string
+    url: string
+    mimeType: string | null
+    fileSize: number | null
+    status: string
+    userId: string
+    shipmentId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentsCountAggregateOutputType | null
+    _avg: DocumentsAvgAggregateOutputType | null
+    _sum: DocumentsSumAggregateOutputType | null
+    _min: DocumentsMinAggregateOutputType | null
+    _max: DocumentsMaxAggregateOutputType | null
+  }
+
+  type GetDocumentsGroupByPayload<T extends DocumentsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentsGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    url?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    status?: boolean
+    userId?: boolean
+    shipmentId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    shipment?: boolean | Documents$shipmentArgs<ExtArgs>
+  }, ExtArgs["result"]["documents"]>
+
+
+
+  export type DocumentsSelectScalar = {
+    id?: boolean
+    name?: boolean
+    url?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    status?: boolean
+    userId?: boolean
+    shipmentId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "url" | "mimeType" | "fileSize" | "status" | "userId" | "shipmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["documents"]>
+  export type DocumentsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    shipment?: boolean | Documents$shipmentArgs<ExtArgs>
+  }
+
+  export type $DocumentsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Documents"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      shipment: Prisma.$ShipmentPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      url: string
+      mimeType: string | null
+      fileSize: number | null
+      status: string
+      userId: string
+      shipmentId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documents"]>
+    composites: {}
+  }
+
+  type DocumentsGetPayload<S extends boolean | null | undefined | DocumentsDefaultArgs> = $Result.GetResult<Prisma.$DocumentsPayload, S>
+
+  type DocumentsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentsCountAggregateInputType | true
+    }
+
+  export interface DocumentsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Documents'], meta: { name: 'Documents' } }
+    /**
+     * Find zero or one Documents that matches the filter.
+     * @param {DocumentsFindUniqueArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentsFindUniqueArgs>(args: SelectSubset<T, DocumentsFindUniqueArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Documents that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentsFindUniqueOrThrowArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentsFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Documents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsFindFirstArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentsFindFirstArgs>(args?: SelectSubset<T, DocumentsFindFirstArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Documents that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsFindFirstOrThrowArgs} args - Arguments to find a Documents
+     * @example
+     * // Get one Documents
+     * const documents = await prisma.documents.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentsFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentsFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Documents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Documents
+     * const documents = await prisma.documents.findMany()
+     * 
+     * // Get first 10 Documents
+     * const documents = await prisma.documents.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const documentsWithIdOnly = await prisma.documents.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DocumentsFindManyArgs>(args?: SelectSubset<T, DocumentsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Documents.
+     * @param {DocumentsCreateArgs} args - Arguments to create a Documents.
+     * @example
+     * // Create one Documents
+     * const Documents = await prisma.documents.create({
+     *   data: {
+     *     // ... data to create a Documents
+     *   }
+     * })
+     * 
+     */
+    create<T extends DocumentsCreateArgs>(args: SelectSubset<T, DocumentsCreateArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Documents.
+     * @param {DocumentsCreateManyArgs} args - Arguments to create many Documents.
+     * @example
+     * // Create many Documents
+     * const documents = await prisma.documents.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DocumentsCreateManyArgs>(args?: SelectSubset<T, DocumentsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Documents.
+     * @param {DocumentsDeleteArgs} args - Arguments to delete one Documents.
+     * @example
+     * // Delete one Documents
+     * const Documents = await prisma.documents.delete({
+     *   where: {
+     *     // ... filter to delete one Documents
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DocumentsDeleteArgs>(args: SelectSubset<T, DocumentsDeleteArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Documents.
+     * @param {DocumentsUpdateArgs} args - Arguments to update one Documents.
+     * @example
+     * // Update one Documents
+     * const documents = await prisma.documents.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DocumentsUpdateArgs>(args: SelectSubset<T, DocumentsUpdateArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Documents.
+     * @param {DocumentsDeleteManyArgs} args - Arguments to filter Documents to delete.
+     * @example
+     * // Delete a few Documents
+     * const { count } = await prisma.documents.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DocumentsDeleteManyArgs>(args?: SelectSubset<T, DocumentsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Documents
+     * const documents = await prisma.documents.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DocumentsUpdateManyArgs>(args: SelectSubset<T, DocumentsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Documents.
+     * @param {DocumentsUpsertArgs} args - Arguments to update or create a Documents.
+     * @example
+     * // Update or create a Documents
+     * const documents = await prisma.documents.upsert({
+     *   create: {
+     *     // ... data to create a Documents
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Documents we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentsUpsertArgs>(args: SelectSubset<T, DocumentsUpsertArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Documents that matches the filter.
+     * @param {DocumentsFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const documents = await prisma.documents.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: DocumentsFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Documents.
+     * @param {DocumentsAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const documents = await prisma.documents.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: DocumentsAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsCountArgs} args - Arguments to filter Documents to count.
+     * @example
+     * // Count the number of Documents
+     * const count = await prisma.documents.count({
+     *   where: {
+     *     // ... the filter for the Documents we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentsCountArgs>(
+      args?: Subset<T, DocumentsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentsAggregateArgs>(args: Subset<T, DocumentsAggregateArgs>): Prisma.PrismaPromise<GetDocumentsAggregateType<T>>
+
+    /**
+     * Group by Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DocumentsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentsGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Documents model
+   */
+  readonly fields: DocumentsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Documents.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    shipment<T extends Documents$shipmentArgs<ExtArgs> = {}>(args?: Subset<T, Documents$shipmentArgs<ExtArgs>>): Prisma__ShipmentClient<$Result.GetResult<Prisma.$ShipmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Documents model
+   */
+  interface DocumentsFieldRefs {
+    readonly id: FieldRef<"Documents", 'String'>
+    readonly name: FieldRef<"Documents", 'String'>
+    readonly url: FieldRef<"Documents", 'String'>
+    readonly mimeType: FieldRef<"Documents", 'String'>
+    readonly fileSize: FieldRef<"Documents", 'Int'>
+    readonly status: FieldRef<"Documents", 'String'>
+    readonly userId: FieldRef<"Documents", 'String'>
+    readonly shipmentId: FieldRef<"Documents", 'String'>
+    readonly createdAt: FieldRef<"Documents", 'DateTime'>
+    readonly updatedAt: FieldRef<"Documents", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Documents findUnique
+   */
+  export type DocumentsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * Filter, which Documents to fetch.
+     */
+    where: DocumentsWhereUniqueInput
+  }
+
+  /**
+   * Documents findUniqueOrThrow
+   */
+  export type DocumentsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * Filter, which Documents to fetch.
+     */
+    where: DocumentsWhereUniqueInput
+  }
+
+  /**
+   * Documents findFirst
+   */
+  export type DocumentsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * Filter, which Documents to fetch.
+     */
+    where?: DocumentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentsOrderByWithRelationInput | DocumentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Documents.
+     */
+    cursor?: DocumentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Documents.
+     */
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
+  }
+
+  /**
+   * Documents findFirstOrThrow
+   */
+  export type DocumentsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * Filter, which Documents to fetch.
+     */
+    where?: DocumentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentsOrderByWithRelationInput | DocumentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Documents.
+     */
+    cursor?: DocumentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Documents.
+     */
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
+  }
+
+  /**
+   * Documents findMany
+   */
+  export type DocumentsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * Filter, which Documents to fetch.
+     */
+    where?: DocumentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentsOrderByWithRelationInput | DocumentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Documents.
+     */
+    cursor?: DocumentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
+  }
+
+  /**
+   * Documents create
+   */
+  export type DocumentsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Documents.
+     */
+    data: XOR<DocumentsCreateInput, DocumentsUncheckedCreateInput>
+  }
+
+  /**
+   * Documents createMany
+   */
+  export type DocumentsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Documents.
+     */
+    data: DocumentsCreateManyInput | DocumentsCreateManyInput[]
+  }
+
+  /**
+   * Documents update
+   */
+  export type DocumentsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Documents.
+     */
+    data: XOR<DocumentsUpdateInput, DocumentsUncheckedUpdateInput>
+    /**
+     * Choose, which Documents to update.
+     */
+    where: DocumentsWhereUniqueInput
+  }
+
+  /**
+   * Documents updateMany
+   */
+  export type DocumentsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Documents.
+     */
+    data: XOR<DocumentsUpdateManyMutationInput, DocumentsUncheckedUpdateManyInput>
+    /**
+     * Filter which Documents to update
+     */
+    where?: DocumentsWhereInput
+    /**
+     * Limit how many Documents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Documents upsert
+   */
+  export type DocumentsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Documents to update in case it exists.
+     */
+    where: DocumentsWhereUniqueInput
+    /**
+     * In case the Documents found by the `where` argument doesn't exist, create a new Documents with this data.
+     */
+    create: XOR<DocumentsCreateInput, DocumentsUncheckedCreateInput>
+    /**
+     * In case the Documents was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentsUpdateInput, DocumentsUncheckedUpdateInput>
+  }
+
+  /**
+   * Documents delete
+   */
+  export type DocumentsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+    /**
+     * Filter which Documents to delete.
+     */
+    where: DocumentsWhereUniqueInput
+  }
+
+  /**
+   * Documents deleteMany
+   */
+  export type DocumentsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Documents to delete
+     */
+    where?: DocumentsWhereInput
+    /**
+     * Limit how many Documents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Documents findRaw
+   */
+  export type DocumentsFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Documents aggregateRaw
+   */
+  export type DocumentsAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * Documents.shipment
+   */
+  export type Documents$shipmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shipment
+     */
+    select?: ShipmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shipment
+     */
+    omit?: ShipmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShipmentInclude<ExtArgs> | null
+    where?: ShipmentWhereInput
+  }
+
+  /**
+   * Documents without action
+   */
+  export type DocumentsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Documents
+     */
+    select?: DocumentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Documents
+     */
+    omit?: DocumentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentsInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -14367,6 +15623,22 @@ export namespace Prisma {
   export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum]
 
 
+  export const DocumentsScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    url: 'url',
+    mimeType: 'mimeType',
+    fileSize: 'fileSize',
+    status: 'status',
+    userId: 'userId',
+    shipmentId: 'shipmentId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentsScalarFieldEnum = (typeof DocumentsScalarFieldEnum)[keyof typeof DocumentsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -14545,6 +15817,7 @@ export namespace Prisma {
     shipments?: ShipmentListRelationFilter
     ticketsOwned?: TicketListRelationFilter
     ticketsClosed?: TicketListRelationFilter
+    documents?: DocumentsListRelationFilter
     tokens?: TokenListRelationFilter
     blacklistedTokens?: TokenBlacklistListRelationFilter
   }
@@ -14581,6 +15854,7 @@ export namespace Prisma {
     shipments?: ShipmentOrderByRelationAggregateInput
     ticketsOwned?: TicketOrderByRelationAggregateInput
     ticketsClosed?: TicketOrderByRelationAggregateInput
+    documents?: DocumentsOrderByRelationAggregateInput
     tokens?: TokenOrderByRelationAggregateInput
     blacklistedTokens?: TokenBlacklistOrderByRelationAggregateInput
   }
@@ -14620,6 +15894,7 @@ export namespace Prisma {
     shipments?: ShipmentListRelationFilter
     ticketsOwned?: TicketListRelationFilter
     ticketsClosed?: TicketListRelationFilter
+    documents?: DocumentsListRelationFilter
     tokens?: TokenListRelationFilter
     blacklistedTokens?: TokenBlacklistListRelationFilter
   }, "id" | "email">
@@ -15160,6 +16435,7 @@ export namespace Prisma {
     updatedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     tickets?: TicketListRelationFilter
+    documents?: DocumentsListRelationFilter
   }
 
   export type ShipmentOrderByWithRelationInput = {
@@ -15178,6 +16454,7 @@ export namespace Prisma {
     updatedBy?: UserOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     tickets?: TicketOrderByRelationAggregateInput
+    documents?: DocumentsOrderByRelationAggregateInput
   }
 
   export type ShipmentWhereUniqueInput = Prisma.AtLeast<{
@@ -15199,6 +16476,7 @@ export namespace Prisma {
     updatedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     tickets?: TicketListRelationFilter
+    documents?: DocumentsListRelationFilter
   }, "id" | "paymentId">
 
   export type ShipmentOrderByWithAggregationInput = {
@@ -15522,6 +16800,91 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"WebhookEvent"> | Date | string
   }
 
+  export type DocumentsWhereInput = {
+    AND?: DocumentsWhereInput | DocumentsWhereInput[]
+    OR?: DocumentsWhereInput[]
+    NOT?: DocumentsWhereInput | DocumentsWhereInput[]
+    id?: StringFilter<"Documents"> | string
+    name?: StringFilter<"Documents"> | string
+    url?: StringFilter<"Documents"> | string
+    mimeType?: StringNullableFilter<"Documents"> | string | null
+    fileSize?: IntNullableFilter<"Documents"> | number | null
+    status?: StringFilter<"Documents"> | string
+    userId?: StringFilter<"Documents"> | string
+    shipmentId?: StringNullableFilter<"Documents"> | string | null
+    createdAt?: DateTimeFilter<"Documents"> | Date | string
+    updatedAt?: DateTimeFilter<"Documents"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    shipment?: XOR<ShipmentNullableScalarRelationFilter, ShipmentWhereInput> | null
+  }
+
+  export type DocumentsOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    shipmentId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    shipment?: ShipmentOrderByWithRelationInput
+  }
+
+  export type DocumentsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DocumentsWhereInput | DocumentsWhereInput[]
+    OR?: DocumentsWhereInput[]
+    NOT?: DocumentsWhereInput | DocumentsWhereInput[]
+    name?: StringFilter<"Documents"> | string
+    url?: StringFilter<"Documents"> | string
+    mimeType?: StringNullableFilter<"Documents"> | string | null
+    fileSize?: IntNullableFilter<"Documents"> | number | null
+    status?: StringFilter<"Documents"> | string
+    userId?: StringFilter<"Documents"> | string
+    shipmentId?: StringNullableFilter<"Documents"> | string | null
+    createdAt?: DateTimeFilter<"Documents"> | Date | string
+    updatedAt?: DateTimeFilter<"Documents"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    shipment?: XOR<ShipmentNullableScalarRelationFilter, ShipmentWhereInput> | null
+  }, "id">
+
+  export type DocumentsOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    shipmentId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentsCountOrderByAggregateInput
+    _avg?: DocumentsAvgOrderByAggregateInput
+    _max?: DocumentsMaxOrderByAggregateInput
+    _min?: DocumentsMinOrderByAggregateInput
+    _sum?: DocumentsSumOrderByAggregateInput
+  }
+
+  export type DocumentsScalarWhereWithAggregatesInput = {
+    AND?: DocumentsScalarWhereWithAggregatesInput | DocumentsScalarWhereWithAggregatesInput[]
+    OR?: DocumentsScalarWhereWithAggregatesInput[]
+    NOT?: DocumentsScalarWhereWithAggregatesInput | DocumentsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Documents"> | string
+    name?: StringWithAggregatesFilter<"Documents"> | string
+    url?: StringWithAggregatesFilter<"Documents"> | string
+    mimeType?: StringNullableWithAggregatesFilter<"Documents"> | string | null
+    fileSize?: IntNullableWithAggregatesFilter<"Documents"> | number | null
+    status?: StringWithAggregatesFilter<"Documents"> | string
+    userId?: StringWithAggregatesFilter<"Documents"> | string
+    shipmentId?: StringNullableWithAggregatesFilter<"Documents"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Documents"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Documents"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -15553,6 +16916,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -15588,6 +16952,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -15622,6 +16987,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -15656,6 +17022,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -16258,6 +17625,7 @@ export namespace Prisma {
     updatedBy?: UserCreateNestedOneWithoutShipmentsUpdatedInput
     user?: UserCreateNestedOneWithoutShipmentsInput
     tickets?: TicketCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentUncheckedCreateInput = {
@@ -16272,6 +17640,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tickets?: TicketUncheckedCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentUpdateInput = {
@@ -16285,6 +17654,7 @@ export namespace Prisma {
     updatedBy?: UserUpdateOneWithoutShipmentsUpdatedNestedInput
     user?: UserUpdateOneWithoutShipmentsNestedInput
     tickets?: TicketUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateInput = {
@@ -16298,6 +17668,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: TicketUncheckedUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentCreateManyInput = {
@@ -16626,6 +17997,91 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DocumentsCreateInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutDocumentsInput
+    shipment?: ShipmentCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type DocumentsUncheckedCreateInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    userId: string
+    shipmentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentsUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
+    shipment?: ShipmentUpdateOneWithoutDocumentsNestedInput
+  }
+
+  export type DocumentsUncheckedUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentsCreateManyInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    userId: string
+    shipmentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentsUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentsUncheckedUpdateManyInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16734,6 +18190,12 @@ export namespace Prisma {
     none?: TicketWhereInput
   }
 
+  export type DocumentsListRelationFilter = {
+    every?: DocumentsWhereInput
+    some?: DocumentsWhereInput
+    none?: DocumentsWhereInput
+  }
+
   export type TokenListRelationFilter = {
     every?: TokenWhereInput
     some?: TokenWhereInput
@@ -16767,6 +18229,10 @@ export namespace Prisma {
   }
 
   export type TicketOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17575,6 +19041,82 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
+  }
+
+  export type DocumentsCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    shipmentId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentsAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type DocumentsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    shipmentId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentsMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    shipmentId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentsSumOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
   export type UserCreateNestedOneWithoutInvitedUsersInput = {
     create?: XOR<UserCreateWithoutInvitedUsersInput, UserUncheckedCreateWithoutInvitedUsersInput>
     connectOrCreate?: UserCreateOrConnectWithoutInvitedUsersInput
@@ -17670,6 +19212,13 @@ export namespace Prisma {
     connectOrCreate?: TicketCreateOrConnectWithoutClosedByInput | TicketCreateOrConnectWithoutClosedByInput[]
     createMany?: TicketCreateManyClosedByInputEnvelope
     connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+  }
+
+  export type DocumentsCreateNestedManyWithoutUserInput = {
+    create?: XOR<DocumentsCreateWithoutUserInput, DocumentsUncheckedCreateWithoutUserInput> | DocumentsCreateWithoutUserInput[] | DocumentsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutUserInput | DocumentsCreateOrConnectWithoutUserInput[]
+    createMany?: DocumentsCreateManyUserInputEnvelope
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
   }
 
   export type TokenCreateNestedManyWithoutUserInput = {
@@ -17775,6 +19324,13 @@ export namespace Prisma {
     connectOrCreate?: TicketCreateOrConnectWithoutClosedByInput | TicketCreateOrConnectWithoutClosedByInput[]
     createMany?: TicketCreateManyClosedByInputEnvelope
     connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+  }
+
+  export type DocumentsUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<DocumentsCreateWithoutUserInput, DocumentsUncheckedCreateWithoutUserInput> | DocumentsCreateWithoutUserInput[] | DocumentsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutUserInput | DocumentsCreateOrConnectWithoutUserInput[]
+    createMany?: DocumentsCreateManyUserInputEnvelope
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
   }
 
   export type TokenUncheckedCreateNestedManyWithoutUserInput = {
@@ -18010,6 +19566,20 @@ export namespace Prisma {
     deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
   }
 
+  export type DocumentsUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DocumentsCreateWithoutUserInput, DocumentsUncheckedCreateWithoutUserInput> | DocumentsCreateWithoutUserInput[] | DocumentsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutUserInput | DocumentsCreateOrConnectWithoutUserInput[]
+    upsert?: DocumentsUpsertWithWhereUniqueWithoutUserInput | DocumentsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DocumentsCreateManyUserInputEnvelope
+    set?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    disconnect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    delete?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    update?: DocumentsUpdateWithWhereUniqueWithoutUserInput | DocumentsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DocumentsUpdateManyWithWhereWithoutUserInput | DocumentsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
+  }
+
   export type TokenUpdateManyWithoutUserNestedInput = {
     create?: XOR<TokenCreateWithoutUserInput, TokenUncheckedCreateWithoutUserInput> | TokenCreateWithoutUserInput[] | TokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TokenCreateOrConnectWithoutUserInput | TokenCreateOrConnectWithoutUserInput[]
@@ -18218,6 +19788,20 @@ export namespace Prisma {
     update?: TicketUpdateWithWhereUniqueWithoutClosedByInput | TicketUpdateWithWhereUniqueWithoutClosedByInput[]
     updateMany?: TicketUpdateManyWithWhereWithoutClosedByInput | TicketUpdateManyWithWhereWithoutClosedByInput[]
     deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
+  }
+
+  export type DocumentsUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DocumentsCreateWithoutUserInput, DocumentsUncheckedCreateWithoutUserInput> | DocumentsCreateWithoutUserInput[] | DocumentsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutUserInput | DocumentsCreateOrConnectWithoutUserInput[]
+    upsert?: DocumentsUpsertWithWhereUniqueWithoutUserInput | DocumentsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DocumentsCreateManyUserInputEnvelope
+    set?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    disconnect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    delete?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    update?: DocumentsUpdateWithWhereUniqueWithoutUserInput | DocumentsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DocumentsUpdateManyWithWhereWithoutUserInput | DocumentsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
   }
 
   export type TokenUncheckedUpdateManyWithoutUserNestedInput = {
@@ -18796,11 +20380,25 @@ export namespace Prisma {
     connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
   }
 
+  export type DocumentsCreateNestedManyWithoutShipmentInput = {
+    create?: XOR<DocumentsCreateWithoutShipmentInput, DocumentsUncheckedCreateWithoutShipmentInput> | DocumentsCreateWithoutShipmentInput[] | DocumentsUncheckedCreateWithoutShipmentInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutShipmentInput | DocumentsCreateOrConnectWithoutShipmentInput[]
+    createMany?: DocumentsCreateManyShipmentInputEnvelope
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+  }
+
   export type TicketUncheckedCreateNestedManyWithoutShipmentInput = {
     create?: XOR<TicketCreateWithoutShipmentInput, TicketUncheckedCreateWithoutShipmentInput> | TicketCreateWithoutShipmentInput[] | TicketUncheckedCreateWithoutShipmentInput[]
     connectOrCreate?: TicketCreateOrConnectWithoutShipmentInput | TicketCreateOrConnectWithoutShipmentInput[]
     createMany?: TicketCreateManyShipmentInputEnvelope
     connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+  }
+
+  export type DocumentsUncheckedCreateNestedManyWithoutShipmentInput = {
+    create?: XOR<DocumentsCreateWithoutShipmentInput, DocumentsUncheckedCreateWithoutShipmentInput> | DocumentsCreateWithoutShipmentInput[] | DocumentsUncheckedCreateWithoutShipmentInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutShipmentInput | DocumentsCreateOrConnectWithoutShipmentInput[]
+    createMany?: DocumentsCreateManyShipmentInputEnvelope
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
   }
 
   export type QuoteUpdateOneWithoutShipmentsNestedInput = {
@@ -18857,6 +20455,20 @@ export namespace Prisma {
     deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
   }
 
+  export type DocumentsUpdateManyWithoutShipmentNestedInput = {
+    create?: XOR<DocumentsCreateWithoutShipmentInput, DocumentsUncheckedCreateWithoutShipmentInput> | DocumentsCreateWithoutShipmentInput[] | DocumentsUncheckedCreateWithoutShipmentInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutShipmentInput | DocumentsCreateOrConnectWithoutShipmentInput[]
+    upsert?: DocumentsUpsertWithWhereUniqueWithoutShipmentInput | DocumentsUpsertWithWhereUniqueWithoutShipmentInput[]
+    createMany?: DocumentsCreateManyShipmentInputEnvelope
+    set?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    disconnect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    delete?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    update?: DocumentsUpdateWithWhereUniqueWithoutShipmentInput | DocumentsUpdateWithWhereUniqueWithoutShipmentInput[]
+    updateMany?: DocumentsUpdateManyWithWhereWithoutShipmentInput | DocumentsUpdateManyWithWhereWithoutShipmentInput[]
+    deleteMany?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
+  }
+
   export type TicketUncheckedUpdateManyWithoutShipmentNestedInput = {
     create?: XOR<TicketCreateWithoutShipmentInput, TicketUncheckedCreateWithoutShipmentInput> | TicketCreateWithoutShipmentInput[] | TicketUncheckedCreateWithoutShipmentInput[]
     connectOrCreate?: TicketCreateOrConnectWithoutShipmentInput | TicketCreateOrConnectWithoutShipmentInput[]
@@ -18869,6 +20481,20 @@ export namespace Prisma {
     update?: TicketUpdateWithWhereUniqueWithoutShipmentInput | TicketUpdateWithWhereUniqueWithoutShipmentInput[]
     updateMany?: TicketUpdateManyWithWhereWithoutShipmentInput | TicketUpdateManyWithWhereWithoutShipmentInput[]
     deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
+  }
+
+  export type DocumentsUncheckedUpdateManyWithoutShipmentNestedInput = {
+    create?: XOR<DocumentsCreateWithoutShipmentInput, DocumentsUncheckedCreateWithoutShipmentInput> | DocumentsCreateWithoutShipmentInput[] | DocumentsUncheckedCreateWithoutShipmentInput[]
+    connectOrCreate?: DocumentsCreateOrConnectWithoutShipmentInput | DocumentsCreateOrConnectWithoutShipmentInput[]
+    upsert?: DocumentsUpsertWithWhereUniqueWithoutShipmentInput | DocumentsUpsertWithWhereUniqueWithoutShipmentInput[]
+    createMany?: DocumentsCreateManyShipmentInputEnvelope
+    set?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    disconnect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    delete?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+    update?: DocumentsUpdateWithWhereUniqueWithoutShipmentInput | DocumentsUpdateWithWhereUniqueWithoutShipmentInput[]
+    updateMany?: DocumentsUpdateManyWithWhereWithoutShipmentInput | DocumentsUpdateManyWithWhereWithoutShipmentInput[]
+    deleteMany?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
   }
 
   export type TicketConversationNullableCreateEnvelopeInput = {
@@ -18984,6 +20610,45 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutBlacklistedTokensInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBlacklistedTokensInput, UserUpdateWithoutBlacklistedTokensInput>, UserUncheckedUpdateWithoutBlacklistedTokensInput>
+  }
+
+  export type UserCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<UserCreateWithoutDocumentsInput, UserUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDocumentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ShipmentCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<ShipmentCreateWithoutDocumentsInput, ShipmentUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: ShipmentCreateOrConnectWithoutDocumentsInput
+    connect?: ShipmentWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+    unset?: boolean
+  }
+
+  export type UserUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<UserCreateWithoutDocumentsInput, UserUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDocumentsInput
+    upsert?: UserUpsertWithoutDocumentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDocumentsInput, UserUpdateWithoutDocumentsInput>, UserUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type ShipmentUpdateOneWithoutDocumentsNestedInput = {
+    create?: XOR<ShipmentCreateWithoutDocumentsInput, ShipmentUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: ShipmentCreateOrConnectWithoutDocumentsInput
+    upsert?: ShipmentUpsertWithoutDocumentsInput
+    disconnect?: boolean
+    delete?: ShipmentWhereInput | boolean
+    connect?: ShipmentWhereUniqueInput
+    update?: XOR<XOR<ShipmentUpdateToOneWithWhereWithoutDocumentsInput, ShipmentUpdateWithoutDocumentsInput>, ShipmentUncheckedUpdateWithoutDocumentsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -19325,6 +20990,23 @@ export namespace Prisma {
     isSet?: boolean
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
   export type UserCreateWithoutInvitedUsersInput = {
     id?: string
     email: string
@@ -19355,6 +21037,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -19389,6 +21072,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -19428,6 +21112,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -19462,6 +21147,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -19886,6 +21572,7 @@ export namespace Prisma {
     payment?: PaymentCreateNestedOneWithoutShipmentsInput
     user?: UserCreateNestedOneWithoutShipmentsInput
     tickets?: TicketCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentUncheckedCreateWithoutUpdatedByInput = {
@@ -19899,6 +21586,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tickets?: TicketUncheckedCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentCreateOrConnectWithoutUpdatedByInput = {
@@ -19921,6 +21609,7 @@ export namespace Prisma {
     payment?: PaymentCreateNestedOneWithoutShipmentsInput
     updatedBy?: UserCreateNestedOneWithoutShipmentsUpdatedInput
     tickets?: TicketCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentUncheckedCreateWithoutUserInput = {
@@ -19934,6 +21623,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tickets?: TicketUncheckedCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentCreateOrConnectWithoutUserInput = {
@@ -20013,6 +21703,39 @@ export namespace Prisma {
 
   export type TicketCreateManyClosedByInputEnvelope = {
     data: TicketCreateManyClosedByInput | TicketCreateManyClosedByInput[]
+  }
+
+  export type DocumentsCreateWithoutUserInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    shipment?: ShipmentCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type DocumentsUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    shipmentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentsCreateOrConnectWithoutUserInput = {
+    where: DocumentsWhereUniqueInput
+    create: XOR<DocumentsCreateWithoutUserInput, DocumentsUncheckedCreateWithoutUserInput>
+  }
+
+  export type DocumentsCreateManyUserInputEnvelope = {
+    data: DocumentsCreateManyUserInput | DocumentsCreateManyUserInput[]
   }
 
   export type TokenCreateWithoutUserInput = {
@@ -20107,6 +21830,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -20140,6 +21864,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -20469,6 +22194,38 @@ export namespace Prisma {
     data: XOR<TicketUpdateManyMutationInput, TicketUncheckedUpdateManyWithoutClosedByInput>
   }
 
+  export type DocumentsUpsertWithWhereUniqueWithoutUserInput = {
+    where: DocumentsWhereUniqueInput
+    update: XOR<DocumentsUpdateWithoutUserInput, DocumentsUncheckedUpdateWithoutUserInput>
+    create: XOR<DocumentsCreateWithoutUserInput, DocumentsUncheckedCreateWithoutUserInput>
+  }
+
+  export type DocumentsUpdateWithWhereUniqueWithoutUserInput = {
+    where: DocumentsWhereUniqueInput
+    data: XOR<DocumentsUpdateWithoutUserInput, DocumentsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DocumentsUpdateManyWithWhereWithoutUserInput = {
+    where: DocumentsScalarWhereInput
+    data: XOR<DocumentsUpdateManyMutationInput, DocumentsUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type DocumentsScalarWhereInput = {
+    AND?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
+    OR?: DocumentsScalarWhereInput[]
+    NOT?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
+    id?: StringFilter<"Documents"> | string
+    name?: StringFilter<"Documents"> | string
+    url?: StringFilter<"Documents"> | string
+    mimeType?: StringNullableFilter<"Documents"> | string | null
+    fileSize?: IntNullableFilter<"Documents"> | number | null
+    status?: StringFilter<"Documents"> | string
+    userId?: StringFilter<"Documents"> | string
+    shipmentId?: StringNullableFilter<"Documents"> | string | null
+    createdAt?: DateTimeFilter<"Documents"> | Date | string
+    updatedAt?: DateTimeFilter<"Documents"> | Date | string
+  }
+
   export type TokenUpsertWithWhereUniqueWithoutUserInput = {
     where: TokenWhereUniqueInput
     update: XOR<TokenUpdateWithoutUserInput, TokenUncheckedUpdateWithoutUserInput>
@@ -20730,6 +22487,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -20764,6 +22522,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -20803,6 +22562,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -20837,6 +22597,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -20957,6 +22718,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -20990,6 +22752,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -21034,6 +22797,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -21067,6 +22831,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -21192,6 +22957,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -21226,6 +22992,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21265,6 +23032,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -21299,6 +23067,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21338,6 +23107,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -21372,6 +23142,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21449,6 +23220,7 @@ export namespace Prisma {
     updatedBy?: UserCreateNestedOneWithoutShipmentsUpdatedInput
     user?: UserCreateNestedOneWithoutShipmentsInput
     tickets?: TicketCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentUncheckedCreateWithoutQuoteInput = {
@@ -21462,6 +23234,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tickets?: TicketUncheckedCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentCreateOrConnectWithoutQuoteInput = {
@@ -21604,6 +23377,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -21637,6 +23411,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -21681,6 +23456,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -21714,6 +23490,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -21758,6 +23535,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -21791,6 +23569,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -21918,6 +23697,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -21952,6 +23732,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21991,6 +23772,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -22025,6 +23807,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -22064,6 +23847,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -22098,6 +23882,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -22118,6 +23903,7 @@ export namespace Prisma {
     updatedBy?: UserCreateNestedOneWithoutShipmentsUpdatedInput
     user?: UserCreateNestedOneWithoutShipmentsInput
     tickets?: TicketCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentUncheckedCreateWithoutPaymentInput = {
@@ -22131,6 +23917,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tickets?: TicketUncheckedCreateNestedManyWithoutShipmentInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentCreateOrConnectWithoutPaymentInput = {
@@ -22231,6 +24018,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -22264,6 +24052,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22308,6 +24097,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -22341,6 +24131,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22385,6 +24176,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -22418,6 +24210,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22566,6 +24359,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -22600,6 +24394,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -22639,6 +24434,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentCreateNestedManyWithoutUpdatedByInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -22673,6 +24469,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUncheckedCreateNestedManyWithoutUpdatedByInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -22715,6 +24512,39 @@ export namespace Prisma {
 
   export type TicketCreateManyShipmentInputEnvelope = {
     data: TicketCreateManyShipmentInput | TicketCreateManyShipmentInput[]
+  }
+
+  export type DocumentsCreateWithoutShipmentInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type DocumentsUncheckedCreateWithoutShipmentInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentsCreateOrConnectWithoutShipmentInput = {
+    where: DocumentsWhereUniqueInput
+    create: XOR<DocumentsCreateWithoutShipmentInput, DocumentsUncheckedCreateWithoutShipmentInput>
+  }
+
+  export type DocumentsCreateManyShipmentInputEnvelope = {
+    data: DocumentsCreateManyShipmentInput | DocumentsCreateManyShipmentInput[]
   }
 
   export type QuoteUpsertWithoutShipmentsInput = {
@@ -22863,6 +24693,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -22896,6 +24727,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22940,6 +24772,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUpdateManyWithoutUpdatedByNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -22973,6 +24806,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUncheckedUpdateManyWithoutUpdatedByNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22991,6 +24825,22 @@ export namespace Prisma {
   export type TicketUpdateManyWithWhereWithoutShipmentInput = {
     where: TicketScalarWhereInput
     data: XOR<TicketUpdateManyMutationInput, TicketUncheckedUpdateManyWithoutShipmentInput>
+  }
+
+  export type DocumentsUpsertWithWhereUniqueWithoutShipmentInput = {
+    where: DocumentsWhereUniqueInput
+    update: XOR<DocumentsUpdateWithoutShipmentInput, DocumentsUncheckedUpdateWithoutShipmentInput>
+    create: XOR<DocumentsCreateWithoutShipmentInput, DocumentsUncheckedCreateWithoutShipmentInput>
+  }
+
+  export type DocumentsUpdateWithWhereUniqueWithoutShipmentInput = {
+    where: DocumentsWhereUniqueInput
+    data: XOR<DocumentsUpdateWithoutShipmentInput, DocumentsUncheckedUpdateWithoutShipmentInput>
+  }
+
+  export type DocumentsUpdateManyWithWhereWithoutShipmentInput = {
+    where: DocumentsScalarWhereInput
+    data: XOR<DocumentsUpdateManyMutationInput, DocumentsUncheckedUpdateManyWithoutShipmentInput>
   }
 
   export type UserCreateWithoutTicketsOwnedInput = {
@@ -23023,6 +24873,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentCreateNestedManyWithoutUpdatedByInput
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -23057,6 +24908,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUncheckedCreateNestedManyWithoutUpdatedByInput
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23096,6 +24948,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentCreateNestedManyWithoutUpdatedByInput
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -23130,6 +24983,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUncheckedCreateNestedManyWithoutUpdatedByInput
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23195,6 +25049,7 @@ export namespace Prisma {
     payment?: PaymentCreateNestedOneWithoutShipmentsInput
     updatedBy?: UserCreateNestedOneWithoutShipmentsUpdatedInput
     user?: UserCreateNestedOneWithoutShipmentsInput
+    documents?: DocumentsCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentUncheckedCreateWithoutTicketsInput = {
@@ -23208,6 +25063,7 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    documents?: DocumentsUncheckedCreateNestedManyWithoutShipmentInput
   }
 
   export type ShipmentCreateOrConnectWithoutTicketsInput = {
@@ -23260,6 +25116,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUpdateManyWithoutUpdatedByNestedInput
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -23293,6 +25150,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUncheckedUpdateManyWithoutUpdatedByNestedInput
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23337,6 +25195,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUpdateManyWithoutUpdatedByNestedInput
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -23370,6 +25229,7 @@ export namespace Prisma {
     shipmentsUpdated?: ShipmentUncheckedUpdateManyWithoutUpdatedByNestedInput
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23444,6 +25304,7 @@ export namespace Prisma {
     payment?: PaymentUpdateOneWithoutShipmentsNestedInput
     updatedBy?: UserUpdateOneWithoutShipmentsUpdatedNestedInput
     user?: UserUpdateOneWithoutShipmentsNestedInput
+    documents?: DocumentsUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateWithoutTicketsInput = {
@@ -23456,6 +25317,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: DocumentsUncheckedUpdateManyWithoutShipmentNestedInput
   }
 
   export type UserCreateWithoutTokensInput = {
@@ -23489,6 +25351,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
 
@@ -23523,6 +25386,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -23572,6 +25436,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
 
@@ -23605,6 +25470,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -23639,6 +25505,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
     tokens?: TokenCreateNestedManyWithoutUserInput
   }
 
@@ -23673,6 +25540,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -23722,6 +25590,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
   }
 
@@ -23755,7 +25624,232 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutDocumentsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserType
+    status?: string
+    inviteToken?: string | null
+    inviteTokenExpiry?: Date | string | null
+    passwordResetToken?: string | null
+    passwordResetExpiry?: Date | string | null
+    lastLogin?: Date | string | null
+    isSubscribedToNewsletter?: boolean | null
+    isAgreedToTermsAndConditions?: boolean | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invitedBy?: UserCreateNestedOneWithoutInvitedUsersInput
+    invitedUsers?: UserCreateNestedManyWithoutInvitedByInput
+    quoteRequests?: QuoteRequestCreateNestedManyWithoutUserInput
+    quoteRequestsReviewed?: QuoteRequestCreateNestedManyWithoutReviewedByUserInput
+    quotesGenerated?: QuoteCreateNestedManyWithoutGeneratedByInput
+    quotesCreated?: QuoteCreateNestedManyWithoutCreatedByInput
+    quotesUpdated?: QuoteCreateNestedManyWithoutUpdatedByInput
+    paymentsCreated?: PaymentCreateNestedManyWithoutCreatedByInput
+    paymentsUpdated?: PaymentCreateNestedManyWithoutUpdatedByInput
+    payments?: PaymentCreateNestedManyWithoutUserInput
+    shipmentsUpdated?: ShipmentCreateNestedManyWithoutUpdatedByInput
+    shipments?: ShipmentCreateNestedManyWithoutUserInput
+    ticketsOwned?: TicketCreateNestedManyWithoutUserInput
+    ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    tokens?: TokenCreateNestedManyWithoutUserInput
+    blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserType
+    status?: string
+    invitedById?: string | null
+    inviteToken?: string | null
+    inviteTokenExpiry?: Date | string | null
+    passwordResetToken?: string | null
+    passwordResetExpiry?: Date | string | null
+    lastLogin?: Date | string | null
+    isSubscribedToNewsletter?: boolean | null
+    isAgreedToTermsAndConditions?: boolean | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invitedUsers?: UserUncheckedCreateNestedManyWithoutInvitedByInput
+    quoteRequests?: QuoteRequestUncheckedCreateNestedManyWithoutUserInput
+    quoteRequestsReviewed?: QuoteRequestUncheckedCreateNestedManyWithoutReviewedByUserInput
+    quotesGenerated?: QuoteUncheckedCreateNestedManyWithoutGeneratedByInput
+    quotesCreated?: QuoteUncheckedCreateNestedManyWithoutCreatedByInput
+    quotesUpdated?: QuoteUncheckedCreateNestedManyWithoutUpdatedByInput
+    paymentsCreated?: PaymentUncheckedCreateNestedManyWithoutCreatedByInput
+    paymentsUpdated?: PaymentUncheckedCreateNestedManyWithoutUpdatedByInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    shipmentsUpdated?: ShipmentUncheckedCreateNestedManyWithoutUpdatedByInput
+    shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
+    ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
+    ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
+    blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDocumentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDocumentsInput, UserUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type ShipmentCreateWithoutDocumentsInput = {
+    id?: string
+    sku?: string | null
+    status?: string
+    isManual?: boolean | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quote?: QuoteCreateNestedOneWithoutShipmentsInput
+    payment?: PaymentCreateNestedOneWithoutShipmentsInput
+    updatedBy?: UserCreateNestedOneWithoutShipmentsUpdatedInput
+    user?: UserCreateNestedOneWithoutShipmentsInput
+    tickets?: TicketCreateNestedManyWithoutShipmentInput
+  }
+
+  export type ShipmentUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    sku?: string | null
+    quoteId?: string | null
+    paymentId?: string | null
+    status?: string
+    updatedById?: string | null
+    isManual?: boolean | null
+    userId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tickets?: TicketUncheckedCreateNestedManyWithoutShipmentInput
+  }
+
+  export type ShipmentCreateOrConnectWithoutDocumentsInput = {
+    where: ShipmentWhereUniqueInput
+    create: XOR<ShipmentCreateWithoutDocumentsInput, ShipmentUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type UserUpsertWithoutDocumentsInput = {
+    update: XOR<UserUpdateWithoutDocumentsInput, UserUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<UserCreateWithoutDocumentsInput, UserUncheckedCreateWithoutDocumentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDocumentsInput, UserUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type UserUpdateWithoutDocumentsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    status?: StringFieldUpdateOperationsInput | string
+    inviteToken?: NullableStringFieldUpdateOperationsInput | string | null
+    inviteTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isSubscribedToNewsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isAgreedToTermsAndConditions?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invitedBy?: UserUpdateOneWithoutInvitedUsersNestedInput
+    invitedUsers?: UserUpdateManyWithoutInvitedByNestedInput
+    quoteRequests?: QuoteRequestUpdateManyWithoutUserNestedInput
+    quoteRequestsReviewed?: QuoteRequestUpdateManyWithoutReviewedByUserNestedInput
+    quotesGenerated?: QuoteUpdateManyWithoutGeneratedByNestedInput
+    quotesCreated?: QuoteUpdateManyWithoutCreatedByNestedInput
+    quotesUpdated?: QuoteUpdateManyWithoutUpdatedByNestedInput
+    paymentsCreated?: PaymentUpdateManyWithoutCreatedByNestedInput
+    paymentsUpdated?: PaymentUpdateManyWithoutUpdatedByNestedInput
+    payments?: PaymentUpdateManyWithoutUserNestedInput
+    shipmentsUpdated?: ShipmentUpdateManyWithoutUpdatedByNestedInput
+    shipments?: ShipmentUpdateManyWithoutUserNestedInput
+    ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
+    ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    tokens?: TokenUpdateManyWithoutUserNestedInput
+    blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDocumentsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    status?: StringFieldUpdateOperationsInput | string
+    invitedById?: NullableStringFieldUpdateOperationsInput | string | null
+    inviteToken?: NullableStringFieldUpdateOperationsInput | string | null
+    inviteTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isSubscribedToNewsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isAgreedToTermsAndConditions?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invitedUsers?: UserUncheckedUpdateManyWithoutInvitedByNestedInput
+    quoteRequests?: QuoteRequestUncheckedUpdateManyWithoutUserNestedInput
+    quoteRequestsReviewed?: QuoteRequestUncheckedUpdateManyWithoutReviewedByUserNestedInput
+    quotesGenerated?: QuoteUncheckedUpdateManyWithoutGeneratedByNestedInput
+    quotesCreated?: QuoteUncheckedUpdateManyWithoutCreatedByNestedInput
+    quotesUpdated?: QuoteUncheckedUpdateManyWithoutUpdatedByNestedInput
+    paymentsCreated?: PaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+    paymentsUpdated?: PaymentUncheckedUpdateManyWithoutUpdatedByNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    shipmentsUpdated?: ShipmentUncheckedUpdateManyWithoutUpdatedByNestedInput
+    shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
+    ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
+    blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ShipmentUpsertWithoutDocumentsInput = {
+    update: XOR<ShipmentUpdateWithoutDocumentsInput, ShipmentUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<ShipmentCreateWithoutDocumentsInput, ShipmentUncheckedCreateWithoutDocumentsInput>
+    where?: ShipmentWhereInput
+  }
+
+  export type ShipmentUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: ShipmentWhereInput
+    data: XOR<ShipmentUpdateWithoutDocumentsInput, ShipmentUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type ShipmentUpdateWithoutDocumentsInput = {
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    isManual?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quote?: QuoteUpdateOneWithoutShipmentsNestedInput
+    payment?: PaymentUpdateOneWithoutShipmentsNestedInput
+    updatedBy?: UserUpdateOneWithoutShipmentsUpdatedNestedInput
+    user?: UserUpdateOneWithoutShipmentsNestedInput
+    tickets?: TicketUpdateManyWithoutShipmentNestedInput
+  }
+
+  export type ShipmentUncheckedUpdateWithoutDocumentsInput = {
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    updatedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isManual?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tickets?: TicketUncheckedUpdateManyWithoutShipmentNestedInput
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -24014,6 +26108,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DocumentsCreateManyUserInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    shipmentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TokenCreateManyUserInput = {
     id?: string
     expiresIn?: Date | string | null
@@ -24060,6 +26166,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -24093,6 +26200,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -24579,6 +26687,7 @@ export namespace Prisma {
     payment?: PaymentUpdateOneWithoutShipmentsNestedInput
     user?: UserUpdateOneWithoutShipmentsNestedInput
     tickets?: TicketUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateWithoutUpdatedByInput = {
@@ -24591,6 +26700,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: TicketUncheckedUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateManyWithoutUpdatedByInput = {
@@ -24614,6 +26724,7 @@ export namespace Prisma {
     payment?: PaymentUpdateOneWithoutShipmentsNestedInput
     updatedBy?: UserUpdateOneWithoutShipmentsUpdatedNestedInput
     tickets?: TicketUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateWithoutUserInput = {
@@ -24626,6 +26737,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: TicketUncheckedUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateManyWithoutUserInput = {
@@ -24707,6 +26819,39 @@ export namespace Prisma {
     shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
     conversation?: XOR<TicketConversationNullableUpdateEnvelopeInput, TicketConversationCreateInput> | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentsUpdateWithoutUserInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shipment?: ShipmentUpdateOneWithoutDocumentsNestedInput
+  }
+
+  export type DocumentsUncheckedUpdateWithoutUserInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentsUncheckedUpdateManyWithoutUserInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24977,6 +27122,7 @@ export namespace Prisma {
     updatedBy?: UserUpdateOneWithoutShipmentsUpdatedNestedInput
     user?: UserUpdateOneWithoutShipmentsNestedInput
     tickets?: TicketUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateWithoutQuoteInput = {
@@ -24989,6 +27135,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: TicketUncheckedUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateManyWithoutQuoteInput = {
@@ -25060,6 +27207,7 @@ export namespace Prisma {
     updatedBy?: UserUpdateOneWithoutShipmentsUpdatedNestedInput
     user?: UserUpdateOneWithoutShipmentsNestedInput
     tickets?: TicketUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateWithoutPaymentInput = {
@@ -25072,6 +27220,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: TicketUncheckedUpdateManyWithoutShipmentNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutShipmentNestedInput
   }
 
   export type ShipmentUncheckedUpdateManyWithoutPaymentInput = {
@@ -25094,6 +27243,18 @@ export namespace Prisma {
     quoteId?: string | null
     conversation?: XOR<TicketConversationNullableCreateEnvelopeInput, TicketConversationCreateInput> | null
     closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentsCreateManyShipmentInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25130,6 +27291,39 @@ export namespace Prisma {
     quoteId?: NullableStringFieldUpdateOperationsInput | string | null
     conversation?: XOR<TicketConversationNullableUpdateEnvelopeInput, TicketConversationCreateInput> | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentsUpdateWithoutShipmentInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type DocumentsUncheckedUpdateWithoutShipmentInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentsUncheckedUpdateManyWithoutShipmentInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
