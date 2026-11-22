@@ -275,6 +275,15 @@ exports.Prisma.DocumentsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DocumentRejectReasonScalarFieldEnum = {
+  id: 'id',
+  reason: 'reason',
+  documentId: 'documentId',
+  rejectedById: 'rejectedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -317,7 +326,8 @@ exports.Prisma.ModelName = {
   Token: 'Token',
   TokenBlacklist: 'TokenBlacklist',
   WebhookEvent: 'WebhookEvent',
-  Documents: 'Documents'
+  Documents: 'Documents',
+  DocumentRejectReason: 'DocumentRejectReason'
 };
 
 /**

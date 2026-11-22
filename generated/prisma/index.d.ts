@@ -108,6 +108,11 @@ export type WebhookEvent = $Result.DefaultSelection<Prisma.$WebhookEventPayload>
  * 
  */
 export type Documents = $Result.DefaultSelection<Prisma.$DocumentsPayload>
+/**
+ * Model DocumentRejectReason
+ * 
+ */
+export type DocumentRejectReason = $Result.DefaultSelection<Prisma.$DocumentRejectReasonPayload>
 
 /**
  * Enums
@@ -358,6 +363,16 @@ export class PrismaClient<
     * ```
     */
   get documents(): Prisma.DocumentsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documentRejectReason`: Exposes CRUD operations for the **DocumentRejectReason** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DocumentRejectReasons
+    * const documentRejectReasons = await prisma.documentRejectReason.findMany()
+    * ```
+    */
+  get documentRejectReason(): Prisma.DocumentRejectReasonDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -809,7 +824,8 @@ export namespace Prisma {
     Token: 'Token',
     TokenBlacklist: 'TokenBlacklist',
     WebhookEvent: 'WebhookEvent',
-    Documents: 'Documents'
+    Documents: 'Documents',
+    DocumentRejectReason: 'DocumentRejectReason'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -828,7 +844,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "adminUser" | "quoteRequest" | "quote" | "payment" | "shipment" | "ticket" | "token" | "tokenBlacklist" | "webhookEvent" | "documents"
+      modelProps: "user" | "adminUser" | "quoteRequest" | "quote" | "payment" | "shipment" | "ticket" | "token" | "tokenBlacklist" | "webhookEvent" | "documents" | "documentRejectReason"
       txIsolationLevel: never
     }
     model: {
@@ -1646,6 +1662,80 @@ export namespace Prisma {
           }
         }
       }
+      DocumentRejectReason: {
+        payload: Prisma.$DocumentRejectReasonPayload<ExtArgs>
+        fields: Prisma.DocumentRejectReasonFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentRejectReasonFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentRejectReasonFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentRejectReasonFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentRejectReasonFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentRejectReasonFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentRejectReasonCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentRejectReasonCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DocumentRejectReasonDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload>
+          }
+          update: {
+            args: Prisma.DocumentRejectReasonUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentRejectReasonDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentRejectReasonUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DocumentRejectReasonUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentRejectReasonPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentRejectReasonAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentRejectReason>
+          }
+          groupBy: {
+            args: Prisma.DocumentRejectReasonGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentRejectReasonGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.DocumentRejectReasonFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.DocumentRejectReasonAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.DocumentRejectReasonCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentRejectReasonCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1736,6 +1826,7 @@ export namespace Prisma {
     tokenBlacklist?: TokenBlacklistOmit
     webhookEvent?: WebhookEventOmit
     documents?: DocumentsOmit
+    documentRejectReason?: DocumentRejectReasonOmit
   }
 
   /* Types for Logging */
@@ -1830,6 +1921,7 @@ export namespace Prisma {
     ticketsOwned: number
     ticketsClosed: number
     documents: number
+    documentRejectReasons: number
     tokens: number
     blacklistedTokens: number
   }
@@ -1849,6 +1941,7 @@ export namespace Prisma {
     ticketsOwned?: boolean | UserCountOutputTypeCountTicketsOwnedArgs
     ticketsClosed?: boolean | UserCountOutputTypeCountTicketsClosedArgs
     documents?: boolean | UserCountOutputTypeCountDocumentsArgs
+    documentRejectReasons?: boolean | UserCountOutputTypeCountDocumentRejectReasonsArgs
     tokens?: boolean | UserCountOutputTypeCountTokensArgs
     blacklistedTokens?: boolean | UserCountOutputTypeCountBlacklistedTokensArgs
   }
@@ -1960,6 +2053,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DocumentsWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDocumentRejectReasonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentRejectReasonWhereInput
   }
 
   /**
@@ -2991,6 +3091,7 @@ export namespace Prisma {
     ticketsOwned?: boolean | User$ticketsOwnedArgs<ExtArgs>
     ticketsClosed?: boolean | User$ticketsClosedArgs<ExtArgs>
     documents?: boolean | User$documentsArgs<ExtArgs>
+    documentRejectReasons?: boolean | User$documentRejectReasonsArgs<ExtArgs>
     tokens?: boolean | User$tokensArgs<ExtArgs>
     blacklistedTokens?: boolean | User$blacklistedTokensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3035,6 +3136,7 @@ export namespace Prisma {
     ticketsOwned?: boolean | User$ticketsOwnedArgs<ExtArgs>
     ticketsClosed?: boolean | User$ticketsClosedArgs<ExtArgs>
     documents?: boolean | User$documentsArgs<ExtArgs>
+    documentRejectReasons?: boolean | User$documentRejectReasonsArgs<ExtArgs>
     tokens?: boolean | User$tokensArgs<ExtArgs>
     blacklistedTokens?: boolean | User$blacklistedTokensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3058,6 +3160,7 @@ export namespace Prisma {
       ticketsOwned: Prisma.$TicketPayload<ExtArgs>[]
       ticketsClosed: Prisma.$TicketPayload<ExtArgs>[]
       documents: Prisma.$DocumentsPayload<ExtArgs>[]
+      documentRejectReasons: Prisma.$DocumentRejectReasonPayload<ExtArgs>[]
       tokens: Prisma.$TokenPayload<ExtArgs>[]
       blacklistedTokens: Prisma.$TokenBlacklistPayload<ExtArgs>[]
     }
@@ -3457,6 +3560,7 @@ export namespace Prisma {
     ticketsOwned<T extends User$ticketsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$ticketsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ticketsClosed<T extends User$ticketsClosedArgs<ExtArgs> = {}>(args?: Subset<T, User$ticketsClosedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     documents<T extends User$documentsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documentRejectReasons<T extends User$documentRejectReasonsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentRejectReasonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tokens<T extends User$tokensArgs<ExtArgs> = {}>(args?: Subset<T, User$tokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     blacklistedTokens<T extends User$blacklistedTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$blacklistedTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TokenBlacklistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4227,6 +4331,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DocumentsScalarFieldEnum | DocumentsScalarFieldEnum[]
+  }
+
+  /**
+   * User.documentRejectReasons
+   */
+  export type User$documentRejectReasonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    where?: DocumentRejectReasonWhereInput
+    orderBy?: DocumentRejectReasonOrderByWithRelationInput | DocumentRejectReasonOrderByWithRelationInput[]
+    cursor?: DocumentRejectReasonWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentRejectReasonScalarFieldEnum | DocumentRejectReasonScalarFieldEnum[]
   }
 
   /**
@@ -14590,6 +14718,7 @@ export namespace Prisma {
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     shipment?: boolean | Documents$shipmentArgs<ExtArgs>
+    rejectReason?: boolean | Documents$rejectReasonArgs<ExtArgs>
   }, ExtArgs["result"]["documents"]>
 
 
@@ -14611,6 +14740,7 @@ export namespace Prisma {
   export type DocumentsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     shipment?: boolean | Documents$shipmentArgs<ExtArgs>
+    rejectReason?: boolean | Documents$rejectReasonArgs<ExtArgs>
   }
 
   export type $DocumentsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14618,6 +14748,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       shipment: Prisma.$ShipmentPayload<ExtArgs> | null
+      rejectReason: Prisma.$DocumentRejectReasonPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14995,6 +15126,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     shipment<T extends Documents$shipmentArgs<ExtArgs> = {}>(args?: Subset<T, Documents$shipmentArgs<ExtArgs>>): Prisma__ShipmentClient<$Result.GetResult<Prisma.$ShipmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    rejectReason<T extends Documents$rejectReasonArgs<ExtArgs> = {}>(args?: Subset<T, Documents$rejectReasonArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15423,6 +15555,25 @@ export namespace Prisma {
   }
 
   /**
+   * Documents.rejectReason
+   */
+  export type Documents$rejectReasonArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    where?: DocumentRejectReasonWhereInput
+  }
+
+  /**
    * Documents without action
    */
   export type DocumentsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15438,6 +15589,1019 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DocumentsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DocumentRejectReason
+   */
+
+  export type AggregateDocumentRejectReason = {
+    _count: DocumentRejectReasonCountAggregateOutputType | null
+    _min: DocumentRejectReasonMinAggregateOutputType | null
+    _max: DocumentRejectReasonMaxAggregateOutputType | null
+  }
+
+  export type DocumentRejectReasonMinAggregateOutputType = {
+    id: string | null
+    reason: string | null
+    documentId: string | null
+    rejectedById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentRejectReasonMaxAggregateOutputType = {
+    id: string | null
+    reason: string | null
+    documentId: string | null
+    rejectedById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentRejectReasonCountAggregateOutputType = {
+    id: number
+    reason: number
+    documentId: number
+    rejectedById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentRejectReasonMinAggregateInputType = {
+    id?: true
+    reason?: true
+    documentId?: true
+    rejectedById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentRejectReasonMaxAggregateInputType = {
+    id?: true
+    reason?: true
+    documentId?: true
+    rejectedById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentRejectReasonCountAggregateInputType = {
+    id?: true
+    reason?: true
+    documentId?: true
+    rejectedById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentRejectReasonAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentRejectReason to aggregate.
+     */
+    where?: DocumentRejectReasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentRejectReasons to fetch.
+     */
+    orderBy?: DocumentRejectReasonOrderByWithRelationInput | DocumentRejectReasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DocumentRejectReasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentRejectReasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentRejectReasons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DocumentRejectReasons
+    **/
+    _count?: true | DocumentRejectReasonCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentRejectReasonMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentRejectReasonMaxAggregateInputType
+  }
+
+  export type GetDocumentRejectReasonAggregateType<T extends DocumentRejectReasonAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentRejectReason]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentRejectReason[P]>
+      : GetScalarType<T[P], AggregateDocumentRejectReason[P]>
+  }
+
+
+
+
+  export type DocumentRejectReasonGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentRejectReasonWhereInput
+    orderBy?: DocumentRejectReasonOrderByWithAggregationInput | DocumentRejectReasonOrderByWithAggregationInput[]
+    by: DocumentRejectReasonScalarFieldEnum[] | DocumentRejectReasonScalarFieldEnum
+    having?: DocumentRejectReasonScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentRejectReasonCountAggregateInputType | true
+    _min?: DocumentRejectReasonMinAggregateInputType
+    _max?: DocumentRejectReasonMaxAggregateInputType
+  }
+
+  export type DocumentRejectReasonGroupByOutputType = {
+    id: string
+    reason: string
+    documentId: string
+    rejectedById: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentRejectReasonCountAggregateOutputType | null
+    _min: DocumentRejectReasonMinAggregateOutputType | null
+    _max: DocumentRejectReasonMaxAggregateOutputType | null
+  }
+
+  type GetDocumentRejectReasonGroupByPayload<T extends DocumentRejectReasonGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentRejectReasonGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentRejectReasonGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentRejectReasonGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentRejectReasonGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentRejectReasonSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reason?: boolean
+    documentId?: boolean
+    rejectedById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    document?: boolean | DocumentsDefaultArgs<ExtArgs>
+    rejectedBy?: boolean | DocumentRejectReason$rejectedByArgs<ExtArgs>
+  }, ExtArgs["result"]["documentRejectReason"]>
+
+
+
+  export type DocumentRejectReasonSelectScalar = {
+    id?: boolean
+    reason?: boolean
+    documentId?: boolean
+    rejectedById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentRejectReasonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reason" | "documentId" | "rejectedById" | "createdAt" | "updatedAt", ExtArgs["result"]["documentRejectReason"]>
+  export type DocumentRejectReasonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    document?: boolean | DocumentsDefaultArgs<ExtArgs>
+    rejectedBy?: boolean | DocumentRejectReason$rejectedByArgs<ExtArgs>
+  }
+
+  export type $DocumentRejectReasonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DocumentRejectReason"
+    objects: {
+      document: Prisma.$DocumentsPayload<ExtArgs>
+      rejectedBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reason: string
+      documentId: string
+      rejectedById: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documentRejectReason"]>
+    composites: {}
+  }
+
+  type DocumentRejectReasonGetPayload<S extends boolean | null | undefined | DocumentRejectReasonDefaultArgs> = $Result.GetResult<Prisma.$DocumentRejectReasonPayload, S>
+
+  type DocumentRejectReasonCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentRejectReasonFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentRejectReasonCountAggregateInputType | true
+    }
+
+  export interface DocumentRejectReasonDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DocumentRejectReason'], meta: { name: 'DocumentRejectReason' } }
+    /**
+     * Find zero or one DocumentRejectReason that matches the filter.
+     * @param {DocumentRejectReasonFindUniqueArgs} args - Arguments to find a DocumentRejectReason
+     * @example
+     * // Get one DocumentRejectReason
+     * const documentRejectReason = await prisma.documentRejectReason.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentRejectReasonFindUniqueArgs>(args: SelectSubset<T, DocumentRejectReasonFindUniqueArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DocumentRejectReason that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentRejectReasonFindUniqueOrThrowArgs} args - Arguments to find a DocumentRejectReason
+     * @example
+     * // Get one DocumentRejectReason
+     * const documentRejectReason = await prisma.documentRejectReason.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentRejectReasonFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentRejectReasonFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentRejectReason that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentRejectReasonFindFirstArgs} args - Arguments to find a DocumentRejectReason
+     * @example
+     * // Get one DocumentRejectReason
+     * const documentRejectReason = await prisma.documentRejectReason.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentRejectReasonFindFirstArgs>(args?: SelectSubset<T, DocumentRejectReasonFindFirstArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DocumentRejectReason that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentRejectReasonFindFirstOrThrowArgs} args - Arguments to find a DocumentRejectReason
+     * @example
+     * // Get one DocumentRejectReason
+     * const documentRejectReason = await prisma.documentRejectReason.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentRejectReasonFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentRejectReasonFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DocumentRejectReasons that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentRejectReasonFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DocumentRejectReasons
+     * const documentRejectReasons = await prisma.documentRejectReason.findMany()
+     * 
+     * // Get first 10 DocumentRejectReasons
+     * const documentRejectReasons = await prisma.documentRejectReason.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const documentRejectReasonWithIdOnly = await prisma.documentRejectReason.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DocumentRejectReasonFindManyArgs>(args?: SelectSubset<T, DocumentRejectReasonFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DocumentRejectReason.
+     * @param {DocumentRejectReasonCreateArgs} args - Arguments to create a DocumentRejectReason.
+     * @example
+     * // Create one DocumentRejectReason
+     * const DocumentRejectReason = await prisma.documentRejectReason.create({
+     *   data: {
+     *     // ... data to create a DocumentRejectReason
+     *   }
+     * })
+     * 
+     */
+    create<T extends DocumentRejectReasonCreateArgs>(args: SelectSubset<T, DocumentRejectReasonCreateArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DocumentRejectReasons.
+     * @param {DocumentRejectReasonCreateManyArgs} args - Arguments to create many DocumentRejectReasons.
+     * @example
+     * // Create many DocumentRejectReasons
+     * const documentRejectReason = await prisma.documentRejectReason.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DocumentRejectReasonCreateManyArgs>(args?: SelectSubset<T, DocumentRejectReasonCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DocumentRejectReason.
+     * @param {DocumentRejectReasonDeleteArgs} args - Arguments to delete one DocumentRejectReason.
+     * @example
+     * // Delete one DocumentRejectReason
+     * const DocumentRejectReason = await prisma.documentRejectReason.delete({
+     *   where: {
+     *     // ... filter to delete one DocumentRejectReason
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DocumentRejectReasonDeleteArgs>(args: SelectSubset<T, DocumentRejectReasonDeleteArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DocumentRejectReason.
+     * @param {DocumentRejectReasonUpdateArgs} args - Arguments to update one DocumentRejectReason.
+     * @example
+     * // Update one DocumentRejectReason
+     * const documentRejectReason = await prisma.documentRejectReason.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DocumentRejectReasonUpdateArgs>(args: SelectSubset<T, DocumentRejectReasonUpdateArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DocumentRejectReasons.
+     * @param {DocumentRejectReasonDeleteManyArgs} args - Arguments to filter DocumentRejectReasons to delete.
+     * @example
+     * // Delete a few DocumentRejectReasons
+     * const { count } = await prisma.documentRejectReason.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DocumentRejectReasonDeleteManyArgs>(args?: SelectSubset<T, DocumentRejectReasonDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentRejectReasons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentRejectReasonUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DocumentRejectReasons
+     * const documentRejectReason = await prisma.documentRejectReason.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DocumentRejectReasonUpdateManyArgs>(args: SelectSubset<T, DocumentRejectReasonUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DocumentRejectReason.
+     * @param {DocumentRejectReasonUpsertArgs} args - Arguments to update or create a DocumentRejectReason.
+     * @example
+     * // Update or create a DocumentRejectReason
+     * const documentRejectReason = await prisma.documentRejectReason.upsert({
+     *   create: {
+     *     // ... data to create a DocumentRejectReason
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DocumentRejectReason we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentRejectReasonUpsertArgs>(args: SelectSubset<T, DocumentRejectReasonUpsertArgs<ExtArgs>>): Prisma__DocumentRejectReasonClient<$Result.GetResult<Prisma.$DocumentRejectReasonPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DocumentRejectReasons that matches the filter.
+     * @param {DocumentRejectReasonFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const documentRejectReason = await prisma.documentRejectReason.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: DocumentRejectReasonFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a DocumentRejectReason.
+     * @param {DocumentRejectReasonAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const documentRejectReason = await prisma.documentRejectReason.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: DocumentRejectReasonAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of DocumentRejectReasons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentRejectReasonCountArgs} args - Arguments to filter DocumentRejectReasons to count.
+     * @example
+     * // Count the number of DocumentRejectReasons
+     * const count = await prisma.documentRejectReason.count({
+     *   where: {
+     *     // ... the filter for the DocumentRejectReasons we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentRejectReasonCountArgs>(
+      args?: Subset<T, DocumentRejectReasonCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentRejectReasonCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DocumentRejectReason.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentRejectReasonAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentRejectReasonAggregateArgs>(args: Subset<T, DocumentRejectReasonAggregateArgs>): Prisma.PrismaPromise<GetDocumentRejectReasonAggregateType<T>>
+
+    /**
+     * Group by DocumentRejectReason.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentRejectReasonGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DocumentRejectReasonGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentRejectReasonGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentRejectReasonGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentRejectReasonGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentRejectReasonGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DocumentRejectReason model
+   */
+  readonly fields: DocumentRejectReasonFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DocumentRejectReason.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentRejectReasonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    document<T extends DocumentsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocumentsDefaultArgs<ExtArgs>>): Prisma__DocumentsClient<$Result.GetResult<Prisma.$DocumentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    rejectedBy<T extends DocumentRejectReason$rejectedByArgs<ExtArgs> = {}>(args?: Subset<T, DocumentRejectReason$rejectedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DocumentRejectReason model
+   */
+  interface DocumentRejectReasonFieldRefs {
+    readonly id: FieldRef<"DocumentRejectReason", 'String'>
+    readonly reason: FieldRef<"DocumentRejectReason", 'String'>
+    readonly documentId: FieldRef<"DocumentRejectReason", 'String'>
+    readonly rejectedById: FieldRef<"DocumentRejectReason", 'String'>
+    readonly createdAt: FieldRef<"DocumentRejectReason", 'DateTime'>
+    readonly updatedAt: FieldRef<"DocumentRejectReason", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DocumentRejectReason findUnique
+   */
+  export type DocumentRejectReasonFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentRejectReason to fetch.
+     */
+    where: DocumentRejectReasonWhereUniqueInput
+  }
+
+  /**
+   * DocumentRejectReason findUniqueOrThrow
+   */
+  export type DocumentRejectReasonFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentRejectReason to fetch.
+     */
+    where: DocumentRejectReasonWhereUniqueInput
+  }
+
+  /**
+   * DocumentRejectReason findFirst
+   */
+  export type DocumentRejectReasonFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentRejectReason to fetch.
+     */
+    where?: DocumentRejectReasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentRejectReasons to fetch.
+     */
+    orderBy?: DocumentRejectReasonOrderByWithRelationInput | DocumentRejectReasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentRejectReasons.
+     */
+    cursor?: DocumentRejectReasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentRejectReasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentRejectReasons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentRejectReasons.
+     */
+    distinct?: DocumentRejectReasonScalarFieldEnum | DocumentRejectReasonScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentRejectReason findFirstOrThrow
+   */
+  export type DocumentRejectReasonFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentRejectReason to fetch.
+     */
+    where?: DocumentRejectReasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentRejectReasons to fetch.
+     */
+    orderBy?: DocumentRejectReasonOrderByWithRelationInput | DocumentRejectReasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentRejectReasons.
+     */
+    cursor?: DocumentRejectReasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentRejectReasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentRejectReasons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentRejectReasons.
+     */
+    distinct?: DocumentRejectReasonScalarFieldEnum | DocumentRejectReasonScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentRejectReason findMany
+   */
+  export type DocumentRejectReasonFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentRejectReasons to fetch.
+     */
+    where?: DocumentRejectReasonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentRejectReasons to fetch.
+     */
+    orderBy?: DocumentRejectReasonOrderByWithRelationInput | DocumentRejectReasonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DocumentRejectReasons.
+     */
+    cursor?: DocumentRejectReasonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentRejectReasons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentRejectReasons.
+     */
+    skip?: number
+    distinct?: DocumentRejectReasonScalarFieldEnum | DocumentRejectReasonScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentRejectReason create
+   */
+  export type DocumentRejectReasonCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DocumentRejectReason.
+     */
+    data: XOR<DocumentRejectReasonCreateInput, DocumentRejectReasonUncheckedCreateInput>
+  }
+
+  /**
+   * DocumentRejectReason createMany
+   */
+  export type DocumentRejectReasonCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DocumentRejectReasons.
+     */
+    data: DocumentRejectReasonCreateManyInput | DocumentRejectReasonCreateManyInput[]
+  }
+
+  /**
+   * DocumentRejectReason update
+   */
+  export type DocumentRejectReasonUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DocumentRejectReason.
+     */
+    data: XOR<DocumentRejectReasonUpdateInput, DocumentRejectReasonUncheckedUpdateInput>
+    /**
+     * Choose, which DocumentRejectReason to update.
+     */
+    where: DocumentRejectReasonWhereUniqueInput
+  }
+
+  /**
+   * DocumentRejectReason updateMany
+   */
+  export type DocumentRejectReasonUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DocumentRejectReasons.
+     */
+    data: XOR<DocumentRejectReasonUpdateManyMutationInput, DocumentRejectReasonUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentRejectReasons to update
+     */
+    where?: DocumentRejectReasonWhereInput
+    /**
+     * Limit how many DocumentRejectReasons to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentRejectReason upsert
+   */
+  export type DocumentRejectReasonUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DocumentRejectReason to update in case it exists.
+     */
+    where: DocumentRejectReasonWhereUniqueInput
+    /**
+     * In case the DocumentRejectReason found by the `where` argument doesn't exist, create a new DocumentRejectReason with this data.
+     */
+    create: XOR<DocumentRejectReasonCreateInput, DocumentRejectReasonUncheckedCreateInput>
+    /**
+     * In case the DocumentRejectReason was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentRejectReasonUpdateInput, DocumentRejectReasonUncheckedUpdateInput>
+  }
+
+  /**
+   * DocumentRejectReason delete
+   */
+  export type DocumentRejectReasonDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
+    /**
+     * Filter which DocumentRejectReason to delete.
+     */
+    where: DocumentRejectReasonWhereUniqueInput
+  }
+
+  /**
+   * DocumentRejectReason deleteMany
+   */
+  export type DocumentRejectReasonDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentRejectReasons to delete
+     */
+    where?: DocumentRejectReasonWhereInput
+    /**
+     * Limit how many DocumentRejectReasons to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DocumentRejectReason findRaw
+   */
+  export type DocumentRejectReasonFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * DocumentRejectReason aggregateRaw
+   */
+  export type DocumentRejectReasonAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * DocumentRejectReason.rejectedBy
+   */
+  export type DocumentRejectReason$rejectedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * DocumentRejectReason without action
+   */
+  export type DocumentRejectReasonDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentRejectReason
+     */
+    select?: DocumentRejectReasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DocumentRejectReason
+     */
+    omit?: DocumentRejectReasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentRejectReasonInclude<ExtArgs> | null
   }
 
 
@@ -15639,6 +16803,18 @@ export namespace Prisma {
   export type DocumentsScalarFieldEnum = (typeof DocumentsScalarFieldEnum)[keyof typeof DocumentsScalarFieldEnum]
 
 
+  export const DocumentRejectReasonScalarFieldEnum: {
+    id: 'id',
+    reason: 'reason',
+    documentId: 'documentId',
+    rejectedById: 'rejectedById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentRejectReasonScalarFieldEnum = (typeof DocumentRejectReasonScalarFieldEnum)[keyof typeof DocumentRejectReasonScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -15818,6 +16994,7 @@ export namespace Prisma {
     ticketsOwned?: TicketListRelationFilter
     ticketsClosed?: TicketListRelationFilter
     documents?: DocumentsListRelationFilter
+    documentRejectReasons?: DocumentRejectReasonListRelationFilter
     tokens?: TokenListRelationFilter
     blacklistedTokens?: TokenBlacklistListRelationFilter
   }
@@ -15855,6 +17032,7 @@ export namespace Prisma {
     ticketsOwned?: TicketOrderByRelationAggregateInput
     ticketsClosed?: TicketOrderByRelationAggregateInput
     documents?: DocumentsOrderByRelationAggregateInput
+    documentRejectReasons?: DocumentRejectReasonOrderByRelationAggregateInput
     tokens?: TokenOrderByRelationAggregateInput
     blacklistedTokens?: TokenBlacklistOrderByRelationAggregateInput
   }
@@ -15895,6 +17073,7 @@ export namespace Prisma {
     ticketsOwned?: TicketListRelationFilter
     ticketsClosed?: TicketListRelationFilter
     documents?: DocumentsListRelationFilter
+    documentRejectReasons?: DocumentRejectReasonListRelationFilter
     tokens?: TokenListRelationFilter
     blacklistedTokens?: TokenBlacklistListRelationFilter
   }, "id" | "email">
@@ -16816,6 +17995,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Documents"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     shipment?: XOR<ShipmentNullableScalarRelationFilter, ShipmentWhereInput> | null
+    rejectReason?: XOR<DocumentRejectReasonNullableScalarRelationFilter, DocumentRejectReasonWhereInput> | null
   }
 
   export type DocumentsOrderByWithRelationInput = {
@@ -16831,6 +18011,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
     shipment?: ShipmentOrderByWithRelationInput
+    rejectReason?: DocumentRejectReasonOrderByWithRelationInput
   }
 
   export type DocumentsWhereUniqueInput = Prisma.AtLeast<{
@@ -16849,6 +18030,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Documents"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     shipment?: XOR<ShipmentNullableScalarRelationFilter, ShipmentWhereInput> | null
+    rejectReason?: XOR<DocumentRejectReasonNullableScalarRelationFilter, DocumentRejectReasonWhereInput> | null
   }, "id">
 
   export type DocumentsOrderByWithAggregationInput = {
@@ -16885,6 +18067,69 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Documents"> | Date | string
   }
 
+  export type DocumentRejectReasonWhereInput = {
+    AND?: DocumentRejectReasonWhereInput | DocumentRejectReasonWhereInput[]
+    OR?: DocumentRejectReasonWhereInput[]
+    NOT?: DocumentRejectReasonWhereInput | DocumentRejectReasonWhereInput[]
+    id?: StringFilter<"DocumentRejectReason"> | string
+    reason?: StringFilter<"DocumentRejectReason"> | string
+    documentId?: StringFilter<"DocumentRejectReason"> | string
+    rejectedById?: StringNullableFilter<"DocumentRejectReason"> | string | null
+    createdAt?: DateTimeFilter<"DocumentRejectReason"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentRejectReason"> | Date | string
+    document?: XOR<DocumentsScalarRelationFilter, DocumentsWhereInput>
+    rejectedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type DocumentRejectReasonOrderByWithRelationInput = {
+    id?: SortOrder
+    reason?: SortOrder
+    documentId?: SortOrder
+    rejectedById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    document?: DocumentsOrderByWithRelationInput
+    rejectedBy?: UserOrderByWithRelationInput
+  }
+
+  export type DocumentRejectReasonWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    documentId?: string
+    AND?: DocumentRejectReasonWhereInput | DocumentRejectReasonWhereInput[]
+    OR?: DocumentRejectReasonWhereInput[]
+    NOT?: DocumentRejectReasonWhereInput | DocumentRejectReasonWhereInput[]
+    reason?: StringFilter<"DocumentRejectReason"> | string
+    rejectedById?: StringNullableFilter<"DocumentRejectReason"> | string | null
+    createdAt?: DateTimeFilter<"DocumentRejectReason"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentRejectReason"> | Date | string
+    document?: XOR<DocumentsScalarRelationFilter, DocumentsWhereInput>
+    rejectedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id" | "documentId">
+
+  export type DocumentRejectReasonOrderByWithAggregationInput = {
+    id?: SortOrder
+    reason?: SortOrder
+    documentId?: SortOrder
+    rejectedById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentRejectReasonCountOrderByAggregateInput
+    _max?: DocumentRejectReasonMaxOrderByAggregateInput
+    _min?: DocumentRejectReasonMinOrderByAggregateInput
+  }
+
+  export type DocumentRejectReasonScalarWhereWithAggregatesInput = {
+    AND?: DocumentRejectReasonScalarWhereWithAggregatesInput | DocumentRejectReasonScalarWhereWithAggregatesInput[]
+    OR?: DocumentRejectReasonScalarWhereWithAggregatesInput[]
+    NOT?: DocumentRejectReasonScalarWhereWithAggregatesInput | DocumentRejectReasonScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DocumentRejectReason"> | string
+    reason?: StringWithAggregatesFilter<"DocumentRejectReason"> | string
+    documentId?: StringWithAggregatesFilter<"DocumentRejectReason"> | string
+    rejectedById?: StringNullableWithAggregatesFilter<"DocumentRejectReason"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DocumentRejectReason"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DocumentRejectReason"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -16917,6 +18162,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -16953,6 +18199,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -16988,6 +18235,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -17023,6 +18271,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -18008,6 +19257,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutDocumentsInput
     shipment?: ShipmentCreateNestedOneWithoutDocumentsInput
+    rejectReason?: DocumentRejectReasonCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentsUncheckedCreateInput = {
@@ -18021,6 +19271,7 @@ export namespace Prisma {
     shipmentId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    rejectReason?: DocumentRejectReasonUncheckedCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentsUpdateInput = {
@@ -18033,6 +19284,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
     shipment?: ShipmentUpdateOneWithoutDocumentsNestedInput
+    rejectReason?: DocumentRejectReasonUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentsUncheckedUpdateInput = {
@@ -18045,6 +19297,7 @@ export namespace Prisma {
     shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rejectReason?: DocumentRejectReasonUncheckedUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentsCreateManyInput = {
@@ -18078,6 +19331,63 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentRejectReasonCreateInput = {
+    id?: string
+    reason: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentsCreateNestedOneWithoutRejectReasonInput
+    rejectedBy?: UserCreateNestedOneWithoutDocumentRejectReasonsInput
+  }
+
+  export type DocumentRejectReasonUncheckedCreateInput = {
+    id?: string
+    reason: string
+    documentId: string
+    rejectedById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentRejectReasonUpdateInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentsUpdateOneRequiredWithoutRejectReasonNestedInput
+    rejectedBy?: UserUpdateOneWithoutDocumentRejectReasonsNestedInput
+  }
+
+  export type DocumentRejectReasonUncheckedUpdateInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    rejectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentRejectReasonCreateManyInput = {
+    id?: string
+    reason: string
+    documentId: string
+    rejectedById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentRejectReasonUpdateManyMutationInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentRejectReasonUncheckedUpdateManyInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    rejectedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18196,6 +19506,12 @@ export namespace Prisma {
     none?: DocumentsWhereInput
   }
 
+  export type DocumentRejectReasonListRelationFilter = {
+    every?: DocumentRejectReasonWhereInput
+    some?: DocumentRejectReasonWhereInput
+    none?: DocumentRejectReasonWhereInput
+  }
+
   export type TokenListRelationFilter = {
     every?: TokenWhereInput
     some?: TokenWhereInput
@@ -18233,6 +19549,10 @@ export namespace Prisma {
   }
 
   export type DocumentsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentRejectReasonOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19053,6 +20373,11 @@ export namespace Prisma {
     isSet?: boolean
   }
 
+  export type DocumentRejectReasonNullableScalarRelationFilter = {
+    is?: DocumentRejectReasonWhereInput | null
+    isNot?: DocumentRejectReasonWhereInput | null
+  }
+
   export type DocumentsCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -19115,6 +20440,38 @@ export namespace Prisma {
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
     isSet?: boolean
+  }
+
+  export type DocumentsScalarRelationFilter = {
+    is?: DocumentsWhereInput
+    isNot?: DocumentsWhereInput
+  }
+
+  export type DocumentRejectReasonCountOrderByAggregateInput = {
+    id?: SortOrder
+    reason?: SortOrder
+    documentId?: SortOrder
+    rejectedById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentRejectReasonMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reason?: SortOrder
+    documentId?: SortOrder
+    rejectedById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentRejectReasonMinOrderByAggregateInput = {
+    id?: SortOrder
+    reason?: SortOrder
+    documentId?: SortOrder
+    rejectedById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserCreateNestedOneWithoutInvitedUsersInput = {
@@ -19219,6 +20576,13 @@ export namespace Prisma {
     connectOrCreate?: DocumentsCreateOrConnectWithoutUserInput | DocumentsCreateOrConnectWithoutUserInput[]
     createMany?: DocumentsCreateManyUserInputEnvelope
     connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+  }
+
+  export type DocumentRejectReasonCreateNestedManyWithoutRejectedByInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutRejectedByInput, DocumentRejectReasonUncheckedCreateWithoutRejectedByInput> | DocumentRejectReasonCreateWithoutRejectedByInput[] | DocumentRejectReasonUncheckedCreateWithoutRejectedByInput[]
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutRejectedByInput | DocumentRejectReasonCreateOrConnectWithoutRejectedByInput[]
+    createMany?: DocumentRejectReasonCreateManyRejectedByInputEnvelope
+    connect?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
   }
 
   export type TokenCreateNestedManyWithoutUserInput = {
@@ -19331,6 +20695,13 @@ export namespace Prisma {
     connectOrCreate?: DocumentsCreateOrConnectWithoutUserInput | DocumentsCreateOrConnectWithoutUserInput[]
     createMany?: DocumentsCreateManyUserInputEnvelope
     connect?: DocumentsWhereUniqueInput | DocumentsWhereUniqueInput[]
+  }
+
+  export type DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutRejectedByInput, DocumentRejectReasonUncheckedCreateWithoutRejectedByInput> | DocumentRejectReasonCreateWithoutRejectedByInput[] | DocumentRejectReasonUncheckedCreateWithoutRejectedByInput[]
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutRejectedByInput | DocumentRejectReasonCreateOrConnectWithoutRejectedByInput[]
+    createMany?: DocumentRejectReasonCreateManyRejectedByInputEnvelope
+    connect?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
   }
 
   export type TokenUncheckedCreateNestedManyWithoutUserInput = {
@@ -19580,6 +20951,20 @@ export namespace Prisma {
     deleteMany?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
   }
 
+  export type DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutRejectedByInput, DocumentRejectReasonUncheckedCreateWithoutRejectedByInput> | DocumentRejectReasonCreateWithoutRejectedByInput[] | DocumentRejectReasonUncheckedCreateWithoutRejectedByInput[]
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutRejectedByInput | DocumentRejectReasonCreateOrConnectWithoutRejectedByInput[]
+    upsert?: DocumentRejectReasonUpsertWithWhereUniqueWithoutRejectedByInput | DocumentRejectReasonUpsertWithWhereUniqueWithoutRejectedByInput[]
+    createMany?: DocumentRejectReasonCreateManyRejectedByInputEnvelope
+    set?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    disconnect?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    delete?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    connect?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    update?: DocumentRejectReasonUpdateWithWhereUniqueWithoutRejectedByInput | DocumentRejectReasonUpdateWithWhereUniqueWithoutRejectedByInput[]
+    updateMany?: DocumentRejectReasonUpdateManyWithWhereWithoutRejectedByInput | DocumentRejectReasonUpdateManyWithWhereWithoutRejectedByInput[]
+    deleteMany?: DocumentRejectReasonScalarWhereInput | DocumentRejectReasonScalarWhereInput[]
+  }
+
   export type TokenUpdateManyWithoutUserNestedInput = {
     create?: XOR<TokenCreateWithoutUserInput, TokenUncheckedCreateWithoutUserInput> | TokenCreateWithoutUserInput[] | TokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TokenCreateOrConnectWithoutUserInput | TokenCreateOrConnectWithoutUserInput[]
@@ -19802,6 +21187,20 @@ export namespace Prisma {
     update?: DocumentsUpdateWithWhereUniqueWithoutUserInput | DocumentsUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DocumentsUpdateManyWithWhereWithoutUserInput | DocumentsUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DocumentsScalarWhereInput | DocumentsScalarWhereInput[]
+  }
+
+  export type DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutRejectedByInput, DocumentRejectReasonUncheckedCreateWithoutRejectedByInput> | DocumentRejectReasonCreateWithoutRejectedByInput[] | DocumentRejectReasonUncheckedCreateWithoutRejectedByInput[]
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutRejectedByInput | DocumentRejectReasonCreateOrConnectWithoutRejectedByInput[]
+    upsert?: DocumentRejectReasonUpsertWithWhereUniqueWithoutRejectedByInput | DocumentRejectReasonUpsertWithWhereUniqueWithoutRejectedByInput[]
+    createMany?: DocumentRejectReasonCreateManyRejectedByInputEnvelope
+    set?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    disconnect?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    delete?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    connect?: DocumentRejectReasonWhereUniqueInput | DocumentRejectReasonWhereUniqueInput[]
+    update?: DocumentRejectReasonUpdateWithWhereUniqueWithoutRejectedByInput | DocumentRejectReasonUpdateWithWhereUniqueWithoutRejectedByInput[]
+    updateMany?: DocumentRejectReasonUpdateManyWithWhereWithoutRejectedByInput | DocumentRejectReasonUpdateManyWithWhereWithoutRejectedByInput[]
+    deleteMany?: DocumentRejectReasonScalarWhereInput | DocumentRejectReasonScalarWhereInput[]
   }
 
   export type TokenUncheckedUpdateManyWithoutUserNestedInput = {
@@ -20624,6 +22023,18 @@ export namespace Prisma {
     connect?: ShipmentWhereUniqueInput
   }
 
+  export type DocumentRejectReasonCreateNestedOneWithoutDocumentInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutDocumentInput, DocumentRejectReasonUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutDocumentInput
+    connect?: DocumentRejectReasonWhereUniqueInput
+  }
+
+  export type DocumentRejectReasonUncheckedCreateNestedOneWithoutDocumentInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutDocumentInput, DocumentRejectReasonUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutDocumentInput
+    connect?: DocumentRejectReasonWhereUniqueInput
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -20649,6 +22060,56 @@ export namespace Prisma {
     delete?: ShipmentWhereInput | boolean
     connect?: ShipmentWhereUniqueInput
     update?: XOR<XOR<ShipmentUpdateToOneWithWhereWithoutDocumentsInput, ShipmentUpdateWithoutDocumentsInput>, ShipmentUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type DocumentRejectReasonUpdateOneWithoutDocumentNestedInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutDocumentInput, DocumentRejectReasonUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutDocumentInput
+    upsert?: DocumentRejectReasonUpsertWithoutDocumentInput
+    disconnect?: DocumentRejectReasonWhereInput | boolean
+    delete?: DocumentRejectReasonWhereInput | boolean
+    connect?: DocumentRejectReasonWhereUniqueInput
+    update?: XOR<XOR<DocumentRejectReasonUpdateToOneWithWhereWithoutDocumentInput, DocumentRejectReasonUpdateWithoutDocumentInput>, DocumentRejectReasonUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type DocumentRejectReasonUncheckedUpdateOneWithoutDocumentNestedInput = {
+    create?: XOR<DocumentRejectReasonCreateWithoutDocumentInput, DocumentRejectReasonUncheckedCreateWithoutDocumentInput>
+    connectOrCreate?: DocumentRejectReasonCreateOrConnectWithoutDocumentInput
+    upsert?: DocumentRejectReasonUpsertWithoutDocumentInput
+    disconnect?: DocumentRejectReasonWhereInput | boolean
+    delete?: DocumentRejectReasonWhereInput | boolean
+    connect?: DocumentRejectReasonWhereUniqueInput
+    update?: XOR<XOR<DocumentRejectReasonUpdateToOneWithWhereWithoutDocumentInput, DocumentRejectReasonUpdateWithoutDocumentInput>, DocumentRejectReasonUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type DocumentsCreateNestedOneWithoutRejectReasonInput = {
+    create?: XOR<DocumentsCreateWithoutRejectReasonInput, DocumentsUncheckedCreateWithoutRejectReasonInput>
+    connectOrCreate?: DocumentsCreateOrConnectWithoutRejectReasonInput
+    connect?: DocumentsWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDocumentRejectReasonsInput = {
+    create?: XOR<UserCreateWithoutDocumentRejectReasonsInput, UserUncheckedCreateWithoutDocumentRejectReasonsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDocumentRejectReasonsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DocumentsUpdateOneRequiredWithoutRejectReasonNestedInput = {
+    create?: XOR<DocumentsCreateWithoutRejectReasonInput, DocumentsUncheckedCreateWithoutRejectReasonInput>
+    connectOrCreate?: DocumentsCreateOrConnectWithoutRejectReasonInput
+    upsert?: DocumentsUpsertWithoutRejectReasonInput
+    connect?: DocumentsWhereUniqueInput
+    update?: XOR<XOR<DocumentsUpdateToOneWithWhereWithoutRejectReasonInput, DocumentsUpdateWithoutRejectReasonInput>, DocumentsUncheckedUpdateWithoutRejectReasonInput>
+  }
+
+  export type UserUpdateOneWithoutDocumentRejectReasonsNestedInput = {
+    create?: XOR<UserCreateWithoutDocumentRejectReasonsInput, UserUncheckedCreateWithoutDocumentRejectReasonsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDocumentRejectReasonsInput
+    upsert?: UserUpsertWithoutDocumentRejectReasonsInput
+    disconnect?: boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDocumentRejectReasonsInput, UserUpdateWithoutDocumentRejectReasonsInput>, UserUncheckedUpdateWithoutDocumentRejectReasonsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -21038,6 +22499,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -21073,6 +22535,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21113,6 +22576,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -21148,6 +22612,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -21715,6 +23180,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     shipment?: ShipmentCreateNestedOneWithoutDocumentsInput
+    rejectReason?: DocumentRejectReasonCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentsUncheckedCreateWithoutUserInput = {
@@ -21727,6 +23193,7 @@ export namespace Prisma {
     shipmentId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    rejectReason?: DocumentRejectReasonUncheckedCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentsCreateOrConnectWithoutUserInput = {
@@ -21736,6 +23203,31 @@ export namespace Prisma {
 
   export type DocumentsCreateManyUserInputEnvelope = {
     data: DocumentsCreateManyUserInput | DocumentsCreateManyUserInput[]
+  }
+
+  export type DocumentRejectReasonCreateWithoutRejectedByInput = {
+    id?: string
+    reason: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    document: DocumentsCreateNestedOneWithoutRejectReasonInput
+  }
+
+  export type DocumentRejectReasonUncheckedCreateWithoutRejectedByInput = {
+    id?: string
+    reason: string
+    documentId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentRejectReasonCreateOrConnectWithoutRejectedByInput = {
+    where: DocumentRejectReasonWhereUniqueInput
+    create: XOR<DocumentRejectReasonCreateWithoutRejectedByInput, DocumentRejectReasonUncheckedCreateWithoutRejectedByInput>
+  }
+
+  export type DocumentRejectReasonCreateManyRejectedByInputEnvelope = {
+    data: DocumentRejectReasonCreateManyRejectedByInput | DocumentRejectReasonCreateManyRejectedByInput[]
   }
 
   export type TokenCreateWithoutUserInput = {
@@ -21831,6 +23323,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -21865,6 +23358,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22226,6 +23720,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Documents"> | Date | string
   }
 
+  export type DocumentRejectReasonUpsertWithWhereUniqueWithoutRejectedByInput = {
+    where: DocumentRejectReasonWhereUniqueInput
+    update: XOR<DocumentRejectReasonUpdateWithoutRejectedByInput, DocumentRejectReasonUncheckedUpdateWithoutRejectedByInput>
+    create: XOR<DocumentRejectReasonCreateWithoutRejectedByInput, DocumentRejectReasonUncheckedCreateWithoutRejectedByInput>
+  }
+
+  export type DocumentRejectReasonUpdateWithWhereUniqueWithoutRejectedByInput = {
+    where: DocumentRejectReasonWhereUniqueInput
+    data: XOR<DocumentRejectReasonUpdateWithoutRejectedByInput, DocumentRejectReasonUncheckedUpdateWithoutRejectedByInput>
+  }
+
+  export type DocumentRejectReasonUpdateManyWithWhereWithoutRejectedByInput = {
+    where: DocumentRejectReasonScalarWhereInput
+    data: XOR<DocumentRejectReasonUpdateManyMutationInput, DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByInput>
+  }
+
+  export type DocumentRejectReasonScalarWhereInput = {
+    AND?: DocumentRejectReasonScalarWhereInput | DocumentRejectReasonScalarWhereInput[]
+    OR?: DocumentRejectReasonScalarWhereInput[]
+    NOT?: DocumentRejectReasonScalarWhereInput | DocumentRejectReasonScalarWhereInput[]
+    id?: StringFilter<"DocumentRejectReason"> | string
+    reason?: StringFilter<"DocumentRejectReason"> | string
+    documentId?: StringFilter<"DocumentRejectReason"> | string
+    rejectedById?: StringNullableFilter<"DocumentRejectReason"> | string | null
+    createdAt?: DateTimeFilter<"DocumentRejectReason"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentRejectReason"> | Date | string
+  }
+
   export type TokenUpsertWithWhereUniqueWithoutUserInput = {
     where: TokenWhereUniqueInput
     update: XOR<TokenUpdateWithoutUserInput, TokenUncheckedUpdateWithoutUserInput>
@@ -22488,6 +24010,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -22523,6 +24046,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -22563,6 +24087,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -22598,6 +24123,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -22719,6 +24245,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -22753,6 +24280,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22798,6 +24326,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -22832,6 +24361,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -22958,6 +24488,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -22993,6 +24524,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23033,6 +24565,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -23068,6 +24601,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23108,6 +24642,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -23143,6 +24678,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23378,6 +24914,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -23412,6 +24949,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23457,6 +24995,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -23491,6 +25030,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23536,6 +25076,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -23570,6 +25111,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23698,6 +25240,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -23733,6 +25276,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23773,6 +25317,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -23808,6 +25353,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23848,6 +25394,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -23883,6 +25430,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -24019,6 +25567,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -24053,6 +25602,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -24098,6 +25648,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -24132,6 +25683,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -24177,6 +25729,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -24211,6 +25764,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -24360,6 +25914,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -24395,6 +25950,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -24435,6 +25991,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -24470,6 +26027,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -24524,6 +26082,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutDocumentsInput
+    rejectReason?: DocumentRejectReasonCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentsUncheckedCreateWithoutShipmentInput = {
@@ -24536,6 +26095,7 @@ export namespace Prisma {
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    rejectReason?: DocumentRejectReasonUncheckedCreateNestedOneWithoutDocumentInput
   }
 
   export type DocumentsCreateOrConnectWithoutShipmentInput = {
@@ -24694,6 +26254,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -24728,6 +26289,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -24773,6 +26335,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -24807,6 +26370,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -24874,6 +26438,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -24909,6 +26474,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -24949,6 +26515,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -24984,6 +26551,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -25117,6 +26685,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -25151,6 +26720,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -25196,6 +26766,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -25230,6 +26801,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -25352,6 +26924,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
 
@@ -25387,6 +26960,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -25437,6 +27011,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
 
@@ -25471,6 +27046,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -25506,6 +27082,7 @@ export namespace Prisma {
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
     documents?: DocumentsCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
   }
 
@@ -25541,6 +27118,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
     documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -25591,6 +27169,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
   }
 
@@ -25625,6 +27204,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -25659,6 +27239,7 @@ export namespace Prisma {
     shipments?: ShipmentCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documentRejectReasons?: DocumentRejectReasonCreateNestedManyWithoutRejectedByInput
     tokens?: TokenCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
   }
@@ -25694,6 +27275,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
     ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
     ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedCreateNestedManyWithoutRejectedByInput
     tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
     blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
   }
@@ -25734,6 +27316,27 @@ export namespace Prisma {
   export type ShipmentCreateOrConnectWithoutDocumentsInput = {
     where: ShipmentWhereUniqueInput
     create: XOR<ShipmentCreateWithoutDocumentsInput, ShipmentUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type DocumentRejectReasonCreateWithoutDocumentInput = {
+    id?: string
+    reason: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rejectedBy?: UserCreateNestedOneWithoutDocumentRejectReasonsInput
+  }
+
+  export type DocumentRejectReasonUncheckedCreateWithoutDocumentInput = {
+    id?: string
+    reason: string
+    rejectedById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentRejectReasonCreateOrConnectWithoutDocumentInput = {
+    where: DocumentRejectReasonWhereUniqueInput
+    create: XOR<DocumentRejectReasonCreateWithoutDocumentInput, DocumentRejectReasonUncheckedCreateWithoutDocumentInput>
   }
 
   export type UserUpsertWithoutDocumentsInput = {
@@ -25777,6 +27380,7 @@ export namespace Prisma {
     shipments?: ShipmentUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -25811,6 +27415,7 @@ export namespace Prisma {
     shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -25850,6 +27455,255 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: TicketUncheckedUpdateManyWithoutShipmentNestedInput
+  }
+
+  export type DocumentRejectReasonUpsertWithoutDocumentInput = {
+    update: XOR<DocumentRejectReasonUpdateWithoutDocumentInput, DocumentRejectReasonUncheckedUpdateWithoutDocumentInput>
+    create: XOR<DocumentRejectReasonCreateWithoutDocumentInput, DocumentRejectReasonUncheckedCreateWithoutDocumentInput>
+    where?: DocumentRejectReasonWhereInput
+  }
+
+  export type DocumentRejectReasonUpdateToOneWithWhereWithoutDocumentInput = {
+    where?: DocumentRejectReasonWhereInput
+    data: XOR<DocumentRejectReasonUpdateWithoutDocumentInput, DocumentRejectReasonUncheckedUpdateWithoutDocumentInput>
+  }
+
+  export type DocumentRejectReasonUpdateWithoutDocumentInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rejectedBy?: UserUpdateOneWithoutDocumentRejectReasonsNestedInput
+  }
+
+  export type DocumentRejectReasonUncheckedUpdateWithoutDocumentInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    rejectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentsCreateWithoutRejectReasonInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutDocumentsInput
+    shipment?: ShipmentCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type DocumentsUncheckedCreateWithoutRejectReasonInput = {
+    id?: string
+    name: string
+    url: string
+    mimeType?: string | null
+    fileSize?: number | null
+    status?: string
+    userId: string
+    shipmentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentsCreateOrConnectWithoutRejectReasonInput = {
+    where: DocumentsWhereUniqueInput
+    create: XOR<DocumentsCreateWithoutRejectReasonInput, DocumentsUncheckedCreateWithoutRejectReasonInput>
+  }
+
+  export type UserCreateWithoutDocumentRejectReasonsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserType
+    status?: string
+    inviteToken?: string | null
+    inviteTokenExpiry?: Date | string | null
+    passwordResetToken?: string | null
+    passwordResetExpiry?: Date | string | null
+    lastLogin?: Date | string | null
+    isSubscribedToNewsletter?: boolean | null
+    isAgreedToTermsAndConditions?: boolean | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invitedBy?: UserCreateNestedOneWithoutInvitedUsersInput
+    invitedUsers?: UserCreateNestedManyWithoutInvitedByInput
+    quoteRequests?: QuoteRequestCreateNestedManyWithoutUserInput
+    quoteRequestsReviewed?: QuoteRequestCreateNestedManyWithoutReviewedByUserInput
+    quotesGenerated?: QuoteCreateNestedManyWithoutGeneratedByInput
+    quotesCreated?: QuoteCreateNestedManyWithoutCreatedByInput
+    quotesUpdated?: QuoteCreateNestedManyWithoutUpdatedByInput
+    paymentsCreated?: PaymentCreateNestedManyWithoutCreatedByInput
+    paymentsUpdated?: PaymentCreateNestedManyWithoutUpdatedByInput
+    payments?: PaymentCreateNestedManyWithoutUserInput
+    shipmentsUpdated?: ShipmentCreateNestedManyWithoutUpdatedByInput
+    shipments?: ShipmentCreateNestedManyWithoutUserInput
+    ticketsOwned?: TicketCreateNestedManyWithoutUserInput
+    ticketsClosed?: TicketCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsCreateNestedManyWithoutUserInput
+    tokens?: TokenCreateNestedManyWithoutUserInput
+    blacklistedTokens?: TokenBlacklistCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDocumentRejectReasonsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    role?: $Enums.UserType
+    status?: string
+    invitedById?: string | null
+    inviteToken?: string | null
+    inviteTokenExpiry?: Date | string | null
+    passwordResetToken?: string | null
+    passwordResetExpiry?: Date | string | null
+    lastLogin?: Date | string | null
+    isSubscribedToNewsletter?: boolean | null
+    isAgreedToTermsAndConditions?: boolean | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invitedUsers?: UserUncheckedCreateNestedManyWithoutInvitedByInput
+    quoteRequests?: QuoteRequestUncheckedCreateNestedManyWithoutUserInput
+    quoteRequestsReviewed?: QuoteRequestUncheckedCreateNestedManyWithoutReviewedByUserInput
+    quotesGenerated?: QuoteUncheckedCreateNestedManyWithoutGeneratedByInput
+    quotesCreated?: QuoteUncheckedCreateNestedManyWithoutCreatedByInput
+    quotesUpdated?: QuoteUncheckedCreateNestedManyWithoutUpdatedByInput
+    paymentsCreated?: PaymentUncheckedCreateNestedManyWithoutCreatedByInput
+    paymentsUpdated?: PaymentUncheckedCreateNestedManyWithoutUpdatedByInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    shipmentsUpdated?: ShipmentUncheckedCreateNestedManyWithoutUpdatedByInput
+    shipments?: ShipmentUncheckedCreateNestedManyWithoutUserInput
+    ticketsOwned?: TicketUncheckedCreateNestedManyWithoutUserInput
+    ticketsClosed?: TicketUncheckedCreateNestedManyWithoutClosedByInput
+    documents?: DocumentsUncheckedCreateNestedManyWithoutUserInput
+    tokens?: TokenUncheckedCreateNestedManyWithoutUserInput
+    blacklistedTokens?: TokenBlacklistUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDocumentRejectReasonsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDocumentRejectReasonsInput, UserUncheckedCreateWithoutDocumentRejectReasonsInput>
+  }
+
+  export type DocumentsUpsertWithoutRejectReasonInput = {
+    update: XOR<DocumentsUpdateWithoutRejectReasonInput, DocumentsUncheckedUpdateWithoutRejectReasonInput>
+    create: XOR<DocumentsCreateWithoutRejectReasonInput, DocumentsUncheckedCreateWithoutRejectReasonInput>
+    where?: DocumentsWhereInput
+  }
+
+  export type DocumentsUpdateToOneWithWhereWithoutRejectReasonInput = {
+    where?: DocumentsWhereInput
+    data: XOR<DocumentsUpdateWithoutRejectReasonInput, DocumentsUncheckedUpdateWithoutRejectReasonInput>
+  }
+
+  export type DocumentsUpdateWithoutRejectReasonInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
+    shipment?: ShipmentUpdateOneWithoutDocumentsNestedInput
+  }
+
+  export type DocumentsUncheckedUpdateWithoutRejectReasonInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutDocumentRejectReasonsInput = {
+    update: XOR<UserUpdateWithoutDocumentRejectReasonsInput, UserUncheckedUpdateWithoutDocumentRejectReasonsInput>
+    create: XOR<UserCreateWithoutDocumentRejectReasonsInput, UserUncheckedCreateWithoutDocumentRejectReasonsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDocumentRejectReasonsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDocumentRejectReasonsInput, UserUncheckedUpdateWithoutDocumentRejectReasonsInput>
+  }
+
+  export type UserUpdateWithoutDocumentRejectReasonsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    status?: StringFieldUpdateOperationsInput | string
+    inviteToken?: NullableStringFieldUpdateOperationsInput | string | null
+    inviteTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isSubscribedToNewsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isAgreedToTermsAndConditions?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invitedBy?: UserUpdateOneWithoutInvitedUsersNestedInput
+    invitedUsers?: UserUpdateManyWithoutInvitedByNestedInput
+    quoteRequests?: QuoteRequestUpdateManyWithoutUserNestedInput
+    quoteRequestsReviewed?: QuoteRequestUpdateManyWithoutReviewedByUserNestedInput
+    quotesGenerated?: QuoteUpdateManyWithoutGeneratedByNestedInput
+    quotesCreated?: QuoteUpdateManyWithoutCreatedByNestedInput
+    quotesUpdated?: QuoteUpdateManyWithoutUpdatedByNestedInput
+    paymentsCreated?: PaymentUpdateManyWithoutCreatedByNestedInput
+    paymentsUpdated?: PaymentUpdateManyWithoutUpdatedByNestedInput
+    payments?: PaymentUpdateManyWithoutUserNestedInput
+    shipmentsUpdated?: ShipmentUpdateManyWithoutUpdatedByNestedInput
+    shipments?: ShipmentUpdateManyWithoutUserNestedInput
+    ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
+    ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUpdateManyWithoutUserNestedInput
+    tokens?: TokenUpdateManyWithoutUserNestedInput
+    blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDocumentRejectReasonsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    status?: StringFieldUpdateOperationsInput | string
+    invitedById?: NullableStringFieldUpdateOperationsInput | string | null
+    inviteToken?: NullableStringFieldUpdateOperationsInput | string | null
+    inviteTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isSubscribedToNewsletter?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isAgreedToTermsAndConditions?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invitedUsers?: UserUncheckedUpdateManyWithoutInvitedByNestedInput
+    quoteRequests?: QuoteRequestUncheckedUpdateManyWithoutUserNestedInput
+    quoteRequestsReviewed?: QuoteRequestUncheckedUpdateManyWithoutReviewedByUserNestedInput
+    quotesGenerated?: QuoteUncheckedUpdateManyWithoutGeneratedByNestedInput
+    quotesCreated?: QuoteUncheckedUpdateManyWithoutCreatedByNestedInput
+    quotesUpdated?: QuoteUncheckedUpdateManyWithoutUpdatedByNestedInput
+    paymentsCreated?: PaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+    paymentsUpdated?: PaymentUncheckedUpdateManyWithoutUpdatedByNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    shipmentsUpdated?: ShipmentUncheckedUpdateManyWithoutUpdatedByNestedInput
+    shipments?: ShipmentUncheckedUpdateManyWithoutUserNestedInput
+    ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
+    documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
+    blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -26120,6 +27974,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DocumentRejectReasonCreateManyRejectedByInput = {
+    id?: string
+    reason: string
+    documentId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TokenCreateManyUserInput = {
     id?: string
     expiresIn?: Date | string | null
@@ -26167,6 +28029,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUpdateManyWithoutUserNestedInput
   }
@@ -26201,6 +28064,7 @@ export namespace Prisma {
     ticketsOwned?: TicketUncheckedUpdateManyWithoutUserNestedInput
     ticketsClosed?: TicketUncheckedUpdateManyWithoutClosedByNestedInput
     documents?: DocumentsUncheckedUpdateManyWithoutUserNestedInput
+    documentRejectReasons?: DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByNestedInput
     tokens?: TokenUncheckedUpdateManyWithoutUserNestedInput
     blacklistedTokens?: TokenBlacklistUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -26832,6 +28696,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     shipment?: ShipmentUpdateOneWithoutDocumentsNestedInput
+    rejectReason?: DocumentRejectReasonUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentsUncheckedUpdateWithoutUserInput = {
@@ -26843,6 +28708,7 @@ export namespace Prisma {
     shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rejectReason?: DocumentRejectReasonUncheckedUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentsUncheckedUpdateManyWithoutUserInput = {
@@ -26852,6 +28718,27 @@ export namespace Prisma {
     fileSize?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     shipmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentRejectReasonUpdateWithoutRejectedByInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    document?: DocumentsUpdateOneRequiredWithoutRejectReasonNestedInput
+  }
+
+  export type DocumentRejectReasonUncheckedUpdateWithoutRejectedByInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentRejectReasonUncheckedUpdateManyWithoutRejectedByInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    documentId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27304,6 +29191,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
+    rejectReason?: DocumentRejectReasonUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentsUncheckedUpdateWithoutShipmentInput = {
@@ -27315,6 +29203,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rejectReason?: DocumentRejectReasonUncheckedUpdateOneWithoutDocumentNestedInput
   }
 
   export type DocumentsUncheckedUpdateManyWithoutShipmentInput = {

@@ -40,6 +40,11 @@ export const getListUserDocumentsAction = async (userId: string, dto: TListUserD
             url: true,
             status: true,
             createdAt: true,
+            rejectReason: {
+                select: {
+                    reason: true
+                }
+            },
             shipment: {
                 select: {
                     id: true,
@@ -62,6 +67,7 @@ export const getListUserDocumentsAction = async (userId: string, dto: TListUserD
         shipmentId: document.shipment?.sku ?? null,
         uploadDate: document.createdAt,
         status: document.status,
+        rejectReason: document.rejectReason?.reason ?? null,
         downloadUrl: document.url
     }));
 

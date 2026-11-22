@@ -122,18 +122,19 @@ model User {
   updatedAt DateTime @updatedAt
 
   quoteRequests         QuoteRequest[]
-  quoteRequestsReviewed QuoteRequest[]   @relation("QuoteRequestReviewer")
-  quotesGenerated       Quote[]          @relation("QuoteGenerator")
-  quotesCreated         Quote[]          @relation("QuoteCreator")
-  quotesUpdated         Quote[]          @relation("QuoteUpdater")
-  paymentsCreated       Payment[]        @relation("PaymentCreator")
-  paymentsUpdated       Payment[]        @relation("PaymentUpdater")
-  payments              Payment[]        @relation("PaymentUser")
-  shipmentsUpdated      Shipment[]       @relation("ShipmentUpdater")
-  shipments             Shipment[]       @relation("ShipmentUser")
-  ticketsOwned          Ticket[]         @relation("TicketOwner")
-  ticketsClosed         Ticket[]         @relation("TicketCloser")
-  documents             Documents[]      @relation("UserDocuments")
+  quoteRequestsReviewed QuoteRequest[]         @relation("QuoteRequestReviewer")
+  quotesGenerated       Quote[]                @relation("QuoteGenerator")
+  quotesCreated         Quote[]                @relation("QuoteCreator")
+  quotesUpdated         Quote[]                @relation("QuoteUpdater")
+  paymentsCreated       Payment[]              @relation("PaymentCreator")
+  paymentsUpdated       Payment[]              @relation("PaymentUpdater")
+  payments              Payment[]              @relation("PaymentUser")
+  shipmentsUpdated      Shipment[]             @relation("ShipmentUpdater")
+  shipments             Shipment[]             @relation("ShipmentUser")
+  ticketsOwned          Ticket[]               @relation("TicketOwner")
+  ticketsClosed         Ticket[]               @relation("TicketCloser")
+  documents             Documents[]            @relation("UserDocuments")
+  documentRejectReasons DocumentRejectReason[] @relation("DocumentRejecter")
   tokens                Token[]
   blacklistedTokens     TokenBlacklist[]
 }
@@ -334,16 +335,29 @@ model WebhookEvent {
 }
 
 model Documents {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  url        String
-  mimeType   String?
-  fileSize   Int?
-  status     String    @default("Pending")
-  userId     String    @map("user") @db.ObjectId
-  user       User      @relation("UserDocuments", fields: [userId], references: [id])
-  shipmentId String?   @map("shipment") @db.ObjectId
-  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+  id           String                @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  url          String
+  mimeType     String?
+  fileSize     Int?
+  status       String                @default("Pending")
+  userId       String                @map("user") @db.ObjectId
+  user         User                  @relation("UserDocuments", fields: [userId], references: [id])
+  shipmentId   String?               @map("shipment") @db.ObjectId
+  shipment     Shipment?             @relation(fields: [shipmentId], references: [id])
+  rejectReason DocumentRejectReason?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DocumentRejectReason {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  reason       String
+  documentId   String    @unique @map("document") @db.ObjectId
+  document     Documents @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  rejectedById String?   @map("rejectedBy") @db.ObjectId
+  rejectedBy   User?     @relation("DocumentRejecter", fields: [rejectedById], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
