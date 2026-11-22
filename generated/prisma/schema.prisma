@@ -135,6 +135,7 @@ model User {
   ticketsClosed         Ticket[]               @relation("TicketCloser")
   documents             Documents[]            @relation("UserDocuments")
   documentRejectReasons DocumentRejectReason[] @relation("DocumentRejecter")
+  activityLogs          ActivityLog[]          @relation("UserActivityLogs")
   tokens                Token[]
   blacklistedTokens     TokenBlacklist[]
 }
@@ -361,4 +362,17 @@ model DocumentRejectReason {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ActivityLog {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  type       String
+  message    String
+  entityType String?
+  entityId   String? @db.ObjectId
+  actorId    String? @map("actor") @db.ObjectId
+  actor      User?   @relation("UserActivityLogs", fields: [actorId], references: [id])
+  metadata   Json?
+
+  createdAt DateTime @default(now())
 }

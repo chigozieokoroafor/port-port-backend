@@ -9,6 +9,7 @@ import { fromMinorUnits } from '../../../../services/payment/currency';
 import { sendPaymentConfirmationEmail } from '../../../../services/email';
 import logger from '../../../../utils/logger';
 import { prisma } from '../../../../config/database';
+import { logActivity } from '../../../../services/activity/service';
 
 
 
@@ -99,6 +100,23 @@ export const fulfillPaidPayment = async (
         // Continue — payment and shipment are already recorded.
     }
     logger.info(`Quote ${quoteRef} paid successfully`);
+
+    const linkedShipment = await Shipment.findOne({ payment: payment._id }).select('sku');
+    await logActivity({
+        type: 'PAYMENT_RECEIVED',
+        message: linkedShipment?.sku
+            ? `Payment received for shipment #${linkedShipment.sku}`
+            : `Payment received for quote #${quoteRef}`,
+        entityType: 'Payment',
+        entityId: payment._id?.toString(),
+        actorId: payment.user?.toString(),
+        metadata: {
+            quoteReference: quoteRef,
+            shipmentSku: linkedShipment?.sku ?? null,
+            amount: displayAmount,
+            currency: displayCurrency
+        }
+    });
 };
 
 /**
@@ -211,9 +229,21 @@ export const handleFailedPayment = async (
     reason: string
 ): Promise<void> => {
     if (!quoteRef) return;
-    await Payment.findOneAndUpdate(
+    const failedPayment = await Payment.findOneAndUpdate(
         { quoteReference: quoteRef, status: { $ne: PaymentStatus.Paid } },
-        { status: PaymentStatus.Failed }
+        { status: PaymentStatus.Failed },
+        { new: true }
     );
     logger.info(`Quote ${quoteRef} payment failed: ${reason}`);
+
+    if (failedPayment) {
+        await logActivity({
+            type: 'PAYMENT_FAILED',
+            message: `Payment failed for quote #${quoteRef}`,
+            entityType: 'Payment',
+            entityId: failedPayment._id?.toString(),
+            actorId: failedPayment.user?.toString(),
+            metadata: { quoteReference: quoteRef, reason }
+        });
+    }
 };

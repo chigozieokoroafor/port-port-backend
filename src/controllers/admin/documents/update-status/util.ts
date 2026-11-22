@@ -1,6 +1,7 @@
 import { object, string, type ObjectSchema } from "yup";
 import { prisma } from "../../../../config/database";
 import { ApiError } from "../../../../utils/ApiError";
+import { logActivity } from "../../../../services/activity/service";
 
 const ALLOWED_STATUSES = ["Approved", "Rejected", "Pending"] as const;
 
@@ -94,6 +95,15 @@ export const updateDocumentStatusAction = async (
                 }
             }
         }
+    });
+
+    await logActivity({
+        type: 'DOCUMENT_REVIEWED',
+        message: `Document "${updatedDocument.name}" marked as ${updatedDocument.status}`,
+        entityType: 'Document',
+        entityId: updatedDocument.id,
+        actorId: adminId,
+        metadata: { status: updatedDocument.status }
     });
 
     return {

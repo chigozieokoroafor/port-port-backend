@@ -3,6 +3,7 @@ import { object, string, number, type ObjectSchema } from "yup";
 import { ApiError } from '../../../../utils/ApiError';
 import { generateReferenceId } from '../../../../utils/helper';
 import { sendQuoteEmailToCustomer } from '../../../../services/email/service';
+import { logActivity } from '../../../../services/activity/service';
 
 export const ApproveQuoteDTO = object({
     requestId: string().required(),
@@ -100,6 +101,15 @@ export async function approveQuoteAction(dto: TApproveQuoteDTO, userId: string) 
         request.id, 
         request.customer.fullName
     );
+
+    await logActivity({
+        type: 'QUOTE_GENERATED',
+        message: `Quote #${quote.quoteNumber} generated for ${request.customer.fullName}`,
+        entityType: 'Quote',
+        entityId: quote.id,
+        actorId: userId,
+        metadata: { quoteNumber: quote.quoteNumber, referenceId: request.referenceId }
+    });
 
     return quote;
 }

@@ -284,6 +284,17 @@ exports.Prisma.DocumentRejectReasonScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ActivityLogScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  message: 'message',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  actorId: 'actorId',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -327,7 +338,8 @@ exports.Prisma.ModelName = {
   TokenBlacklist: 'TokenBlacklist',
   WebhookEvent: 'WebhookEvent',
   Documents: 'Documents',
-  DocumentRejectReason: 'DocumentRejectReason'
+  DocumentRejectReason: 'DocumentRejectReason',
+  ActivityLog: 'ActivityLog'
 };
 
 /**

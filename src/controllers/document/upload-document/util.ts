@@ -3,6 +3,7 @@ import { object, string, type ObjectSchema } from 'yup';
 import { prisma } from '../../../config/database';
 import { ApiError } from '../../../utils/ApiError';
 import { uploadToBunnyStorage } from '../../../services/bunny/service';
+import { logActivity } from '../../../services/activity/service';
 import logger from '../../../utils/logger';
 
 export const UploadDocumentDTO = object({
@@ -35,6 +36,7 @@ export const uploadDocumentAction = async (
   userId: string
 ) => {
   let resolvedShipmentId: string | undefined;
+  let resolvedShipmentSku: string | null = null;
 
   try {
     // 1. If shipmentUid is provided, resolve the Shipment by id (if valid ObjectId) or sku
@@ -47,7 +49,7 @@ export const uploadDocumentAction = async (
               OR: [{ id: dto.shipmentUid }, { sku: dto.shipmentUid }],
             }
           : { sku: dto.shipmentUid },
-        select: { id: true },
+        select: { id: true, sku: true },
       });
 
       if (!shipment) {
@@ -55,6 +57,7 @@ export const uploadDocumentAction = async (
       }
 
       resolvedShipmentId = shipment.id;
+      resolvedShipmentSku = shipment.sku ?? null;
     }
 
     // 2. Upload the temporary disk file to Bunny Storage
@@ -85,6 +88,17 @@ export const uploadDocumentAction = async (
         shipmentId: true,
         createdAt: true,
       },
+    });
+
+    await logActivity({
+      type: 'DOCUMENT_UPLOADED',
+      message: resolvedShipmentSku
+        ? `Document uploaded for shipment #${resolvedShipmentSku}`
+        : `Document "${dto.name}" uploaded`,
+      entityType: 'Document',
+      entityId: document.id,
+      actorId: userId,
+      metadata: { documentName: dto.name, shipmentSku: resolvedShipmentSku }
     });
 
     return document;

@@ -7,6 +7,7 @@ import { generateReferenceId } from '../utils/helper';
 import { sendQuoteEmail, sendQuoteEmailToCustomer } from '../services/email/service';
 import { UserType } from '../models/enums/UserType.enum';
 import { Status } from '../models/enums/Status.enum';
+import { logActivity } from '../services/activity/service';
 
 /**
  * @desc    List all quote requests with filters
@@ -170,6 +171,16 @@ export const approveQuoteRequest = catchAsync(
         quote.status = Status.Approved;
 
         await quote.save();
+
+        const actorName = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim() || req.user.email;
+        await logActivity({
+            type: 'QUOTE_ACCEPTED',
+            message: `Quote #${quote.quoteNumber} accepted by ${actorName}`,
+            entityType: 'Quote',
+            entityId: quote._id?.toString(),
+            actorId: req.user._id?.toString(),
+            metadata: { quoteNumber: quote.quoteNumber }
+        });
 
         res.status(200).json({
             success: true,

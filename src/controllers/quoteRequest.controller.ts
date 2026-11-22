@@ -4,6 +4,7 @@ import { ApiError } from '../utils/ApiError';
 import { catchAsync } from '../utils/catchAsync';
 import { generateReferenceId } from '../utils/helper';
 import { sendQuoteConfirmationEmail } from '../services/email/service'
+import { logActivity } from '../services/activity/service';
 
 /**
  * @desc    Submit quote request
@@ -24,6 +25,15 @@ export const submitQuoteRequest = catchAsync(
             customer,
             vehicle,
             route
+        });
+
+        await logActivity({
+            type: 'QUOTE_SUBMITTED',
+            message: `New quote submitted by ${customer?.fullName || customer?.email || 'a customer'}`,
+            entityType: 'QuoteRequest',
+            entityId: quoteRequest._id?.toString(),
+            actorId: req.user?._id?.toString(),
+            metadata: { referenceId }
         });
 
        //Send confirmation email to customer

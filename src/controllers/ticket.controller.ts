@@ -2,6 +2,7 @@ import { ITicket } from "../models/interfaces/Ticket.interface";
 import Ticket from "../models/Ticket.model";
 import { ApiError } from "../utils/ApiError";
 import { catchAsync } from "../utils/catchAsync";
+import { logActivity } from "../services/activity/service";
 import {Request, Response} from "express";
 
 export const create = catchAsync(async (req: Request, res: Response) =>{
@@ -22,11 +23,19 @@ export const create = catchAsync(async (req: Request, res: Response) =>{
         throw new ApiError(400, 'Ticket already exists');
     }
 
-    await Ticket.create({...req.body});
+    const createdTicket = await Ticket.create({...req.body});
+
+    await logActivity({
+        type: 'TICKET_CREATED',
+        message: `New support ticket opened${req.body.subject ? `: "${req.body.subject}"` : ''}`,
+        entityType: 'Ticket',
+        entityId: createdTicket._id?.toString(),
+        actorId: req.user?._id?.toString()
+    });
 
     return res.status(200).json({
         message: 'Ticket created successfully',
-        ticket
+        ticket: createdTicket
     })
 })
 

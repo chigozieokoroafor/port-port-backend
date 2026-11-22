@@ -1,6 +1,7 @@
 import { prisma } from "../../../../config/database";
 import { object, string, type ObjectSchema } from "yup";
 import { ApiError } from "../../../../utils/ApiError";
+import { logActivity } from "../../../../services/activity/service";
 
 export const CreateShipmentDTO = object({
     quoteRequestId: string().required('Quote Request ID is required')
@@ -62,6 +63,15 @@ export const createShipmentAction = async (dto: TCreateShipmentDTO, adminId: str
             isManual: true,
             status: "Dock"
         }
+    });
+
+    await logActivity({
+        type: 'SHIPMENT_CREATED',
+        message: `Shipment #${shipment.sku} created with status "${shipment.status}"`,
+        entityType: 'Shipment',
+        entityId: shipment.id,
+        actorId: adminId,
+        metadata: { sku: shipment.sku, status: shipment.status }
     });
 
     return shipment;
